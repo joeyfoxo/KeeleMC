@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Core/KeeleCore.iml" filepath="$PROJECT_DIR$/Core/KeeleCore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KeeleSurvival/KeeleSurvival.iml" filepath="$PROJECT_DIR$/KeeleSurvival/KeeleSurvival.iml" />
+    </modules>
+  </component>
+</project>

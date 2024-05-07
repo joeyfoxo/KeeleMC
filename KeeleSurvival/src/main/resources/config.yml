@@ -1,0 +1,5 @@
+starting-balance: 1000
+currency: £
+meteorite_chance: 0.2
+dragonSpawnSeconds: 604800
+dragonProgressSeconds: 0
