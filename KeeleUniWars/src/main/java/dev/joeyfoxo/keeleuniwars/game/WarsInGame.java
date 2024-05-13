@@ -23,7 +23,6 @@ public class WarsInGame<G extends WallsGame<G>> extends CoreInGame<G> {
         gameRunnable();
     }
 
-
     public void wallCountDown(WallsGenerator wallsGenerator) {
         new BukkitRunnable() {
             int secondsLeft = wallCountDownMinutes * 60; // Convert minutes to seconds

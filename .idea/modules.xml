@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Core/KeeleCore.iml" filepath="$PROJECT_DIR$/Core/KeeleCore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KeeleHub/KeeleHub.iml" filepath="$PROJECT_DIR$/KeeleHub/KeeleHub.iml" />
       <module fileurl="file://$PROJECT_DIR$/KeeleSurvival/KeeleSurvival.iml" filepath="$PROJECT_DIR$/KeeleSurvival/KeeleSurvival.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KeeleUniWars/KeeleUniWars.iml" filepath="$PROJECT_DIR$/KeeleUniWars/KeeleUniWars.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MiniGameCore/MiniGameCore.iml" filepath="$PROJECT_DIR$/MiniGameCore/MiniGameCore.iml" />
     </modules>
   </component>
 </project>

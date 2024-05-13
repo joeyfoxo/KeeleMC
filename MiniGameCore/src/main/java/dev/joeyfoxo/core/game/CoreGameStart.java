@@ -2,13 +2,9 @@ package dev.joeyfoxo.core.game;
 
 import dev.joey.keelecore.util.UtilClass;
 import dev.joeyfoxo.core.Core;
-import dev.joeyfoxo.core.game.events.CoreCageHandler;
-import dev.joeyfoxo.core.game.teams.Team;
-import dev.joeyfoxo.core.game.teams.TeamPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;

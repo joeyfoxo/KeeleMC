@@ -28,7 +28,8 @@ public class CageHandler<G extends WallsGame<G>> extends CoreCageHandler<G> impl
   public CageHandler(G game) {
     super(game);
     this.game = game;
-    KeeleUniWars.getKeeleMiniCore().getServer().getPluginManager().registerEvents(this, KeeleUniWars.getKeeleMiniCore());
+    KeeleUniWars.getKeeleMiniCore().getServer().getPluginManager()
+            .registerEvents(this, KeeleUniWars.getKeeleMiniCore());
   }
 
   @Override

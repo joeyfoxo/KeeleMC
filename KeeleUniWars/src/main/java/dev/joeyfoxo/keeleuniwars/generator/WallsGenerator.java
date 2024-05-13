@@ -35,7 +35,6 @@ public class WallsGenerator {
         minHeight = world.getMinHeight();
         maxHeight = world.getMaxHeight();
         session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(world), -1);
-
         loadChunkAsync();
     }
 
@@ -57,6 +56,8 @@ public class WallsGenerator {
 
                     if (surfaceBlockLocation.contains(location)) {
                         Block surfaceBlock = wallsLocation.get(location);
+
+                        //TODO: Fix this
                         if (surfaceBlock.getY() == y) {
                             surfaceBlock.setType(Material.GRASS_BLOCK);
                         } else if (surfaceBlock.getY() < y && surfaceBlock.getY() > world.getMinHeight()) {

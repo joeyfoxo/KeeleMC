@@ -19,7 +19,6 @@ public class GameHandler<G extends WallsGame<G>> implements Listener {
     public GameHandler(G game) {
         Core.getKeeleMiniCore().getServer().getPluginManager().registerEvents(this, Core.getKeeleMiniCore());
         this.game = game;
-
     }
 
     @EventHandler
