@@ -1,9 +1,6 @@
 package dev.joeyfoxo.keeleuniwars.game.events;
 
 import dev.joeyfoxo.core.Core;
-import dev.joeyfoxo.core.game.CoreGame;
-import dev.joeyfoxo.core.game.teams.Team;
-import dev.joeyfoxo.core.game.teams.TeamPlayer;
 import dev.joeyfoxo.keeleuniwars.game.WallsGame;
 import dev.joeyfoxo.keeleuniwars.game.teams.WallsPlayer;
 import dev.joeyfoxo.keeleuniwars.game.teams.WallsTeam;
