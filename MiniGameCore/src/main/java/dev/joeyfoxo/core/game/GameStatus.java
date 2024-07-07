@@ -1,8 +1,10 @@
 package dev.joeyfoxo.core.game;
 
-public enum CoreGameStatus {
+public enum GameStatus {
 
+    NOT_READY,
     WAITING,
+    WALLS_UP,
     IN_GAME,
     FINISHED,
 

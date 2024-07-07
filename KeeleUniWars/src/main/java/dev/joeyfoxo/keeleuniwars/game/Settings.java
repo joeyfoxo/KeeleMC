@@ -10,6 +10,9 @@ public class Settings<G extends WallsGame<G>> extends CoreSettings<G> {
 
     G game;
     public static GameMode defaultGameMode = GameMode.SURVIVAL;
+    public static boolean debugMode = false;
+    public static int wallCountDownMinutes = 1;
+    public static int wallSize = 200;
 
     public Settings(G game, World world) {
         super(game);

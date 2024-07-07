@@ -21,6 +21,8 @@ import org.bukkit.util.Vector;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static dev.joeyfoxo.keeleuniwars.game.Settings.wallSize;
+
 public class CageHandler<G extends WallsGame<G>> extends CoreCageHandler<G> implements Listener {
 
   G game;
@@ -78,22 +80,24 @@ public class CageHandler<G extends WallsGame<G>> extends CoreCageHandler<G> impl
     int wallBlock = 1; // Assuming the wall block is 1 unit wide
     int offset = currentTeamSpawns.size(); // Offset based on the number of players already in the team
 
+    //TODO: Put this in a dynamically resizing circle.
+
     switch (player.getTeamColor()) {
       case RED -> {
-        x = WallsGenerator.center - WallsGenerator.wallSize / 4 - wallBlock + offset;
-        z = WallsGenerator.center - WallsGenerator.wallSize / 4 - wallBlock;
+        x = WallsGenerator.center - wallSize / 4 - wallBlock + offset;
+        z = WallsGenerator.center - wallSize / 4 - wallBlock;
       }
       case GREEN -> {
-        x = WallsGenerator.center + WallsGenerator.wallSize / 4 + wallBlock - offset;
-        z = WallsGenerator.center - WallsGenerator.wallSize / 4 - wallBlock;
+        x = WallsGenerator.center + wallSize / 4 + wallBlock - offset;
+        z = WallsGenerator.center - wallSize / 4 - wallBlock;
       }
       case YELLOW -> {
-        x = WallsGenerator.center - WallsGenerator.wallSize / 4 - wallBlock + offset;
-        z = WallsGenerator.center + WallsGenerator.wallSize / 4 + wallBlock;
+        x = WallsGenerator.center - wallSize / 4 - wallBlock + offset;
+        z = WallsGenerator.center + wallSize / 4 + wallBlock;
       }
       case BLUE -> {
-        x = WallsGenerator.center + WallsGenerator.wallSize / 4 + wallBlock - offset;
-        z = WallsGenerator.center + WallsGenerator.wallSize / 4 + wallBlock;
+        x = WallsGenerator.center + wallSize / 4 + wallBlock - offset;
+        z = WallsGenerator.center + wallSize / 4 + wallBlock;
       }
       default -> throw new IllegalStateException("Unexpected value: " + player.getTeamColor());
     }

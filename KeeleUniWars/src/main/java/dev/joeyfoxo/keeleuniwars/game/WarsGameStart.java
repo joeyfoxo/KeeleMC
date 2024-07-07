@@ -1,13 +1,14 @@
 package dev.joeyfoxo.keeleuniwars.game;
 
 import dev.joeyfoxo.core.game.CoreGameStart;
-import dev.joeyfoxo.core.game.CoreGameStatus;
-import dev.joeyfoxo.core.game.CoreSettings;
+import dev.joeyfoxo.core.game.GameStatus;
 import dev.joeyfoxo.keeleuniwars.game.events.CageHandler;
 import dev.joeyfoxo.keeleuniwars.generator.WallsGenerator;
 import dev.joeyfoxo.keeleuniwars.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.concurrent.TimeUnit;
 
 import static dev.joeyfoxo.keeleuniwars.generator.WallsGenerator.center;
 
@@ -19,17 +20,25 @@ public class WarsGameStart<G extends WallsGame<G>> extends CoreGameStart<G> {
     public WarsGameStart(G game) {
         super(game);
         this.game = game;
-        super.setMinimumPlayers(2);
-        super.setCountdownMins(5);
+//        super.setMinimumPlayers(CoreSettings.minPlayers); -- Can edit if needs
+//        super.setCountdownMins(CoreSettings.countdownMins); -- Can edit if needs
         new Settings<>(game, world);
         new CageHandler<>(game);
         new BukkitRunnable() {
 
             @Override
             public void run() {
-                if (wallsGenerator.setupWallsGameArea(center, center) && !Bukkit.getOnlinePlayers().isEmpty()) {
+
+                if (!Bukkit.getOnlinePlayers().isEmpty()) {
                     startCountdown();
                     cancel();
+                    return;
+                }
+
+                if (wallsGenerator.setupWallsGameArea(center, center)) {
+                    Bukkit.getScheduler().runTaskLater(Util.keeleUniWars, () -> {
+                        game.setGameStatus(GameStatus.WAITING);
+                    }, TimeUnit.SECONDS.toSeconds(10) * 20);
                 }
             }
         }.runTaskTimer(Util.keeleUniWars, 0, 20);
@@ -42,8 +51,10 @@ public class WarsGameStart<G extends WallsGame<G>> extends CoreGameStart<G> {
 
             @Override
             public void run() {
-                if (game.getGameStatus() == CoreGameStatus.IN_GAME) {
-                    new WarsInGame<>(game, wallsGenerator);
+
+                if (countdownSeconds <= 0) {
+                    new WarsInGame<>(game, world);
+                    game.setGameStatus(GameStatus.WALLS_UP);
                     cancel();
                 }
             }

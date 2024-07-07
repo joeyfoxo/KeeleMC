@@ -67,7 +67,7 @@ public class StudentGUI implements PlayerGUI {
 
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
+        meta.addEnchant(Enchantment.POWER, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
         meta.displayName(component);
         item.setItemMeta(meta);

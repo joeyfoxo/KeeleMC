@@ -2,9 +2,8 @@ package dev.joeyfoxo.core.game.events;
 
 import dev.joeyfoxo.core.Core;
 import dev.joeyfoxo.core.game.CoreGame;
-import dev.joeyfoxo.core.game.CoreGameStatus;
+import dev.joeyfoxo.core.game.GameStatus;
 import dev.joeyfoxo.core.game.teams.Team;
-import dev.joeyfoxo.core.game.teams.TeamColors;
 import dev.joeyfoxo.core.game.teams.TeamPlayer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
@@ -37,7 +36,12 @@ public abstract class CoreCageHandler<G extends CoreGame<G>> implements Listener
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPreJoin(AsyncPlayerPreLoginEvent event) {
-        if (game.getGameStatus() == CoreGameStatus.IN_GAME || game.getAlivePlayers() >= game.getMaxPlayers()) {
+        if (game.getGameStatus() == GameStatus.NOT_READY) {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Component.empty());
+            return;
+        }
+        if (game.getGameStatus() == GameStatus.IN_GAME  ||
+        game.getGameStatus() == GameStatus.WALLS_UP || game.getAlivePlayers() >= game.getMaxPlayers()) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, Component.text("Game is full!"));
         }
     }
@@ -62,7 +66,7 @@ public abstract class CoreCageHandler<G extends CoreGame<G>> implements Listener
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (game.getGameStatus() != CoreGameStatus.IN_GAME) {
+        if (game.getGameStatus() == GameStatus.WAITING) {
             // Allow player to turn around but not to change location
             if (!event.getFrom().getBlock().equals(event.getTo().getBlock())) {
                 event.setCancelled(true);
@@ -72,7 +76,7 @@ public abstract class CoreCageHandler<G extends CoreGame<G>> implements Listener
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (game.getGameStatus() != CoreGameStatus.IN_GAME) {
+        if (game.getGameStatus() == GameStatus.WAITING) {
             event.setCancelled(true);
         }
     }

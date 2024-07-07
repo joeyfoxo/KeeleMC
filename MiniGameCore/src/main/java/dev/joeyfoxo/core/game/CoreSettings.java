@@ -6,4 +6,8 @@ public class CoreSettings<G extends CoreGame<G>> {
 
     }
 
+    public static int minPlayers = 2;
+    public static int maxPlayers = 16;
+    public static int countdownMins = 1;
+
 }

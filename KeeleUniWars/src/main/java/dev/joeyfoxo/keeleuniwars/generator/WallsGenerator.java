@@ -5,22 +5,21 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import dev.joeyfoxo.core.Core;
+import dev.joeyfoxo.keeleuniwars.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+
+import static dev.joeyfoxo.keeleuniwars.game.Settings.wallSize;
 
 public class WallsGenerator {
 
-    public static int wallSize = 300;
     int minHeight;
     int maxHeight;
     World world;
@@ -29,6 +28,7 @@ public class WallsGenerator {
     public static HashSet<Location> outerWallLocation = new HashSet<>();
     public static HashSet<Location> surfaceBlockLocation = new HashSet<>();
     public static int center = 0;
+    private boolean isAsyncRunning = false;
 
     public WallsGenerator() {
         world = Bukkit.getWorlds().get(0);
@@ -36,45 +36,6 @@ public class WallsGenerator {
         maxHeight = world.getMaxHeight();
         session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(world), -1);
         loadChunkAsync();
-    }
-
-    public void dropTheWalls() {
-        new BukkitRunnable() {
-            int y = world.getMaxHeight() - 1; // Start from the top layer
-
-            @Override
-            public void run() {
-                if (y < world.getMinHeight()) {
-                    this.cancel(); // Stop the task when all layers have been removed
-                    return;
-                }
-
-                for (Location location : wallsLocation.keySet()) {
-                    if (outerWallLocation.contains(location)) {
-                        continue;
-                    }
-
-                    if (surfaceBlockLocation.contains(location)) {
-                        Block surfaceBlock = wallsLocation.get(location);
-
-                        //TODO: Fix this
-                        if (surfaceBlock.getY() == y) {
-                            surfaceBlock.setType(Material.GRASS_BLOCK);
-                        } else if (surfaceBlock.getY() < y && surfaceBlock.getY() > world.getMinHeight()) {
-                            surfaceBlock.setType(Material.DIRT);
-                        }
-                        continue;
-                    }
-
-                    Block block = wallsLocation.get(location);
-                    if (block.getY() == y) {
-                        block.setType(Material.AIR);
-                    }
-                }
-
-                y--; // Move to the next layer
-            }
-        }.runTaskTimer(Core.getKeeleMiniCore(), 0L, 10L); // Schedule the task to run every second (20 ticks)
     }
 
     private void loadChunkAsync() {
@@ -94,10 +55,38 @@ public class WallsGenerator {
         }
     }
 
+    private CompletableFuture<List<Location>> setupWallsAsync(int centerX, int centerZ) {
+        isAsyncRunning = true;
+        CompletableFuture<List<Location>> futureBlockLocations = new CompletableFuture<>();
+        Bukkit.getScheduler().runTaskAsynchronously(Util.keeleUniWars, () -> {
+            List<Location> blockLocations = Collections.synchronizedList(new ArrayList<>());
+            int halfSize = wallSize / 2;
+
+            int minX = centerX - halfSize;
+            int minZ = centerZ - halfSize;
+            int maxX = centerX + halfSize;
+            int maxZ = centerZ + halfSize;
+
+            for (int x = minX; x <= maxX; x++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    for (int y = minHeight; y <= maxHeight; y++) {
+                        if (x == centerX || z == centerZ || x == minX || x == maxX || z == minZ || z == maxZ) {
+                            blockLocations.add(new Location(world, x, y, z));
+                        }
+                    }
+                }
+            }
+
+            isAsyncRunning = false;
+            futureBlockLocations.complete(blockLocations);
+        });
+        return futureBlockLocations;
+    }
+
     public boolean setupWallsGameArea(int centerX, int centerZ) {
+
         int halfSize = wallSize / 2;
 
-        // Coordinates for the corners of the area
         int minX = centerX - halfSize;
         int minZ = centerZ - halfSize;
         int maxX = centerX + halfSize;
@@ -107,39 +96,39 @@ public class WallsGenerator {
             return false;
         }
 
-        // Create the walls
-        for (int x = minX; x <= maxX; x++) {
-            for (int z = minZ; z <= maxZ; z++) {
-                if (x == centerX || z == centerZ) {
-                    for (int y = minHeight; y <= maxHeight; y++) {
-                        BlockVector3 position = BlockVector3.at(x, y, z);
-                        Block currentBlock = world.getBlockAt(x, y, z);
-                        Block aboveBlock = world.getBlockAt(x, y + 1, z);
-                        if (aboveBlock.getType() == Material.AIR && currentBlock.getType() != Material.AIR) {
-                            if (world.getBlockAt(currentBlock.getLocation()).getType() == Material.TALL_GRASS) {
-                                surfaceBlockLocation.add(currentBlock.getLocation().subtract(0, 2, 0));
-                            } else {
-                                surfaceBlockLocation.add(currentBlock.getLocation());
-                            }
-                        }
-                        wallsLocation.put(new Location(world, x, y, z), currentBlock);
-                        session.setBlock(position, BlockTypes.BEDROCK.getDefaultState());
-                    }
-                }
-
-
-                if (x == minX || x == maxX || z == minZ || z == maxZ) {
-                    for (int y = world.getMinHeight(); y <= world.getMaxHeight(); y++) {
-                        BlockVector3 position = BlockVector3.at(x, y, z);
-                        session.setBlock(position, BlockTypes.BEDROCK.getDefaultState());
-                        outerWallLocation.add(new Location(world, x, y, z));
-                    }
-                }
-
-                session.setBlock(x, maxHeight - 1, z, BlockTypes.BARRIER.getDefaultState());
-            }
+        if (isAsyncRunning) {
+            return false;
         }
-        session.close();
+
+        CompletableFuture<List<Location>> futureBlockLocations = setupWallsAsync(centerX, centerZ);
+
+        futureBlockLocations.thenAccept(blockLocations -> blockLocations.forEach(blockLocation -> {
+
+            int x = blockLocation.getBlockX();
+            int y = blockLocation.getBlockY();
+            int z = blockLocation.getBlockZ();
+            BlockVector3 position = BlockVector3.at(x, y, z);
+            Block currentBlock = world.getBlockAt(x, y, z);
+            Block aboveBlock = world.getBlockAt(x, y + 1, z);
+            if (aboveBlock.getType() == Material.AIR && currentBlock.getType() != Material.AIR) {
+                if (world.getBlockAt(currentBlock.getLocation()).getType() == Material.TALL_GRASS) {
+                    surfaceBlockLocation.add(currentBlock.getLocation().subtract(0, 2, 0));
+                } else {
+                    surfaceBlockLocation.add(currentBlock.getLocation());
+                }
+            }
+            if (x == centerX || z == centerZ) {
+                wallsLocation.put(new Location(world, x, y, z), currentBlock);
+            }
+
+            if (x == minX || x == maxX || z == minZ || z == maxZ) {
+                outerWallLocation.add(new Location(world, x, y, z));
+            }
+
+            session.setBlock(position, BlockTypes.BEDROCK);
+            session.setBlock(x, maxHeight - 1, z, BlockTypes.BARRIER);
+        })).whenComplete((blockLocations, throwable) -> session.close());
+
         return true;
     }
 

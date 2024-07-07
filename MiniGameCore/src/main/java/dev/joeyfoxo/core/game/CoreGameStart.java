@@ -20,9 +20,9 @@ import java.util.Collection;
  */
 public class CoreGameStart<G extends CoreGame<G>> {
 
-    protected int countdownMins = 5;
-    protected int minimumPlayers = 2;
-    private int countdownSeconds = countdownMins * 60; // Convert minutes to seconds
+    protected int countdownMins = CoreSettings.countdownMins;
+    protected int minimumPlayers = CoreSettings.minPlayers;
+    protected int countdownSeconds = countdownMins * 60; // Convert minutes to seconds
     protected World world = Bukkit.getWorld("world");
     G game;
 
@@ -46,26 +46,33 @@ public class CoreGameStart<G extends CoreGame<G>> {
         new BukkitRunnable() {
             @Override
             public void run() {
+
                 Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
 
                 if (onlinePlayers.isEmpty()) {
                     return; // Don't start counting down until there is at least 1 player in the game
                 }
 
-                if (onlinePlayers.size() >= minimumPlayers && countdownSeconds > 10) {
+
+                for (Player player : onlinePlayers) {
+                    player.setLevel(countdownSeconds);
+                }
+
+                if (onlinePlayers.size() >= minimumPlayers * 2 && countdownSeconds > 10) {
                     countdownSeconds = 10; // Set countdown to 10 seconds if there are more than minimum players
                 }
 
-                if (onlinePlayers.size() < minimumPlayers && countdownSeconds <= 0) {
-                    UtilClass.sendPlayerMessage(onlinePlayers, Component.text("Waiting for more players to join...")
-                            .color(TextColor.color(UtilClass.information)));
+                if (onlinePlayers.size() < minimumPlayers) {
+                    if (countdownSeconds <= 10) {
+                        UtilClass.sendPlayerMessage(onlinePlayers, Component.text("Waiting for more players to join...")
+                                .color(TextColor.color(UtilClass.information)));
+                    }
                     countdownSeconds = countdownMins * 60; // Reset countdown
                     return;
                 }
 
                 if (countdownSeconds <= 0) {
                     this.cancel();
-                    game.setGameStatus(CoreGameStatus.IN_GAME);
 
                     // Remove all XP for all online players
                     for (Player player : onlinePlayers) {
@@ -73,24 +80,17 @@ public class CoreGameStart<G extends CoreGame<G>> {
                     }
 
                     onlinePlayers.forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 0.7f));
-                    UtilClass.sendPlayerMessage(onlinePlayers, Component.text("Game has started!")
-                            .color(TextColor.color(UtilClass.information)));
 
                     return;
                 }
 
-                if (countdownSeconds % 60 == 0 || countdownSeconds <= 10) {
+                if ((countdownSeconds % 60 == 0 || countdownSeconds <= 10)) {
                     UtilClass.sendPlayerMessage(onlinePlayers, Component.text("The game will start in " + (countdownSeconds > 60 ? countdownSeconds / 60 + " minutes" : countdownSeconds + " seconds"))
                             .color(TextColor.color(UtilClass.information)));
                     onlinePlayers.forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 0.7f));
                 }
-
-                // Update the XP bar for all online players
-                for (Player player : onlinePlayers) {
-                    player.setLevel(countdownSeconds);
-                }
-
                 countdownSeconds--;
+
             }
         }.runTaskTimer(Core.getKeeleMiniCore(), 0, 20); // Run every second
     }

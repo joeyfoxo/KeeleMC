@@ -1,6 +1,6 @@
 package dev.joeyfoxo.keeleuniwars.game.gamerule;
 
-import dev.joeyfoxo.core.game.CoreGameStatus;
+import dev.joeyfoxo.core.game.GameStatus;
 import dev.joeyfoxo.keeleuniwars.game.WallsGame;
 import dev.joeyfoxo.keeleuniwars.game.teams.WallsPlayer;
 import dev.joeyfoxo.keeleuniwars.util.Util;
@@ -38,24 +38,6 @@ public class GameRules<G extends WallsGame<G>> implements Listener {
 
     public static void setGameRule(World world, GameRule<Integer> gameRule, int enabled) {
         world.setGameRule(gameRule, enabled);
-    }
-
-    @EventHandler
-    public void onDeath(PlayerDeathEvent event) {
-
-        if (game.getGameStatus() == CoreGameStatus.IN_GAME) {
-
-            event.setCancelled(true);
-            Player player = event.getPlayer();
-            WallsPlayer<? extends WallsGame<G>> wallsPlayer = game.getPlayer(player);
-            wallsPlayer.setSpectator(true);
-
-            if (wallsPlayer.isSpectator()) {
-                player.setGameMode(GameMode.SPECTATOR);
-            }
-        }
-
-
     }
 
 }
