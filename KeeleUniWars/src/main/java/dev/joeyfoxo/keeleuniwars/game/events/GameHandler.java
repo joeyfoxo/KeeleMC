@@ -45,7 +45,7 @@ public class GameHandler<G extends WallsGame<G>> implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
 
-        if (game.getGameStatus() != GameStatus.IN_GAME || game.getGameStatus() != GameStatus.WALLS_UP) {
+        if (game.getGameStatus() == GameStatus.WALLS_UP || game.getGameStatus() == GameStatus.WAITING) {
             event.setCancelled(true);
             return;
         }

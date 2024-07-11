@@ -15,6 +15,7 @@ import org.bukkit.block.Block;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.joeyfoxo.keeleuniwars.game.Settings.wallSize;
 
@@ -29,6 +30,7 @@ public class WallsGenerator {
     public static HashSet<Location> surfaceBlockLocation = new HashSet<>();
     public static int center = 0;
     private boolean isAsyncRunning = false;
+    private boolean isBiomeAsyncRunning = false;
 
     public WallsGenerator() {
         world = Bukkit.getWorlds().get(0);
@@ -56,7 +58,6 @@ public class WallsGenerator {
     }
 
     private CompletableFuture<List<Location>> setupWallsAsync(int centerX, int centerZ) {
-        isAsyncRunning = true;
         CompletableFuture<List<Location>> futureBlockLocations = new CompletableFuture<>();
         Bukkit.getScheduler().runTaskAsynchronously(Util.keeleUniWars, () -> {
             List<Location> blockLocations = Collections.synchronizedList(new ArrayList<>());
@@ -76,14 +77,16 @@ public class WallsGenerator {
                     }
                 }
             }
-
-            isAsyncRunning = false;
             futureBlockLocations.complete(blockLocations);
         });
         return futureBlockLocations;
     }
 
     public boolean setupWallsGameArea(int centerX, int centerZ) {
+
+        if (isAsyncRunning) {
+            return false;
+        }
 
         int halfSize = wallSize / 2;
 
@@ -96,10 +99,7 @@ public class WallsGenerator {
             return false;
         }
 
-        if (isAsyncRunning) {
-            return false;
-        }
-
+        isAsyncRunning = true;
         CompletableFuture<List<Location>> futureBlockLocations = setupWallsAsync(centerX, centerZ);
 
         futureBlockLocations.thenAccept(blockLocations -> blockLocations.forEach(blockLocation -> {
@@ -127,13 +127,43 @@ public class WallsGenerator {
 
             session.setBlock(position, BlockTypes.BEDROCK);
             session.setBlock(x, maxHeight - 1, z, BlockTypes.BARRIER);
-        })).whenComplete((blockLocations, throwable) -> session.close());
+        })).whenComplete((blockLocations, throwable) -> {
+            isAsyncRunning = false;
+            //TODO: This runs multiple times
+            System.out.println("Completed wall creation");
 
+            session.close();
+        });
         return true;
     }
 
+    private CompletableFuture<HashSet<Location>> findClosestAsync(int currentX, int currentZ) {
+
+        CompletableFuture<HashSet<Location>> biomeLocations = new CompletableFuture<>();
+        int y = world.getMaxHeight() - 10;
+
+        Bukkit.getScheduler().runTaskAsynchronously(Util.keeleUniWars, () -> {
+            HashSet<Location> locations = new HashSet<>();
+            Random random = new Random();
+            int radius = 1000;
+            for (int i = 0; i < 4; i++) {
+                double angle = 2 * Math.PI * random.nextDouble();
+                int x = currentX + (int) (radius * Math.cos(angle));
+                int z = currentZ + (int) (radius * Math.sin(angle));
+
+                Location biomeLocation = new Location(world, x, y, z);
+                locations.add(biomeLocation);
+            }
+            biomeLocations.complete(locations);
+
+        });
+        return biomeLocations;
+    }
 
     public boolean findClosestSuitableArea(int currentX, int currentZ) {
+
+        AtomicBoolean isSuitable = new AtomicBoolean(false);
+
         // Check the biome at the current center
         Biome currentBiome = world.getBiome(currentX, world.getHighestBlockYAt(currentX, currentZ), currentZ);
         if (currentBiome != Biome.OCEAN && currentBiome
@@ -144,21 +174,16 @@ public class WallsGenerator {
                 != Biome.DEEP_LUKEWARM_OCEAN && currentBiome
                 != Biome.DEEP_COLD_OCEAN && currentBiome
                 != Biome.DEEP_FROZEN_OCEAN) {
-            return true; // Return true if the current center is suitable
+            isSuitable.set(true);
+            return isSuitable.get(); // Return true if the current center is suitable
         }
 
-        Random random = new Random();
-        int radius = 1000; // Define the radius for the nearby area
-        double closestDistance = Double.MAX_VALUE;
+        //TODO: Check if this acc works
+        CompletableFuture<HashSet<Location>> futureBiomeLocations = findClosestAsync(currentX, currentZ);
 
-        for (int i = 0; i < 4; i++) {
-            // Generate a random point within the radius
-            double angle = 2 * Math.PI * random.nextDouble();
-            int x = currentX + (int) (radius * Math.cos(angle));
-            int z = currentZ + (int) (radius * Math.sin(angle));
+        futureBiomeLocations.thenAccept(biomeLocations -> biomeLocations.forEach(biomeLocation -> {
 
-            // Check the biome at the point
-            Biome biome = world.getBiome(x, world.getHighestBlockYAt(x, z), z);
+            Biome biome = world.getBiome(biomeLocation);
             if (biome != Biome.OCEAN && biome
                     != Biome.DEEP_OCEAN && biome
                     != Biome.WARM_OCEAN && biome
@@ -167,14 +192,14 @@ public class WallsGenerator {
                     != Biome.DEEP_LUKEWARM_OCEAN && biome
                     != Biome.DEEP_COLD_OCEAN && biome
                     != Biome.DEEP_FROZEN_OCEAN) {
-                double distance = Math.sqrt(Math.pow(x - currentX, 2) + Math.pow(z - currentZ, 2));
-                if (distance < closestDistance) {
-                    WallsGenerator.center = x; // Adjust the center
-                    closestDistance = distance;
-                }
+                center = biomeLocation.getBlockX();
+                isSuitable.set(true);
             }
-        }
+        })).whenComplete((biomeLocations, throwable) -> {
+            System.out.println("Completed biome search");
+        });
 
-        return closestDistance != Double.MAX_VALUE; // Return true if a suitable area was found
+
+        return isSuitable.get();
     }
 }

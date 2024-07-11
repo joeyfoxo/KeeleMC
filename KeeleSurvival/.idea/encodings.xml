@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Factions/FactionsIsAwesome/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Factions/modules/Legacy/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Factions/modules/Legacy/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Factions/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Factions/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/KeeleHub/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/KeeleHub/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/KeeleSurvival/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/KeeleSurvival/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/KeeleUniWars/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/KeeleUniWars/src/main/java/dev/joeyfoxo/keeleuniwars/game/WallsGame.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/KeeleUniWars/src/main/java/dev/joeyfoxo/keeleuniwars/game/WarsInGame.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/KeeleUniWars/src/main/java/dev/joeyfoxo/keeleuniwars/game/gamerule/GameRules.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/KeeleUniWars/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MiniGameCore/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MiniGameCore/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

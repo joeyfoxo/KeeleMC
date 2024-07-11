@@ -1,0 +1,11 @@
+name: KeeleUniWars
+version: '1.0'
+main: dev.joeyfoxo.keeleuniwars.KeeleUniWars
+api-version: 1.19
+authors: [ Joey ]
+description: Core Walls Plugin
+website: https://joeyfox.dev
+
+depend:
+  - KeeleCore
+  - FastAsyncWorldEdit

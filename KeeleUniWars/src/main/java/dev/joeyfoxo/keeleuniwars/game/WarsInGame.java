@@ -75,6 +75,8 @@ public class WarsInGame<G extends WallsGame<G>> extends CoreInGame<G> {
 
                 if (game.getGameStatus() != GameStatus.WAITING || game.getGameStatus() != GameStatus.NOT_READY) {
 
+
+                    //TODO: Move this to core
                     if (game.getAlivePlayers() <= 1) {
                         UtilClass.sendPlayerMessage(Bukkit.getOnlinePlayers(), Component.text("Game over!")
                                 .color(TextColor.color(UtilClass.information)));
