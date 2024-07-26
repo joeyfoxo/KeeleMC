@@ -70,7 +70,6 @@ public class CageHandler<G extends WallsGame<G>> extends CoreCageHandler<G> impl
       return;
     }
 
-    team.removePlayer(teamPlayer);
     super.onLeave(event);
   }
 

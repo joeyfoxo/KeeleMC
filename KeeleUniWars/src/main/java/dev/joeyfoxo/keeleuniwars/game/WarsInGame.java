@@ -75,13 +75,14 @@ public class WarsInGame<G extends WallsGame<G>> extends CoreInGame<G> {
 
                 if (game.getGameStatus() != GameStatus.WAITING || game.getGameStatus() != GameStatus.NOT_READY) {
 
-
                     //TODO: Move this to core
                     if (game.getAlivePlayers() <= 1) {
                         UtilClass.sendPlayerMessage(Bukkit.getOnlinePlayers(), Component.text("Game over!")
                                 .color(TextColor.color(UtilClass.information)));
                         game.setGameStatus(GameStatus.FINISHED);
-                        Bukkit.getScheduler().runTaskLater(Util.keeleUniWars, () -> Bukkit.spigot().restart(), 20 * 5); // 5 seconds
+
+                        //TODO: Clear the world file, find a way to clear the world file
+                        Bukkit.getScheduler().runTaskLater(Util.keeleUniWars, Bukkit::shutdown, 20 * 5); // 5 seconds
                         cancel();
                     }
                 }
@@ -96,6 +97,7 @@ public class WarsInGame<G extends WallsGame<G>> extends CoreInGame<G> {
             @Override
             public void run() {
                 if (y < world.getMinHeight()) {
+                    //If this fails to run its fucked.
                     this.cancel(); // Stop the task when all layers have been removed
                     return;
                 }

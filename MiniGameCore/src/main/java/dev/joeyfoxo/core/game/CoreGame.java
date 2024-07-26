@@ -70,6 +70,10 @@ public class CoreGame<G extends CoreGame<G>> {
         return teamPlayer;
     }
 
+    public void removePlayer(TeamPlayer<G> player) {
+        players.remove(player);
+    }
+
     public static CoreGame getInstance() {
         if (instance == null) {
             instance = new CoreGame<>();

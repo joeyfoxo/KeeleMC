@@ -129,7 +129,7 @@ public class WallsGenerator {
             session.setBlock(x, maxHeight - 1, z, BlockTypes.BARRIER);
         })).whenComplete((blockLocations, throwable) -> {
             isAsyncRunning = false;
-            //TODO: This runs multiple times
+            //TODO: This runs multiple times, fix this
             System.out.println("Completed wall creation");
 
             session.close();

@@ -6,6 +6,7 @@ import dev.joeyfoxo.core.game.GameStatus;
 import dev.joeyfoxo.core.game.teams.Team;
 import dev.joeyfoxo.core.game.teams.TeamPlayer;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -52,12 +53,13 @@ public abstract class CoreCageHandler<G extends CoreGame<G>> implements Listener
         Team<G> team = game.getTeamWithFewestMembers();
         TeamPlayer<G> teamPlayer;
         if (team != null) {
-            if (game.getPlayer(player) == null) {
+            if (game.getPlayer(player) == null) { //Check if a game Player has been made
                 teamPlayer = game.createTeamPlayer(game, team, player);
-                team.addPlayer(teamPlayer);
             } else {
                 teamPlayer = game.getPlayer(player);
             }
+
+            team.addPlayer(teamPlayer);
             Location cageLocation = findNextAvailableCage(team, teamPlayer);
             player.teleport(cageLocation);
             teamSpawnLocations.computeIfAbsent(team, k -> new HashMap<>()).putIfAbsent(player.getUniqueId(), cageLocation);
@@ -92,19 +94,20 @@ public abstract class CoreCageHandler<G extends CoreGame<G>> implements Listener
                 break;
             }
         }
+
         if (team != null) {
             TeamPlayer<G> teamPlayer = team.getTeamMembers().stream()
                     .filter(p -> p.getPlayer().getUniqueId().equals(playerId))
                     .findFirst()
                     .orElse(null);
+            
             if (teamPlayer != null) {
+                Location cageLocation = teamSpawnLocations.get(team).remove(playerId).subtract(0, 1, 0);
+                // Remove the cage location from the team's spawn locations
+                System.out.println("Spawn Block:" +  world.getBlockAt(cageLocation).getType());
                 team.removePlayer(teamPlayer);
-                Location cageLocation = teamSpawnLocations.get(team).remove(playerId);
-                if (cageLocation != null) {
-                    // Remove the cage location from the team's spawn locations
-                    teamSpawnLocations.get(team).remove(playerId);
-                    world.getBlockAt(cageLocation).setType(Material.AIR);
-                }
+                game.removePlayer(teamPlayer);
+                world.getBlockAt(cageLocation).setType(Material.AIR);
             }
         }
     }
