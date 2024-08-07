@@ -30,48 +30,9 @@ public class CageHandler<G extends WallsGame<G>> extends CoreCageHandler<G> impl
   public CageHandler(G game) {
     super(game);
     this.game = game;
-    KeeleUniWars.getKeeleMiniCore().getServer().getPluginManager()
-            .registerEvents(this, KeeleUniWars.getKeeleMiniCore());
   }
 
-  @Override
-  @EventHandler
-  public void onPlayerJoin(PlayerJoinEvent event) {
-    Player player = event.getPlayer();
-    WallsTeam<G> team = game.getTeamWithFewestMembers();
-    for (TeamPlayer<? extends CoreGame<G>> wallsPlayer : game.players) {
-      if (wallsPlayer.getPlayer() == player) {
-        return;
-      }
-    }
-    if (team != null) {
-      WallsPlayer<G> teamPlayer = game.createTeamPlayer(game, team, player);
-      team.addPlayer(teamPlayer);
-    }
-
-    player.setGameMode(Settings.defaultGameMode);
-
-    super.onPlayerJoin(event);
-  }
-
-
-  @Override
-  @EventHandler
-  public void onLeave(PlayerQuitEvent event) {
-    Player player = event.getPlayer();
-
-    TeamPlayer<G> teamPlayer = game.getPlayer(player);
-    if (teamPlayer == null) {
-      return;
-    }
-    Team<G> team = game.getTeam(teamPlayer);
-
-    if (team == null) {
-      return;
-    }
-
-    super.onLeave(event);
-  }
+  //TODO: Cant add listener here as itll double fire
 
   public Location findNextAvailableCage(Team<G> team, TeamPlayer<G> player) {
     HashMap<UUID, Location> currentTeamSpawns = teamSpawnLocations.computeIfAbsent(team, k -> new HashMap<>());
@@ -80,6 +41,7 @@ public class CageHandler<G extends WallsGame<G>> extends CoreCageHandler<G> impl
     int offset = currentTeamSpawns.size(); // Offset based on the number of players already in the team
 
     //TODO: Put this in a dynamically resizing circle.
+    //TODO NEEDS TO JOIN MOST EMPTY TEAM
 
     switch (player.getTeamColor()) {
       case RED -> {

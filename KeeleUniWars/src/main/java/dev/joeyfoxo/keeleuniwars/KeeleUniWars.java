@@ -15,4 +15,11 @@ public class KeeleUniWars<G extends WallsGame<G>> extends Core<G> {
 
     }
 
+    @Override
+    public void onDisable() {
+        super.onDisable();
+
+
+    }
+
 }

@@ -38,11 +38,18 @@ public abstract class CoreCageHandler<G extends CoreGame<G>> implements Listener
     @EventHandler(priority = EventPriority.HIGH)
     public void onPreJoin(AsyncPlayerPreLoginEvent event) {
         if (game.getGameStatus() == GameStatus.NOT_READY) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Component.empty());
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+                    Component.empty());
             return;
         }
-        if (game.getGameStatus() == GameStatus.IN_GAME  ||
-        game.getGameStatus() == GameStatus.WALLS_UP || game.getAlivePlayers() >= game.getMaxPlayers()) {
+
+        if (game.getGameStatus() == GameStatus.IN_GAME  || game.getGameStatus() == GameStatus.WALLS_UP) {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+                    Component.text("Game is in progress!"));
+            return;
+        }
+
+        if (game.getAlivePlayerCount() >= game.getMaxPlayers()) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, Component.text("Game is full!"));
         }
     }
@@ -51,9 +58,10 @@ public abstract class CoreCageHandler<G extends CoreGame<G>> implements Listener
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Team<G> team = game.getTeamWithFewestMembers();
+        System.out.println(team.getTeamColor());
         TeamPlayer<G> teamPlayer;
         if (team != null) {
-            if (game.getPlayer(player) == null) { //Check if a game Player has been made
+            if (game.getPlayer(player) == null) {
                 teamPlayer = game.createTeamPlayer(game, team, player);
             } else {
                 teamPlayer = game.getPlayer(player);

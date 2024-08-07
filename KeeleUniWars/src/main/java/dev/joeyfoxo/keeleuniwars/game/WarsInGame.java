@@ -12,8 +12,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import static dev.joeyfoxo.keeleuniwars.game.Settings.wallCountDownMinutes;
 import static dev.joeyfoxo.keeleuniwars.generator.WallsGenerator.*;
@@ -30,6 +35,7 @@ public class WarsInGame<G extends WallsGame<G>> extends CoreInGame<G> {
     }
 
     public void wallCountDown(World world) {
+        spawnMobs(world);
         new BukkitRunnable() {
             int secondsLeft = wallCountDownMinutes * 60; // Convert minutes to seconds
 
@@ -68,26 +74,9 @@ public class WarsInGame<G extends WallsGame<G>> extends CoreInGame<G> {
         }.runTaskTimer(Util.keeleUniWars, 0, 20); // Run every second
     }
 
+    @Override
     public void gameRunnable() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-
-                if (game.getGameStatus() != GameStatus.WAITING || game.getGameStatus() != GameStatus.NOT_READY) {
-
-                    //TODO: Move this to core
-                    if (game.getAlivePlayers() <= 1) {
-                        UtilClass.sendPlayerMessage(Bukkit.getOnlinePlayers(), Component.text("Game over!")
-                                .color(TextColor.color(UtilClass.information)));
-                        game.setGameStatus(GameStatus.FINISHED);
-
-                        //TODO: Clear the world file, find a way to clear the world file
-                        Bukkit.getScheduler().runTaskLater(Util.keeleUniWars, Bukkit::shutdown, 20 * 5); // 5 seconds
-                        cancel();
-                    }
-                }
-            }
-        }.runTaskTimer(Util.keeleUniWars, 0, 20); // Run every second
+        super.gameRunnable();
     }
 
     public void dropTheWalls(World world) {
@@ -129,6 +118,38 @@ public class WarsInGame<G extends WallsGame<G>> extends CoreInGame<G> {
             }
         }.runTaskTimer(Core.getKeeleMiniCore(), 0L, 1); // Schedule the task to run every second (20 ticks)
         game.setGameStatus(GameStatus.IN_GAME);
+    }
+
+    private void spawnMobs(World world) {
+        List<EntityType> passiveMobs = Arrays.asList(
+                EntityType.COW,
+                EntityType.SHEEP,
+                EntityType.PIG,
+                EntityType.CHICKEN
+        );
+
+        Random random = new Random();
+        int radius = 50;
+        int mobCountPerPlayer = 10;
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Location playerLocation = player.getLocation();
+
+            for (int i = 0; i < mobCountPerPlayer; i++) {
+                // Calculate random offset within radius for each mob
+                double xOffset = (random.nextDouble() * 2 - 1) * radius;
+                double zOffset = (random.nextDouble() * 2 - 1) * radius;
+
+                Location spawnLocation = playerLocation.clone().add(xOffset, 0, zOffset);
+                spawnLocation.setY(world.getHighestBlockYAt(spawnLocation) + 1);
+
+                // Select a random mob type
+                EntityType mobType = passiveMobs.get(random.nextInt(passiveMobs.size()));
+
+                // Spawn the selected mob at the spawn location
+                world.spawnEntity(spawnLocation, mobType);
+            }
+        }
     }
 
 }

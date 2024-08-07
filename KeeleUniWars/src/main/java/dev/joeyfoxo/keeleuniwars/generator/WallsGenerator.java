@@ -5,6 +5,8 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import dev.joeyfoxo.core.game.GameStatus;
+import dev.joeyfoxo.keeleuniwars.game.WallsGame;
 import dev.joeyfoxo.keeleuniwars.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -19,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.joeyfoxo.keeleuniwars.game.Settings.wallSize;
 
-public class WallsGenerator {
+public class WallsGenerator<G extends WallsGame> {
 
     int minHeight;
     int maxHeight;
@@ -30,7 +32,6 @@ public class WallsGenerator {
     public static HashSet<Location> surfaceBlockLocation = new HashSet<>();
     public static int center = 0;
     private boolean isAsyncRunning = false;
-    private boolean isBiomeAsyncRunning = false;
 
     public WallsGenerator() {
         world = Bukkit.getWorlds().get(0);
@@ -82,7 +83,7 @@ public class WallsGenerator {
         return futureBlockLocations;
     }
 
-    public boolean setupWallsGameArea(int centerX, int centerZ) {
+    public boolean setupWallsGameArea(int centerX, int centerZ, G game) {
 
         if (isAsyncRunning) {
             return false;
@@ -131,6 +132,7 @@ public class WallsGenerator {
             isAsyncRunning = false;
             //TODO: This runs multiple times, fix this
             System.out.println("Completed wall creation");
+            game.setGameStatus(GameStatus.WAITING);
 
             session.close();
         });

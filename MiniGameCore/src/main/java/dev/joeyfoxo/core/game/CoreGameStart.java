@@ -58,7 +58,7 @@ public class CoreGameStart<G extends CoreGame<G>> {
                     player.setLevel(countdownSeconds);
                 }
 
-                if (onlinePlayers.size() >= minimumPlayers * 2 && countdownSeconds > 10) {
+                if (onlinePlayers.size() > minimumPlayers && countdownSeconds > 10) {
                     countdownSeconds = 10; // Set countdown to 10 seconds if there are more than minimum players
                 }
 

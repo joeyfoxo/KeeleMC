@@ -24,12 +24,12 @@ public class GameHandler<G extends WallsGame<G>> implements Listener {
     @EventHandler
     public void onPlayerDamageEvent(EntityDamageByEntityEvent event) {
 
-        if (game.getGameStatus() != GameStatus.IN_GAME) {
-            event.setCancelled(true);
-            return;
-        }
-
         if (event.getEntity() instanceof Player victim && event.getDamager() instanceof Player attacker) {
+
+            if (game.getGameStatus() == GameStatus.WALLS_UP || game.getGameStatus() == GameStatus.WAITING) {
+                event.setCancelled(true);
+                return;
+            }
 
             WallsPlayer<G> victimPlayer = game.getPlayer(victim);
             WallsPlayer<G> attackerPlayer = game.getPlayer(attacker);

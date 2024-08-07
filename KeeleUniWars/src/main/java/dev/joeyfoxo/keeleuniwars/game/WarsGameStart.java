@@ -36,9 +36,8 @@ public class WarsGameStart<G extends WallsGame<G>> extends CoreGameStart<G> {
                     return;
                 }
 
-                if (!ready && wallsGenerator.setupWallsGameArea(center, center)) {
+                if (!ready && wallsGenerator.setupWallsGameArea(center, center, game)) {
                     ready = true;
-                    game.setGameStatus(GameStatus.WAITING);
                 }
             }
         }.runTaskTimer(Util.keeleUniWars, 0, 20);

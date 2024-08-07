@@ -1,8 +1,17 @@
 package dev.joeyfoxo.core;
 
+import dev.joey.keelecore.util.UtilClass;
 import dev.joeyfoxo.core.game.CoreGameStart;
 import dev.joeyfoxo.core.game.CoreGame;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Logger;
+
+import static org.codehaus.plexus.util.FileUtils.deleteDirectory;
 
 /**
  * Core class for the KeeleMC plugin.
@@ -32,6 +41,26 @@ public class Core<G extends CoreGame<G>> extends JavaPlugin {
      */
     @Override
     public void onDisable() {
+
+        for (World world : Bukkit.getWorlds()) {
+
+        Logger logger = getLogger();
+
+        if (world != null) {
+            Bukkit.unloadWorld(world, false);
+            logger.info("World " + world.getName() + " has been unloaded.");
+        } else {
+            logger.warning("World " + world.getName() + " is not loaded or does not exist.");
+        }
+
+
+        File worldFolder = new File(Bukkit.getServer().getWorldContainer(), world.getName());
+            if (UtilClass.deleteDirectory(worldFolder)) {
+                logger.info("World " + world.getName() + " has been deleted.");
+            } else {
+                logger.warning("Failed to delete world " + world.getName() + ".");
+            }
+        }
 
     }
 

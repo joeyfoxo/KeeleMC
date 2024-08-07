@@ -5,10 +5,9 @@ import dev.joeyfoxo.core.game.teams.TeamColors;
 import dev.joeyfoxo.core.game.teams.TeamPlayer;
 import org.bukkit.entity.Player;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CoreGame<G extends CoreGame<G>> {
@@ -20,6 +19,7 @@ public class CoreGame<G extends CoreGame<G>> {
 
     protected Set<Team<G>> teamsList = new HashSet<>();
     public Set<TeamPlayer<G>> players = new HashSet<>();
+    boolean isTeammed;
 
     Team<G> redTeam = new Team<>(this, TeamColors.RED);
     Team<G> greenTeam = new Team<>(this, TeamColors.GREEN);
@@ -56,6 +56,14 @@ public class CoreGame<G extends CoreGame<G>> {
         teamsList.add(yellowTeam);
         teamsList.add(blueTeam);
 
+    }
+
+    public void setTeamed(boolean teamed) {
+        isTeammed = teamed;
+    }
+
+    public boolean isTeamed() {
+        return isTeammed;
     }
 
     public Team<G> getTeamWithFewestMembers() {
@@ -98,7 +106,7 @@ public class CoreGame<G extends CoreGame<G>> {
         return null;
     }
 
-    public int getAlivePlayers() {
+    public int getAlivePlayerCount() {
 
         AtomicInteger alivePlayers = new AtomicInteger();
 
@@ -111,6 +119,19 @@ public class CoreGame<G extends CoreGame<G>> {
         });
         return alivePlayers.get();
     }
+
+    public List<TeamPlayer<G>> getAlivePlayers() {
+        return players.stream().filter(player -> !player.isSpectator()).toList();
+    }
+    public Set<Team<G>> getTeamsAlive() {
+        return teamsList.stream()
+                .filter(Objects::nonNull) // Ensure the team is not null
+                .filter(team -> team.getTeamMembers() != null) // Ensure team members are not null
+                .filter(team -> team.getTeamMembers().stream().anyMatch(player -> player != null && !player.isSpectator()))
+                .collect(Collectors.toSet());
+    }
+
+
 
     public int getMaxPlayers() {
         return maxPlayers;

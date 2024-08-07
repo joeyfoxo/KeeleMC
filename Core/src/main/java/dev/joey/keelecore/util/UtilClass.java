@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.awt.*;
+import java.io.File;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -98,5 +99,23 @@ public class UtilClass {
 
         }
 
+    }
+
+    //TODO Look into this
+
+    public static boolean deleteDirectory(File directory) {
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        deleteDirectory(file);
+                    } else {
+                        file.delete();
+                    }
+                }
+            }
+        }
+        return directory.delete();
     }
 }
