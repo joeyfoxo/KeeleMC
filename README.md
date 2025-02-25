@@ -6,9 +6,6 @@ KeeleMC is a Minecraft server project comprising multiple modules, each serving 
 
 ## 📂 Folders
 
-### `.idea`
-Contains project-specific settings and configurations for the IntelliJ IDEA development environment.
-
 ### `Core`
 Serves as the foundational module for the KeeleMC project, providing essential functionalities and shared resources utilized by other modules.
 
