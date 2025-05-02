@@ -26,7 +26,6 @@ public class HubSelectorItem {
     private void createHubSelector() {
 
         ItemMeta meta = selector.getItemMeta();
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.displayName(Component.text()
                 .content("Hub Selector")
                 .color(TextColor.color(203, 114, 18))

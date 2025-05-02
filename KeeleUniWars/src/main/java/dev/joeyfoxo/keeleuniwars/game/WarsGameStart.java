@@ -16,6 +16,7 @@ public class WarsGameStart<G extends WallsGame<G>> extends CoreGameStart<G> {
     G game;
 
     WallsGenerator wallsGenerator = new WallsGenerator();
+    boolean ready = false;
 
     public WarsGameStart(G game) {
         super(game);
@@ -35,10 +36,8 @@ public class WarsGameStart<G extends WallsGame<G>> extends CoreGameStart<G> {
                     return;
                 }
 
-                if (wallsGenerator.setupWallsGameArea(center, center)) {
-                    Bukkit.getScheduler().runTaskLater(Util.keeleUniWars, () -> {
-                        game.setGameStatus(GameStatus.WAITING);
-                    }, TimeUnit.SECONDS.toSeconds(10) * 20);
+                if (!ready && wallsGenerator.setupWallsGameArea(center, center, game)) {
+                    ready = true;
                 }
             }
         }.runTaskTimer(Util.keeleUniWars, 0, 20);

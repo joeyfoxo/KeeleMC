@@ -60,9 +60,10 @@ public class WallsGame<G extends WallsGame<G>> extends CoreGame<G> {
     @Override
     public WallsTeam<G> getTeamWithFewestMembers() {
         return Stream.of(redTeam, greenTeam, yellowTeam, blueTeam)
-                .min(Comparator.comparing(team -> team.getTeamMembers().size()))
+                .min(Comparator.comparingInt(team -> team.getTeamMembers().size()))
                 .orElse(null);
     }
+
 
     @Override
     public WallsPlayer<G> createTeamPlayer(G game, Team<G> team, Player player) {

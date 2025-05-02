@@ -19,6 +19,8 @@ public class Settings<G extends WallsGame<G>> extends CoreSettings<G> {
         this.game = game;
         new GameRules<>(game, world);
         new GameHandler<>(game);
+        game.setTeamed(true);
+        CoreSettings.countdownMins = 1; //TODO: Make this into the game core and therefore can be changed without static
 
     }
 
