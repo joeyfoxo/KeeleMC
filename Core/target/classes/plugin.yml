@@ -4,47 +4,38 @@ main: dev.joey.keelecore.KeeleCore
 api-version: 1.19
 authors: [ Joey ]
 description: The Core for the keele server
-depend:
-  - Vault
-  - LuckPerms
 website: https://joeyfox.dev
 
 commands:
   gamemode:
     description: Changes the players gamemode
-    permission: kc.gamemode
     aliases:
       - gm
 
   teleport:
     description: Teleports a player
-    permission: kc.teleport
     aliases:
       - tp
 
   time:
     description: Changes the world time
-    permission: kc.time
     aliases:
       - tm
       - t
 
   vanish:
     description: Vanishes a user
-    permission: kc.vanish
     aliases:
       - v
       - vn
 
   whois:
     description: Gains info about a user
-    permission: kc.whois
     aliases:
       - ws
       - seen
   god:
     description: Applies godmode to a player
-    permission: kc.god
 
   hub:
     description: Goes to hub
@@ -53,23 +44,18 @@ commands:
 
   feed:
     description: Feeds a player
-    permission: kc.feed
 
   heal:
     description: Heals a player
-    permission: kc.heal
 
   clearlag:
     description: clears the server lag
-    permission: kc.clearlag
 
   speed:
     description: Sets flight speed
-    permission: kc.speed
 
   setspawn:
     description: Sets spawnpoint
-    permission: kc.setspawn
 
   spawn:
     description: Teleports to spawn
@@ -89,7 +75,9 @@ commands:
       - ann
       - announcement
     description: Announces a message to the server
-    permission: kc.announce
 
   discord:
     description: Links our discord
+
+  rank:
+    description: Provides rank commands

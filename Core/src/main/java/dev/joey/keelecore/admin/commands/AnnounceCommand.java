@@ -1,5 +1,10 @@
 package dev.joey.keelecore.admin.commands;
 
+import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.admin.permissions.RankGuard;
+import dev.joey.keelecore.admin.permissions.RequireRank;
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
+import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
@@ -17,16 +22,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
+@RequireRank(PlayerRank.ADMIN)
 public class AnnounceCommand extends SuperCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
 
         if (commandSenderCheck(commandSender)) return true;
 
-        Player player = (Player) commandSender;
 
-        if (!(player.hasPermission("kc.admin") || player.hasPermission("kc.announce"))) {
+        Player spigotPlayer = (Player) commandSender;
+        KeelePlayer player = PermissionManager.get(spigotPlayer.getUniqueId());
+        if (!RankGuard.hasRequiredRank(this, player)) {
             UtilClass.sendPlayerMessage(player, "Invalid Rank", UtilClass.error);
             return true;
         }

@@ -1,5 +1,9 @@
 package dev.joey.keelecore.admin.commands;
 
+import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.admin.permissions.RankGuard;
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
+import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
 import org.bukkit.Bukkit;
@@ -17,7 +21,8 @@ public class HealCommand extends SuperCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (!(player.hasPermission("kc.admin") || player.hasPermission("kc.heal"))) {
+        KeelePlayer keelePlayer = PermissionManager.get(player.getUniqueId());
+        if (!RankGuard.hasRequiredRank(this, keelePlayer)) {
             UtilClass.sendPlayerMessage(player, "Invalid Rank", UtilClass.error);
             return true;
         }

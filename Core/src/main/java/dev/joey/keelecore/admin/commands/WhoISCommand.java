@@ -1,5 +1,10 @@
 package dev.joey.keelecore.admin.commands;
 
+import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.admin.permissions.RankGuard;
+import dev.joey.keelecore.admin.permissions.RequireRank;
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
+import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
@@ -15,6 +20,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+@RequireRank(PlayerRank.DEV)
 public class WhoISCommand extends SuperCommand implements CommandExecutor {
 
     @Override
@@ -24,10 +30,12 @@ public class WhoISCommand extends SuperCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (!(player.hasPermission("kc.admin") || player.hasPermission("kc.whois"))) {
+        KeelePlayer keelePlayer = PermissionManager.get(player.getUniqueId());
+        if (!RankGuard.hasRequiredRank(this, keelePlayer)) {
             UtilClass.sendPlayerMessage(player, "Invalid Rank", UtilClass.error);
             return true;
         }
+
         if (args.length == 1) {
             Player victim = Bukkit.getPlayer(args[0]);
             if (playerNullCheck(victim, player)) return true;

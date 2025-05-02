@@ -24,6 +24,7 @@ public class CommandManager {
         keeleCore.getCommand("hub").setExecutor(new HubCommand());
         keeleCore.getCommand("discord").setExecutor(new DiscordCommand());
         keeleCore.getCommand("rules").setExecutor(new RulesCommand());
+        keeleCore.getCommand("rank").setExecutor(new RankCommand());
 
     }
 }

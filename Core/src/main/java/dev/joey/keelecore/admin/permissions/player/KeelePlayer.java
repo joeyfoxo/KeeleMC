@@ -1,0 +1,55 @@
+package dev.joey.keelecore.admin.permissions.player;
+
+import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.managers.PermissionManager;
+import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
+
+public class KeelePlayer {
+
+    private Player player;
+    private String name;
+    private UUID uuid;
+    private PlayerRank rank;
+
+    public KeelePlayer(Player player ,PlayerRank rank) {
+        this.player = player;
+        this.name = player.getName();
+        this.uuid = player.getUniqueId();
+        this.rank = rank;
+    }
+
+    public KeelePlayer(Player player) {
+        this.player = player;
+        this.name = player.getName();
+        this.uuid = player.getUniqueId();
+        this.rank = PlayerRank.PLAYER;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public PlayerRank getRank() {
+        return rank;
+    }
+
+    public void setRank(PlayerRank rank) {
+        this.rank = rank;
+        PermissionManager.put(this);
+    }
+
+    public void setRank(String input) {
+        setRank(PlayerRank.valueOf(input.toUpperCase()));
+    }
+}

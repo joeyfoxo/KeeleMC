@@ -1,6 +1,7 @@
 package dev.joey.keelecore.util;
 
 import dev.joey.keelecore.KeeleCore;
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
@@ -33,6 +34,10 @@ public class UtilClass {
     //TODO CHANGE THIS
     public static void sendPlayerMessage(Player player, String message, int colour) {
         player.sendMessage(Component.text().content(message).color(TextColor.color(colour)));
+    }
+
+    public static void sendPlayerMessage(KeelePlayer player, String message, int colour) {
+        player.getPlayer().sendMessage(Component.text().content(message).color(TextColor.color(colour)));
     }
 
     public static void sendPlayerMessage(Collection<? extends Player> players, Component component) {
