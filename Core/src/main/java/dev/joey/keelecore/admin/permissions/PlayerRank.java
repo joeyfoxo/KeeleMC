@@ -46,6 +46,7 @@ public enum PlayerRank {
 
     public static PlayerRank fromString(String input) {
         try {
+            System.out.println("Input: " + input.toUpperCase());
             return PlayerRank.valueOf(input.toUpperCase());
         } catch (IllegalArgumentException | NullPointerException e) {
             return null;

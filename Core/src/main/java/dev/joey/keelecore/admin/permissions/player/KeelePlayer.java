@@ -13,6 +13,7 @@ public class KeelePlayer {
     private String name;
     private UUID uuid;
     private PlayerRank rank;
+    boolean isVanished = false;
 
     public KeelePlayer(Player player ,PlayerRank rank) {
         this.player = player;
@@ -57,10 +58,17 @@ public class KeelePlayer {
 
     public void setRank(PlayerRank rank) {
         this.rank = rank;
-        PermissionManager.put(this).thenAccept(updated -> this.rank = updated.getRank());
     }
 
     public void setRank(String input) {
         setRank(PlayerRank.valueOf(input.toUpperCase()));
+    }
+
+    public void setVanished(boolean vanished) {
+        isVanished = vanished;
+    }
+
+    public boolean isVanished() {
+        return isVanished;
     }
 }

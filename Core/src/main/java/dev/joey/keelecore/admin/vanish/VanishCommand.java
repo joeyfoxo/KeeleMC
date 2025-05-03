@@ -1,7 +1,11 @@
 package dev.joey.keelecore.admin.vanish;
 
+import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.admin.permissions.RankGuard;
+import dev.joey.keelecore.admin.permissions.RequireRank;
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
+import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
-import dev.joey.keelecore.util.ConfigFileHandler;
 import dev.joey.keelecore.util.UtilClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,13 +19,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import static dev.joey.keelecore.KeeleCore.nonStudent;
 import static dev.joey.keelecore.util.UtilClass.keeleCore;
 
+@RequireRank(PlayerRank.MOD)
 public class VanishCommand extends Vanish implements CommandExecutor {
 
     @Override
@@ -29,7 +29,8 @@ public class VanishCommand extends Vanish implements CommandExecutor {
 
         if (commandSenderCheck(sender)) return true;
         Player player = (Player) sender;
-        if (!(player.hasPermission("kc.admin") || player.hasPermission("kc.vanish"))) {
+        KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
+        if (!RankGuard.hasRequiredRank(this, keelePlayer)) {
             UtilClass.sendPlayerMessage(player, "Invalid Rank", UtilClass.error);
             return true;
         }
@@ -38,22 +39,16 @@ public class VanishCommand extends Vanish implements CommandExecutor {
         }
 
         playerNullCheck(player, player);
-        if (vanishedPlayers.contains(player.getUniqueId().toString())) { //UNVANISH
-            vanishedPlayers.remove(player.getUniqueId().toString());
-            for (Player playersOnServer : Bukkit.getOnlinePlayers()) {
-                playersOnServer.showPlayer(keeleCore, player);
-            }
+        if (keelePlayer.isVanished()) { //UNVANISH
+            PermissionManager.setVanished(player, false);
+            keelePlayer.setVanished(false);
             player.getInventory().setHelmet(null);
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             UtilClass.sendPlayerMessage(player, "You are now visible", UtilClass.success);
 
         } else { //VANISH
-            vanishedPlayers.add(player.getUniqueId().toString());
-            for (Player playersOnServer : Bukkit.getOnlinePlayers()) {
-                if (!(hasPermissionToSee(playersOnServer))) {
-                    playersOnServer.hidePlayer(keeleCore, player);
-                }
-            }
+            PermissionManager.setVanished(player, true);
+            keelePlayer.setVanished(true);
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000000, 1, false, false, false));
             applyHead(player);
             UtilClass.sendPlayerMessage(player, "You are now vanished", UtilClass.success);

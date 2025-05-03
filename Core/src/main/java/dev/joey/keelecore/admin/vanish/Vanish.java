@@ -1,5 +1,7 @@
 package dev.joey.keelecore.admin.vanish;
 
+import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.ConfigFileHandler;
 import org.bukkit.entity.Player;
@@ -11,18 +13,8 @@ import static dev.joey.keelecore.util.UtilClass.keeleCore;
 
 public class Vanish extends SuperCommand {
 
-    static List<String> vanishedPlayers = new ArrayList<>(new ConfigFileHandler(keeleCore).getPlayerFile().getStringList("vanished"));
-
-    public static List<String> getVanishedPlayers() {
-        return vanishedPlayers;
-    }
-
-    protected boolean hasPermissionToSee(Player player) {
-        return player.isOp() || player.hasPermission("kc.see");
-    }
-
-    protected static boolean isVanished(Player player) {
-        return vanishedPlayers.contains(player.getUniqueId().toString());
+    protected boolean hasPermissionToSee(KeelePlayer keelePlayer) {
+        return keelePlayer.getRank().isStaff();
     }
 
 }

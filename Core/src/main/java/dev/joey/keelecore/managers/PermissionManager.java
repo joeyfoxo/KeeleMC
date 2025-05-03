@@ -6,6 +6,7 @@ import dev.joey.keelecore.admin.permissions.formatting.NameTagFormatting;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -55,6 +56,59 @@ public class PermissionManager {
 
     public static KeelePlayer getCached(UUID uuid) {
         return playerCache.get(uuid);
+    }
+
+    public static Map<UUID, KeelePlayer> getCache() {
+        return playerCache;
+    }
+
+    public static void setVanished(Player player, boolean vanished) {
+        UUID uuid = player.getUniqueId();
+        KeelePlayer vanishedKP = getCached(uuid);
+        if (vanishedKP == null) return;
+
+        for (UUID otherUUID : playerCache.keySet()) {
+            if (otherUUID.equals(uuid)) continue;
+
+            Player otherPlayer = Bukkit.getPlayer(otherUUID);
+            KeelePlayer observerKP = getCached(otherUUID);
+
+            if (otherPlayer == null || observerKP == null) continue;
+
+            boolean canSee = false;
+
+            if (observerKP.getRank().isStaff()) {
+                canSee = observerKP.getRank().hasPermissionLevel(vanishedKP.getRank());
+            }
+
+            if (vanished) {
+                if (!canSee) {
+                    otherPlayer.hidePlayer(KeeleCore.getInstance(), player);
+                } else {
+                    otherPlayer.showPlayer(KeeleCore.getInstance(), player);
+                }
+            } else {
+                // Always show on unvanish
+                otherPlayer.showPlayer(KeeleCore.getInstance(), player);
+            }
+        }
+
+        // Update DB
+        get(uuid).thenCompose(loaded -> {
+            KeelePlayer kp = (loaded != null) ? loaded : new KeelePlayer(player);
+
+            System.out.println("[DB] Setting vanish state for " + player.getName() + " (" + uuid + ") to " + vanished);
+
+            return put(kp).thenApply(updated -> {
+                System.out.println("[DB] Vanish state updated for " + player.getName() + ": " + vanished);
+                return updated;
+            });
+        });
+    }
+
+    public static boolean isVanished(Player player) {
+        KeelePlayer kp = getCached(player.getUniqueId());
+        return kp != null && kp.isVanished();
     }
 
     public static void getRank(Player player) {

@@ -30,7 +30,6 @@ dev/joey/keelecore/admin/vanish/VanishCommand.class
 dev/joey/keelecore/server/announcement/AutoAnnouncer.class
 dev/joey/keelecore/admin/commands/DiscordCommand.class
 dev/joey/keelecore/admin/permissions/PlayerRank.class
-dev/joey/keelecore/admin/vanish/VanishListener.class
 dev/joey/keelecore/admin/permissions/player/KeelePlayer.class
 dev/joey/keelecore/admin/commands/RankCommand.class
 dev/joey/keelecore/admin/permissions/RequireRank.class

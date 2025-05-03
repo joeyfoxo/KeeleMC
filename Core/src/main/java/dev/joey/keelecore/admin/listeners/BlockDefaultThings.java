@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static dev.joey.keelecore.admin.vanish.VanishCommand.getVanishedPlayers;
 import static dev.joey.keelecore.util.UtilClass.keeleCore;
 
 public class BlockDefaultThings implements Listener {
@@ -57,11 +56,6 @@ public class BlockDefaultThings implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent event) {
 
-        getVanishedPlayers().forEach(player -> event.getPlayer().hidePlayer(keeleCore, Bukkit.getPlayer(UUID.fromString(player))));
-        if (getVanishedPlayers().contains(event.getPlayer().getUniqueId().toString())) {
-            event.joinMessage(Component.text(""));
-            return;
-        }
         event.joinMessage(Component.text()
                 .content("[").color(TextColor.color(UtilClass.gray))
                 .append(Component.text("+")
@@ -75,13 +69,6 @@ public class BlockDefaultThings implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerQuitEvent event) {
-        if (getVanishedPlayers().contains(event.getPlayer().getUniqueId().toString())) {
-            event.quitMessage(Component.text(""));
-            for (Player players : Bukkit.getOnlinePlayers()) {
-                players.hidePlayer(keeleCore, event.getPlayer());
-            }
-            return;
-        }
         event.quitMessage(Component.text()
                 .content("[").color(TextColor.color(UtilClass.gray))
                 .append(Component.text("-")
