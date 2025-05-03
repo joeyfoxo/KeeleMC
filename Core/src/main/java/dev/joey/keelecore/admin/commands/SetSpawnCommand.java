@@ -26,8 +26,7 @@ public class SetSpawnCommand extends SuperCommand implements CommandExecutor {
         World world = player.getWorld();
 
         KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
-        if (!RankGuard.hasRequiredRank(this, keelePlayer)) {
-            UtilClass.sendPlayerMessage(player, "Invalid Rank", UtilClass.error);
+        if (UtilClass.noAccessMessage(this, keelePlayer)) {
             return true;
         }
 

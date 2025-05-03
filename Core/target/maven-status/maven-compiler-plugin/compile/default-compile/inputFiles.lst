@@ -1,8 +1,8 @@
-/Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/vanish/Vanish.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/RulesCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/listeners/BlockDefaultThings.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/permissions/player/KeelePlayer.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/SetSpawnCommand.java
+/Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/UnbanCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/HubCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/util/PlayerGUI.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/GodCommand.java
@@ -10,9 +10,9 @@
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/managers/PermissionManager.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/permissions/RequireRank.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/GameModeCommand.java
-/Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/auth/StudentGUI.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/FeedCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/TeleportCommand.java
+/Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/BanlistCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/util/ConfigFileHandler.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/managers/DBManager.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/permissions/PlayerRank.java
@@ -25,9 +25,9 @@
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/SpawnCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/permissions/RankGuard.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/TimeSettingsCommand.java
+/Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/BanCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/WhoISCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/DiscordCommand.java
-/Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/vanish/VanishCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/server/restarting/DailyRestart.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/managers/supers/SuperCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/SpeedCommand.java
@@ -35,3 +35,4 @@
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/auth/listeners/JoinNLeaveListener.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/permissions/formatting/ChatFormatting.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/util/UtilClass.java
+/Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/VanishCommand.java

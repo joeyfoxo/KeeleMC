@@ -1,4 +1,4 @@
-package dev.joey.keelecore.admin.vanish;
+package dev.joey.keelecore.admin.commands;
 
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.RankGuard;
@@ -19,10 +19,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
-import static dev.joey.keelecore.util.UtilClass.keeleCore;
-
 @RequireRank(PlayerRank.MOD)
-public class VanishCommand extends Vanish implements CommandExecutor {
+public class VanishCommand extends SuperCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -30,8 +28,7 @@ public class VanishCommand extends Vanish implements CommandExecutor {
         if (commandSenderCheck(sender)) return true;
         Player player = (Player) sender;
         KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
-        if (!RankGuard.hasRequiredRank(this, keelePlayer)) {
-            UtilClass.sendPlayerMessage(player, "Invalid Rank", UtilClass.error);
+        if (UtilClass.noAccessMessage(this, keelePlayer)) {
             return true;
         }
         if (args.length == 1) {

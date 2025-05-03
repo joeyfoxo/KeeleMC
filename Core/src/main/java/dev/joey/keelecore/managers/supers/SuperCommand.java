@@ -2,12 +2,14 @@ package dev.joey.keelecore.managers.supers;
 
 import dev.joey.keelecore.util.UtilClass;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
-public class SuperCommand {
+public abstract class SuperCommand implements CommandExecutor, TabCompleter {
 
     protected boolean commandSenderCheck(CommandSender commandSender) {
         if (!(commandSender instanceof Player)) {
@@ -19,17 +21,26 @@ public class SuperCommand {
 
     protected boolean playerNullCheck(Player player, Player sender) {
         if (player == null) {
-            UtilClass.sendPlayerMessage(sender, "Sorry thats not a valid player", UtilClass.error);
+            UtilClass.sendPlayerMessage(sender, "Sorry that's not a valid player", UtilClass.error);
             return true;
         }
         return false;
     }
 
-    protected boolean playerNullCheck(String player, Player sender) {
-        if (Bukkit.getPlayer(player) == null) {
-            UtilClass.sendPlayerMessage(sender, "Sorry thats not a valid player", UtilClass.error);
+    protected boolean playerNullCheck(String playerName, Player sender) {
+        if (Bukkit.getPlayer(playerName) == null) {
+            UtilClass.sendPlayerMessage(sender, "Sorry that's not a valid player", UtilClass.error);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender,
+                                      @NotNull Command command,
+                                      @NotNull String alias,
+                                      @NotNull String[] args) {
+        // Default: no suggestions — override in child command
+        return Collections.emptyList();
     }
 }

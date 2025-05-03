@@ -81,3 +81,13 @@ commands:
 
   rank:
     description: Provides rank commands
+
+  ban:
+    description: Ban a player
+    usage: /ban [-s] [-ip] <player> <reason>
+  unban:
+    description: Unban a player
+    usage: /unban <player>
+  banlist:
+    description: List banned players
+    usage: /banlist

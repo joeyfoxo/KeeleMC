@@ -27,6 +27,10 @@ public class RankCommand extends SuperCommand implements CommandExecutor {
         Player player = (Player) sender;
         KeelePlayer executor = PermissionManager.getCached(player.getUniqueId());
 
+        if (UtilClass.noAccessMessage(this, executor)) {
+            return true;
+        }
+
         if (args.length < 1) {
             UtilClass.sendPlayerMessage(executor, "Usage: /rank <debug|set|remove> ...", UtilClass.error);
             return true;
@@ -51,10 +55,6 @@ public class RankCommand extends SuperCommand implements CommandExecutor {
 
             case "set" -> {
 
-                if (!RankGuard.hasRequiredRank(this, executor)) {
-                    UtilClass.sendPlayerMessage(executor, "You do not have permission to run this command.", UtilClass.error);
-                    return true;
-                }
                 if (args.length != 3) {
                     UtilClass.sendPlayerMessage(executor, "Usage: /rank set <player> <rank>", UtilClass.error);
                     return true;
@@ -88,8 +88,7 @@ public class RankCommand extends SuperCommand implements CommandExecutor {
 
             case "remove" -> {
 
-                if (!RankGuard.hasRequiredRank(this, executor)) {
-                    UtilClass.sendPlayerMessage(executor, "You do not have permission to run this command.", UtilClass.error);
+                if (UtilClass.noAccessMessage(this, executor)) {
                     return true;
                 }
 

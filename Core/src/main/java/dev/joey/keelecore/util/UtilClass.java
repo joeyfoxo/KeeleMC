@@ -1,17 +1,14 @@
 package dev.joey.keelecore.util;
 
 import dev.joey.keelecore.KeeleCore;
+import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.admin.permissions.RankGuard;
+import dev.joey.keelecore.admin.permissions.RequireRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.awt.*;
 import java.io.File;
@@ -32,6 +29,20 @@ public class UtilClass {
     public static int information = new Color(255, 221, 0).getRGB();
     public static int gray = new Color(115, 115, 115).getRGB();
 
+    public static boolean noAccessMessage(Object instance, KeelePlayer keelePlayer) {
+        if (RankGuard.hasRequiredRank(instance, keelePlayer)) {
+            return false;
+        }
+
+        RequireRank annotation = instance.getClass().getAnnotation(RequireRank.class);
+        String required = (annotation != null) ? annotation.value().name() : "Unknown";
+
+        Component message = Component.text("✖ You lack permission. Required Rank: ", TextColor.color(0xFF5555))
+                .append(PlayerRank.fromString(required).getPrefix());
+
+        UtilClass.sendPlayerMessage(keelePlayer, message);        return true;
+    }
+
     //TODO CHANGE THIS
     public static void sendPlayerMessage(Player player, String message, int colour) {
         player.sendMessage(Component.text().content(message).color(TextColor.color(colour)));
@@ -43,6 +54,10 @@ public class UtilClass {
 
     public static void sendPlayerMessage(Collection<? extends Player> players, Component component) {
         players.forEach(player -> player.sendMessage(component));
+    }
+
+    public static void sendPlayerMessage(KeelePlayer player, Component message) {
+        player.getPlayer().sendMessage(message);
     }
 
     public static double round (double value, int precision) {

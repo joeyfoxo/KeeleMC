@@ -1,7 +1,7 @@
 package dev.joey.keelecore.managers;
 
 import dev.joey.keelecore.admin.commands.*;
-import dev.joey.keelecore.admin.vanish.VanishCommand;
+import dev.joey.keelecore.admin.commands.VanishCommand;
 
 import static dev.joey.keelecore.util.UtilClass.keeleCore;
 
@@ -26,5 +26,16 @@ public class CommandManager {
         keeleCore.getCommand("rules").setExecutor(new RulesCommand());
         keeleCore.getCommand("rank").setExecutor(new RankCommand());
 
+        BanCommand banCommand = new BanCommand();
+        keeleCore.getCommand("ban").setExecutor(banCommand);
+        keeleCore.getCommand("ban").setTabCompleter(banCommand);
+
+        UnbanCommand unbanCommand = new UnbanCommand();
+        keeleCore.getCommand("unban").setExecutor(unbanCommand);
+        keeleCore.getCommand("unban").setTabCompleter(unbanCommand);
+
+        BanlistCommand banlistCommand = new BanlistCommand();
+        keeleCore.getCommand("banlist").setExecutor(banlistCommand);
+        keeleCore.getCommand("banlist").setTabCompleter(banlistCommand);
     }
 }

@@ -154,6 +154,7 @@ public class PermissionManager {
             Component display = rank.getPrefix().append(Component.text(player.getName()));
             player.displayName(display);
             player.playerListName(display);
+            NameTagFormatting.updateNameTag(player, rank);
         });
     }
 }

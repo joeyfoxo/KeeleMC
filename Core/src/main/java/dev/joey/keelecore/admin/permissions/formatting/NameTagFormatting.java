@@ -1,8 +1,7 @@
 package dev.joey.keelecore.admin.permissions.formatting;
 
 import dev.joey.keelecore.admin.permissions.PlayerRank;
-import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.managers.PermissionManager;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
@@ -10,27 +9,26 @@ import org.bukkit.scoreboard.Team;
 
 public class NameTagFormatting {
 
-    public static void updateNameTag(Player player) {
-        KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
+    private static final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
 
-        if (keelePlayer == null) {
-            player.sendMessage("§cFailed to load your player rank.");
-            return;
-        }
+    public static void updateNameTag(Player player, PlayerRank rank) {
 
-        PlayerRank rank = keelePlayer.getRank();
-        String teamName = "rank_" + rank.name().toLowerCase();
+        String teamName = rank.name();
 
-        // Use per-player scoreboard to avoid interfering with other teams
-        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        // Use or create the team
         Team team = scoreboard.getTeam(teamName);
         if (team == null) {
             team = scoreboard.registerNewTeam(teamName);
+            team.setPrefix(LegacyComponentSerializer.legacySection().serialize(rank.getPrefix()));
+            team.setSuffix(LegacyComponentSerializer.legacySection().serialize(rank.getSuffix()));
         }
 
-        team.prefix(rank.getPrefix()); // Adventure Component API
-        team.addEntry(player.getName());
+        // Remove player from any old team
+        for (Team t : scoreboard.getTeams()) {
+            t.removeEntry(player.getName());
+        }
 
+        team.addEntry(player.getName());
         player.setScoreboard(scoreboard);
     }
 }

@@ -1,6 +1,5 @@
 package dev.joey.keelecore;
 
-import dev.joey.keelecore.admin.vanish.VanishCommand;
 import dev.joey.keelecore.managers.CommandManager;
 import dev.joey.keelecore.managers.ListenerManager;
 import dev.joey.keelecore.util.ConfigFileHandler;
@@ -10,9 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public final class KeeleCore extends JavaPlugin {
