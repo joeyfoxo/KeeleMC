@@ -1,4 +1,4 @@
-package dev.joey.keelecore.util.formatting;
+package dev.joey.keelecore.admin.permissions.formatting;
 
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;

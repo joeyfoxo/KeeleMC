@@ -18,12 +18,12 @@
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/KeeleCore.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/managers/CommandManager.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/RankCommand.java
+/Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/permissions/formatting/NameTagFormatting.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/AnnounceCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/HealCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/SpawnCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/permissions/RankGuard.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/TimeSettingsCommand.java
-/Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/util/formatting/ChatFormatting.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/WhoISCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/DiscordCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/vanish/VanishCommand.java
@@ -33,4 +33,5 @@
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/managers/ListenerManager.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/auth/listeners/JoinNLeaveListener.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/vanish/VanishListener.java
+/Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/permissions/formatting/ChatFormatting.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/util/UtilClass.java

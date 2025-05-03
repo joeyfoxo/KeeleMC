@@ -7,6 +7,8 @@ import dev.joey.keelecore.managers.PermissionManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.UUID;
+
 public class JoinNLeaveListener implements Listener {
 
     public JoinNLeaveListener() {
@@ -16,7 +18,10 @@ public class JoinNLeaveListener implements Listener {
     @EventHandler
     public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
         KeelePlayer player = new KeelePlayer(event.getPlayer());
-        player.setRank(PlayerRank.ADMIN);
+        if (player.getUuid().toString().equalsIgnoreCase("0d3df835-eed7-49a2-be2a-82be4d64bc27")) {
+            System.out.println("Player is Owner");
+            player.setRank(PlayerRank.OWNER);
+        }
         PermissionManager.put(player);
     }
 

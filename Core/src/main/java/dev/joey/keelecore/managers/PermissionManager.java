@@ -1,5 +1,6 @@
 package dev.joey.keelecore.managers;
 
+import dev.joey.keelecore.admin.permissions.formatting.NameTagFormatting;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import net.kyori.adventure.text.Component;
 
@@ -12,8 +13,10 @@ public class PermissionManager {
     private static final Map<UUID, KeelePlayer> playerCache = new HashMap<>();
 
     public static KeelePlayer put(KeelePlayer player) {
+        playerCache.put(player.getUuid(), player); // store first
         player.getPlayer().playerListName(player.getRank().getPrefix().append(Component.text(player.getName())));
-        return playerCache.put(player.getUuid(), player);
+        NameTagFormatting.updateNameTag(player.getPlayer());
+        return player;
     }
 
     public static KeelePlayer get(UUID uuid) {
