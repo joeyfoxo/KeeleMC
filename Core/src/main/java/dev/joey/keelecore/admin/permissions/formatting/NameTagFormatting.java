@@ -11,24 +11,24 @@ import org.bukkit.scoreboard.Team;
 public class NameTagFormatting {
 
     public static void updateNameTag(Player player) {
-        // Safe retrieval using Player object
-        KeelePlayer kp = PermissionManager.get(player.getUniqueId());
-        if (kp == null) {
+        KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
+
+        if (keelePlayer == null) {
             player.sendMessage("§cFailed to load your player rank.");
             return;
         }
 
-        PlayerRank rank = kp.getRank();
+        PlayerRank rank = keelePlayer.getRank();
         String teamName = "rank_" + rank.name().toLowerCase();
 
-        // Use per-player scoreboard to avoid interfering with chat/tab
+        // Use per-player scoreboard to avoid interfering with other teams
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         Team team = scoreboard.getTeam(teamName);
         if (team == null) {
             team = scoreboard.registerNewTeam(teamName);
         }
 
-        team.prefix(rank.getPrefix()); // This is a Component
+        team.prefix(rank.getPrefix()); // Adventure Component API
         team.addEntry(player.getName());
 
         player.setScoreboard(scoreboard);

@@ -19,7 +19,7 @@ public class GodCommand extends SuperCommand implements CommandExecutor {
 
         if (commandSenderCheck(sender)) return true;
         Player player = (Player) sender;
-        KeelePlayer keelePlayer = PermissionManager.get(player.getUniqueId());
+        KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
         if (!RankGuard.hasRequiredRank(this, keelePlayer)) {
             UtilClass.sendPlayerMessage(player, "Invalid Rank", UtilClass.error);
             return true;

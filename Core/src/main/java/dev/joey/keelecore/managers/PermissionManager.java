@@ -1,33 +1,105 @@
 package dev.joey.keelecore.managers;
 
+import dev.joey.keelecore.KeeleCore;
+import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.formatting.NameTagFormatting;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PermissionManager {
 
-    private static final Map<UUID, KeelePlayer> playerCache = new HashMap<>();
+    private static final DBManager manager = new DBManager(KeeleCore.getInstance());
+    private static final Map<UUID, KeelePlayer> playerCache = new ConcurrentHashMap<>();
 
-    public static KeelePlayer put(KeelePlayer player) {
-        playerCache.put(player.getUuid(), player); // store first
-        player.getPlayer().playerListName(player.getRank().getPrefix().append(Component.text(player.getName())));
-        NameTagFormatting.updateNameTag(player.getPlayer());
-        return player;
+    public static CompletableFuture<KeelePlayer> get(UUID uuid) {
+        KeelePlayer cached = playerCache.get(uuid);
+        if (cached != null) {
+            return CompletableFuture.completedFuture(cached);
+        }
+
+        return manager.loadPlayerAsync(uuid).thenApply(player -> {
+            if (player != null) {
+                playerCache.put(uuid, player);
+            }
+            return player;
+        });
     }
 
-    public static KeelePlayer get(UUID uuid) {
+    public static CompletableFuture<KeelePlayer> put(KeelePlayer player) {
+        UUID uuid = player.getUuid();
+
+        // Put in cache immediately
+        playerCache.put(uuid, player);
+
+        // Save to DB asynchronously
+        manager.savePlayerDataAsync(uuid, player.getName(), player.getRank());
+
+        return CompletableFuture.completedFuture(player);
+    }
+
+    public static void remove(UUID uuid) {
+        playerCache.remove(uuid);
+        //manager.deletePlayerAsync(player);
+    }
+
+    public static boolean hasCached(UUID uuid) {
+        return playerCache.containsKey(uuid);
+    }
+
+    public static KeelePlayer getCached(UUID uuid) {
         return playerCache.get(uuid);
     }
 
-    public static void remove(KeelePlayer player) {
-        playerCache.remove(player.getUuid());
+    public static void getRank(Player player) {
+        UUID uuid = player.getUniqueId();
+
+        get(uuid).thenCompose(loaded -> {
+            KeelePlayer kp = (loaded != null) ? loaded : new KeelePlayer(player);
+            kp.setPlayer(player);
+            System.out.println("[DB] Loaded player data for " + player.getName() + " (" + uuid + ") with rank " + kp.getRank().name() + " BEFORE");
+
+            return put(kp).thenApply(updated -> {
+                updateDisplayNames(player, updated.getRank());
+                System.out.println("[DB] Finalized player rank for " + player.getName() + " as " + updated.getRank().name());
+                return updated;
+            });
+        });
     }
 
-    public static void clear() {
-        playerCache.clear();
+    public static void setRank(Player player, PlayerRank newRank) {
+        UUID uuid = player.getUniqueId();
+
+        get(uuid).thenCompose(loaded -> {
+            KeelePlayer kp = (loaded != null) ? loaded : new KeelePlayer(player);
+            kp.setPlayer(player);
+            kp.setRank(newRank);
+
+            System.out.println("[DB] Setting rank for " + player.getName() + " (" + uuid + ") to " + newRank.name());
+
+            return put(kp).thenApply(updated -> {
+                updateDisplayNames(player, updated.getRank());
+                System.out.println("[DB] Rank updated for " + player.getName() + " to " + updated.getRank().name());
+                return updated;
+            });
+        });
+    }
+
+    public static void setRank(Player player, String input) {
+        setRank(player, PlayerRank.valueOf(input.toUpperCase()));
+    }
+
+    private static void updateDisplayNames(Player player, PlayerRank rank) {
+        Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> {
+            Component display = rank.getPrefix().append(Component.text(player.getName()));
+            player.displayName(display);
+            player.playerListName(display);
+        });
     }
 }

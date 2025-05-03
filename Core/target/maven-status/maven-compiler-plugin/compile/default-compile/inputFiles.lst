@@ -14,6 +14,7 @@
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/FeedCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/commands/TeleportCommand.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/util/ConfigFileHandler.java
+/Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/managers/DBManager.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/admin/permissions/PlayerRank.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/KeeleCore.java
 /Users/Joey/Desktop/Programming/Java/KeeleMC/Core/src/main/java/dev/joey/keelecore/managers/CommandManager.java

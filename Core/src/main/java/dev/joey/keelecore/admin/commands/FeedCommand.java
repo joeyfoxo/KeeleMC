@@ -25,7 +25,7 @@ public class FeedCommand extends SuperCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        KeelePlayer keelePlayer = PermissionManager.get(player.getUniqueId());
+        KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
         if (!RankGuard.hasRequiredRank(this, keelePlayer)) {
             UtilClass.sendPlayerMessage(player, "Invalid Rank", UtilClass.error);
             return true;

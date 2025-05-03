@@ -17,6 +17,14 @@ import java.util.concurrent.TimeUnit;
 
 public final class KeeleCore extends JavaPlugin {
 
+    // Singleton instance
+    private static KeeleCore instance;
+
+    // Expose globally
+    public static KeeleCore getInstance() {
+        return instance;
+    }
+
     ConfigFileHandler configFileHandler = new ConfigFileHandler(this);
 
     public static List<String> keeleStudent = new ArrayList<>();
@@ -24,9 +32,13 @@ public final class KeeleCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Set singleton
+        instance = this;
+
         UtilClass.keeleCore = this;
         saveDefaultConfig();
         configFileHandler.createPlayerFile();
+
         if (!Bukkit.getScoreboardManager().getMainScoreboard().getTeams().isEmpty()) {
             Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(Team::unregister);
         }
@@ -36,11 +48,8 @@ public final class KeeleCore extends JavaPlugin {
         new CommandManager();
         new ListenerManager();
 
-        //Every 2 Minutes
+        // Every 2 Minutes
         Bukkit.getScheduler().runTaskTimer(this, this::saveData, 0, TimeUnit.MINUTES.toSeconds(2) * 20);
-
-
-
     }
 
     @Override
@@ -49,11 +58,9 @@ public final class KeeleCore extends JavaPlugin {
         saveConfig();
     }
 
-
     private void saveData() {
-        configFileHandler.getPlayerFile().set("vanished", VanishCommand.getVanishedPlayers());
-        configFileHandler.getPlayerFile().set("players.students", keeleStudent);
-        configFileHandler.getPlayerFile().set("players.guests", nonStudent);
-        configFileHandler.saveFile();
+
+
+
     }
 }

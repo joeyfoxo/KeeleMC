@@ -25,7 +25,7 @@ public class RankCommand extends SuperCommand implements CommandExecutor {
         if (commandSenderCheck(sender)) return true;
 
         Player player = (Player) sender;
-        KeelePlayer executor = PermissionManager.get(player.getUniqueId());
+        KeelePlayer executor = PermissionManager.getCached(player.getUniqueId());
 
         if (args.length < 1) {
             UtilClass.sendPlayerMessage(executor, "Usage: /rank <debug|set|remove> ...", UtilClass.error);
@@ -45,7 +45,7 @@ public class RankCommand extends SuperCommand implements CommandExecutor {
                     UtilClass.sendPlayerMessage(executor, "Invalid rank. Available ranks: " + PlayerRank.listRanks(), UtilClass.error);
                     return true;
                 }
-                executor.setRank(rank);
+                PermissionManager.setRank(player, rank);
                 UtilClass.sendPlayerMessage(executor, "Your rank has been set to " + rank.name(), UtilClass.success);
             }
 
@@ -69,7 +69,7 @@ public class RankCommand extends SuperCommand implements CommandExecutor {
                     return true;
                 }
 
-                KeelePlayer target = PermissionManager.get(targetPlayer.getUniqueId());
+                KeelePlayer target = PermissionManager.getCached(targetPlayer.getUniqueId());
                 PlayerRank newRank = PlayerRank.fromString(rankInput);
                 if (newRank == null) {
                     UtilClass.sendPlayerMessage(executor, "Invalid rank. Available ranks: " + PlayerRank.listRanks(), UtilClass.error);
@@ -81,7 +81,7 @@ public class RankCommand extends SuperCommand implements CommandExecutor {
                     return true;
                 }
 
-                target.setRank(newRank);
+                PermissionManager.setRank(targetPlayer, newRank);
                 UtilClass.sendPlayerMessage(target, "Your rank has been set to " + newRank.name(), UtilClass.success);
                 UtilClass.sendPlayerMessage(executor, "Set " + target.getName() + "'s rank to " + newRank.name(), UtilClass.success);
             }
@@ -105,8 +105,8 @@ public class RankCommand extends SuperCommand implements CommandExecutor {
                     return true;
                 }
 
-                KeelePlayer target = PermissionManager.get(targetPlayer.getUniqueId());
-                target.setRank(PlayerRank.PLAYER);
+                KeelePlayer target = PermissionManager.getCached(targetPlayer.getUniqueId());
+                PermissionManager.setRank(targetPlayer, PlayerRank.PLAYER);
                 UtilClass.sendPlayerMessage(target, "Your rank has been reset to PLAYER.", UtilClass.success);
                 UtilClass.sendPlayerMessage(executor, "Removed rank from " + target.getName() + ".", UtilClass.success);
             }

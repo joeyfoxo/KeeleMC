@@ -16,6 +16,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import java.util.UUID;
+
 public class ChatFormatting implements Listener {
     private Component format;
 
@@ -31,28 +33,33 @@ public class ChatFormatting implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChatLow(AsyncChatEvent e) {
-        e.message(this.format);
+        e.setCancelled(true); // prevent default handling
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChatHigh(AsyncChatEvent e) {
-        KeelePlayer kp = PermissionManager.get(e.getPlayer().getUniqueId());
-        Component format = this.format;
+        UUID uuid = e.getPlayer().getUniqueId();
+        KeelePlayer kp = PermissionManager.getCached(uuid);
 
-        Component prefixComponent = kp.getRank().getPrefix();
+        if (kp == null) {
+            e.getPlayer().sendMessage(Component.text("§cFailed to load your player rank."));
+            return;
+        }
+
+        Component format = this.format;
+        Component prefixComponent = handleGroupHoverEvent(kp.getRank());
         Component suffixComponent = kp.getRank().getSuffix();
 
-        prefixComponent = handleGroupHoverEvent(kp.getRank());
-
-        Component finalPrefixComponent = prefixComponent;
-        format = format.replaceText(builder -> builder.match("\\{prefix\\}").replacement(finalPrefixComponent));
+        format = format.replaceText(builder -> builder.match("\\{prefix\\}").replacement(prefixComponent));
         format = format.replaceText(builder -> builder.match("\\{suffix\\}").replacement(suffixComponent));
-        format = format.replaceText(builder -> builder.match("\\{name\\}").replacement(e.getPlayer().getName()));
+        format = format.replaceText(builder -> builder.match("\\{name\\}").replacement(Component.text(e.getPlayer().getName())));
         format = format.replaceText(builder -> builder.match("\\{message\\}").replacement(e.originalMessage()));
 
-        e.setCancelled(true);
-        Audience audience = Bukkit.getServer();
-        audience.sendMessage(format);
+        Component finalFormat = format;
+        Bukkit.getScheduler().runTask(UtilClass.keeleCore, () -> {
+            Audience audience = Bukkit.getServer();
+            audience.sendMessage(finalFormat);
+        });
     }
 
     private Component handleGroupHoverEvent(PlayerRank rank) {

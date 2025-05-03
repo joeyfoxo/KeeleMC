@@ -28,6 +28,17 @@ public class KeelePlayer {
         this.rank = PlayerRank.PLAYER;
     }
 
+    public KeelePlayer(UUID uuid, String name, PlayerRank rank) {
+        this.player = null;
+        this.name = name;
+        this.uuid = uuid;
+        this.rank = rank;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
     public Player getPlayer() {
         return player;
     }
@@ -46,7 +57,7 @@ public class KeelePlayer {
 
     public void setRank(PlayerRank rank) {
         this.rank = rank;
-        PermissionManager.put(this);
+        PermissionManager.put(this).thenAccept(updated -> this.rank = updated.getRank());
     }
 
     public void setRank(String input) {

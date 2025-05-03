@@ -1,6 +1,7 @@
 dev/joey/keelecore/admin/commands/HubCommand.class
 dev/joey/keelecore/admin/permissions/formatting/ChatFormatting.class
 dev/joey/keelecore/admin/commands/HealCommand.class
+dev/joey/keelecore/managers/DBManager.class
 dev/joey/keelecore/admin/commands/TeleportCommand.class
 dev/joey/keelecore/auth/listeners/JoinNLeaveListener.class
 dev/joey/keelecore/managers/ListenerManager.class

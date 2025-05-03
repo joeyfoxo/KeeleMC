@@ -7,7 +7,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public enum PlayerRank {
     OWNER("&c&lOWNER &r", ""),
-    DEV("&c&lDEV &r", ""),
+    DEV("&4&lDEV &r", ""),
     ADMIN("&4&lADMIN &r", ""),
     MOD("&b&lMOD &r", ""),
     HELPER("&d&lHELPER &r", ""),

@@ -6,8 +6,11 @@ import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PermissionManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class JoinNLeaveListener implements Listener {
 
@@ -17,17 +20,16 @@ public class JoinNLeaveListener implements Listener {
 
     @EventHandler
     public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
-        KeelePlayer player = new KeelePlayer(event.getPlayer());
-        if (player.getUuid().toString().equalsIgnoreCase("0d3df835-eed7-49a2-be2a-82be4d64bc27")) {
-            System.out.println("Player is Owner");
-            player.setRank(PlayerRank.OWNER);
-        }
-        PermissionManager.put(player);
+        PermissionManager.getRank(event.getPlayer());
     }
 
     @EventHandler
-    public void onLeave(org.bukkit.event.player.PlayerQuitEvent event) {
-        KeelePlayer player = PermissionManager.get(event.getPlayer().getUniqueId());
-        PermissionManager.remove(player);
+    public void onLeave(PlayerQuitEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
+
+        PermissionManager.get(uuid)
+                .thenApply(player -> player != null ? player : new KeelePlayer(event.getPlayer()))
+                .thenAccept(PermissionManager::put) // Save current state to DB and update cache if needed
+                .thenRun(() -> PermissionManager.remove(uuid)); // Remove from cache
     }
 }

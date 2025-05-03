@@ -33,7 +33,7 @@ public class AnnounceCommand extends SuperCommand implements CommandExecutor {
 
 
         Player spigotPlayer = (Player) commandSender;
-        KeelePlayer player = PermissionManager.get(spigotPlayer.getUniqueId());
+        KeelePlayer player = PermissionManager.getCached(spigotPlayer.getUniqueId());
         if (!RankGuard.hasRequiredRank(this, player)) {
             UtilClass.sendPlayerMessage(player, "Invalid Rank", UtilClass.error);
             return true;
