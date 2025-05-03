@@ -2,6 +2,7 @@ package dev.joey.keelecore.admin.commands;
 
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.RankGuard;
+import dev.joey.keelecore.admin.permissions.RequireRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
@@ -12,6 +13,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+@RequireRank(PlayerRank.ADMIN)
 
 public class GodCommand extends SuperCommand implements CommandExecutor {
     @Override
