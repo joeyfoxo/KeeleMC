@@ -91,3 +91,6 @@ commands:
   banlist:
     description: List banned players
     usage: /banlist
+
+  galaxy:
+    description: Galaxy commands

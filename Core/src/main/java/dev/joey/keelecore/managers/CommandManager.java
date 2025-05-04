@@ -25,6 +25,7 @@ public class CommandManager {
         keeleCore.getCommand("discord").setExecutor(new DiscordCommand());
         keeleCore.getCommand("rules").setExecutor(new RulesCommand());
         keeleCore.getCommand("rank").setExecutor(new RankCommand());
+        keeleCore.getCommand("galaxy").setExecutor(new GalaxyCommand());
 
         BanCommand banCommand = new BanCommand();
         keeleCore.getCommand("ban").setExecutor(banCommand);

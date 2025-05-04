@@ -1,15 +1,17 @@
 dev/joey/keelecore/admin/commands/HubCommand.class
 dev/joey/keelecore/admin/permissions/formatting/ChatFormatting.class
 dev/joey/keelecore/admin/commands/HealCommand.class
+dev/joey/keelecore/admin/commands/GalaxyCommand.class
 dev/joey/keelecore/managers/DBManager.class
 dev/joey/keelecore/admin/commands/TeleportCommand.class
 dev/joey/keelecore/auth/listeners/JoinNLeaveListener.class
 dev/joey/keelecore/managers/ListenerManager.class
 dev/joey/keelecore/admin/commands/AnnounceCommand.class
+dev/joey/keelecore/armour/galaxy/ArmourListener.class
 dev/joey/keelecore/util/UtilClass.class
 dev/joey/keelecore/admin/permissions/RankGuard.class
-dev/joey/keelecore/util/ConfigFileHandler.class
 dev/joey/keelecore/managers/CommandManager.class
+dev/joey/keelecore/armour/galaxy/GalaxyArmour.class
 dev/joey/keelecore/managers/PermissionManager.class
 dev/joey/keelecore/util/PlayerGUI.class
 dev/joey/keelecore/admin/commands/UnbanCommand.class
@@ -18,6 +20,7 @@ dev/joey/keelecore/admin/permissions/formatting/NameTagFormatting.class
 dev/joey/keelecore/managers/supers/SuperCommand.class
 dev/joey/keelecore/KeeleCore.class
 dev/joey/keelecore/admin/commands/GodCommand.class
+dev/joey/keelecore/armour/galaxy/ColorCycleTask.class
 dev/joey/keelecore/admin/commands/FeedCommand.class
 dev/joey/keelecore/admin/commands/VanishCommand.class
 dev/joey/keelecore/admin/commands/SetSpawnCommand.class

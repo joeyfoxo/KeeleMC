@@ -24,3 +24,9 @@ autoAnnouncer:
   - "&e&lThis Server is still in BETA please report any bugs or suggestions to: &r&6https://forms.gle/YmKYYSRaUpRDWKaP7"
   - "&e&lPlease ensure you've read the rules"
 
+database:
+  host: "localhost"
+  port: 3306
+  name: "KeeleMC"
+  user: "joey"
+  password: "nE4p!rTz@X9w#sG2"

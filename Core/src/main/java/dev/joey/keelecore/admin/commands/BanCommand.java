@@ -82,7 +82,8 @@ public class BanCommand extends SuperCommand {
         } else {
             Bukkit.getBanList(BanList.Type.NAME).addBan(target.getName(), reason, null, sender.getName());
             if (target.isOnline()) {
-                ((Player) target).kick(Component.text("You have been banned.\nReason: " + reason));
+                ((Player) target).kick(Component.text("You have been banned.\nReason: " + reason + "\n" +
+                        "Banned by: " + sender.getName()));
             }
         }
 

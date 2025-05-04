@@ -6,20 +6,20 @@ import dev.joey.keelecore.admin.permissions.formatting.NameTagFormatting;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class PermissionManager {
 
     private static final DBManager manager = new DBManager(KeeleCore.getInstance());
     private static final Map<UUID, KeelePlayer> playerCache = new ConcurrentHashMap<>();
 
-    public static CompletableFuture<KeelePlayer> get(UUID uuid) {
+    public static CompletableFuture<KeelePlayer> getPlayer(UUID uuid) {
         KeelePlayer cached = playerCache.get(uuid);
         if (cached != null) {
             return CompletableFuture.completedFuture(cached);
@@ -94,7 +94,7 @@ public class PermissionManager {
         }
 
         // Update DB
-        get(uuid).thenCompose(loaded -> {
+        getPlayer(uuid).thenCompose(loaded -> {
             KeelePlayer kp = (loaded != null) ? loaded : new KeelePlayer(player);
 
             System.out.println("[DB] Setting vanish state for " + player.getName() + " (" + uuid + ") to " + vanished);
@@ -111,10 +111,18 @@ public class PermissionManager {
         return kp != null && kp.isVanished();
     }
 
+    public static void getVanishValueFromDatabaseAsync(Player player, Consumer<Boolean> callback) {
+        getPlayer(player.getUniqueId())
+                .thenAccept(kp -> {
+                    boolean isVanished = kp != null && kp.isVanished();
+                    callback.accept(isVanished);
+                });
+    }
+
     public static void getRank(Player player) {
         UUID uuid = player.getUniqueId();
 
-        get(uuid).thenCompose(loaded -> {
+        getPlayer(uuid).thenCompose(loaded -> {
             KeelePlayer kp = (loaded != null) ? loaded : new KeelePlayer(player);
             kp.setPlayer(player);
             System.out.println("[DB] Loaded player data for " + player.getName() + " (" + uuid + ") with rank " + kp.getRank().name() + " BEFORE");
@@ -130,7 +138,7 @@ public class PermissionManager {
     public static void setRank(Player player, PlayerRank newRank) {
         UUID uuid = player.getUniqueId();
 
-        get(uuid).thenCompose(loaded -> {
+        getPlayer(uuid).thenCompose(loaded -> {
             KeelePlayer kp = (loaded != null) ? loaded : new KeelePlayer(player);
             kp.setPlayer(player);
             kp.setRank(newRank);
@@ -156,5 +164,4 @@ public class PermissionManager {
             player.playerListName(display);
             NameTagFormatting.updateNameTag(player, rank);
         });
-    }
-}
+    }}

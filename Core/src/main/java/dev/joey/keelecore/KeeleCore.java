@@ -1,12 +1,11 @@
 package dev.joey.keelecore;
 
+import dev.joey.keelecore.armour.galaxy.ColorCycleTask;
 import dev.joey.keelecore.managers.CommandManager;
 import dev.joey.keelecore.managers.ListenerManager;
-import dev.joey.keelecore.util.ConfigFileHandler;
 import dev.joey.keelecore.util.UtilClass;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +21,6 @@ public final class KeeleCore extends JavaPlugin {
         return instance;
     }
 
-    ConfigFileHandler configFileHandler = new ConfigFileHandler(this);
-
-    public static List<String> keeleStudent = new ArrayList<>();
-    public static List<String> nonStudent = new ArrayList<>();
-
     @Override
     public void onEnable() {
         // Set singleton
@@ -34,19 +28,13 @@ public final class KeeleCore extends JavaPlugin {
 
         UtilClass.keeleCore = this;
         saveDefaultConfig();
-        configFileHandler.createPlayerFile();
 
-        if (!Bukkit.getScoreboardManager().getMainScoreboard().getTeams().isEmpty()) {
-            Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(Team::unregister);
-        }
-
-        keeleStudent.addAll(configFileHandler.getPlayerFile().getStringList("players.students"));
-        nonStudent.addAll(configFileHandler.getPlayerFile().getStringList("players.guests"));
         new CommandManager();
         new ListenerManager();
 
         // Every 2 Minutes
         Bukkit.getScheduler().runTaskTimer(this, this::saveData, 0, TimeUnit.MINUTES.toSeconds(2) * 20);
+        Bukkit.getScheduler().runTaskTimer(this, new ColorCycleTask(), 0L, 2L); // every 5 ticks
     }
 
     @Override
