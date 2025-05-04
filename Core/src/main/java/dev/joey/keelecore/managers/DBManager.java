@@ -43,15 +43,16 @@ public class DBManager {
     }
 
     // -- ASYNC SAVE or UPDATE
-    public void savePlayerDataAsync(UUID uuid, String name, PlayerRank rank) {
+    public void savePlayerDataAsync(UUID uuid, String name, PlayerRank rank, boolean vanished) {
         System.out.println("[DB] Saving player data for " + name + " (" + uuid + ") with rank " + rank.name());
         Bukkit.getScheduler().runTaskAsynchronously(KeeleCore.getInstance(), () -> {
             try (Connection conn = getConnection();
                  PreparedStatement stmt = conn.prepareStatement(
-                         "REPLACE INTO players (uuid, name, `rank`) VALUES (?, ?, ?)")) {
+                         "REPLACE INTO players (uuid, name, `rank`, vanished) VALUES (?, ?, ?, ?)")) {
                 stmt.setString(1, uuid.toString());
                 stmt.setString(2, name);
                 stmt.setString(3, rank.name());
+                stmt.setBoolean(4, vanished);
                 stmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -65,7 +66,7 @@ public class DBManager {
 
         Bukkit.getScheduler().runTaskAsynchronously(KeeleCore.getInstance(), () -> {
             try (Connection conn = getConnection();
-                 PreparedStatement stmt = conn.prepareStatement("SELECT name, `rank` FROM players WHERE uuid = ?")) {
+                 PreparedStatement stmt = conn.prepareStatement("SELECT name, `rank`, vanished FROM players WHERE uuid = ?")) {
 
                 System.out.println("[DB] Connected to DB successfully for load.");
                 stmt.setString(1, uuid.toString());
@@ -74,12 +75,19 @@ public class DBManager {
                 if (rs.next()) {
                     String name = rs.getString("name");
                     String rankStr = rs.getString("rank");
+                    boolean vanished = rs.getBoolean("vanished");
                     PlayerRank rank = PlayerRank.valueOf(rankStr);
 
                     System.out.println("[DB] Found DB entry for " + uuid + ", name: " + name + ", rank: " + rankStr);
 
                     // If online, bind the live player
                     KeelePlayer player = new KeelePlayer(uuid, name, rank);
+
+                    player.setPlayer(Bukkit.getPlayer(uuid));
+                    player.setVanished(vanished);
+                    if (vanished) {
+                        PermissionManager.setVanished(player.getPlayer(), vanished);
+                    }
 
                     Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> future.complete(player));
                     return;

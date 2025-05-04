@@ -92,6 +92,9 @@ public class Interactions implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         KeelePlayer player = PermissionManager.getCached(event.getPlayer().getUniqueId());
+
+        System.out.println("KEELEHUB: " + PermissionManager.getCache());
+        System.out.println("HUB CLASSLOADER: " + PermissionManager.class.getClassLoader());
         if (!RankGuard.hasRequiredRank(player, this, "onInteract", event)) {
             event.setCancelled(true);
             return;

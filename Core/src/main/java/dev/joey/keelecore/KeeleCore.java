@@ -3,6 +3,7 @@ package dev.joey.keelecore;
 import dev.joey.keelecore.armour.galaxy.ColorCycleTask;
 import dev.joey.keelecore.managers.CommandManager;
 import dev.joey.keelecore.managers.ListenerManager;
+import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.util.UtilClass;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +26,7 @@ public final class KeeleCore extends JavaPlugin {
     public void onEnable() {
         // Set singleton
         instance = this;
+        PermissionManager.init(this);
 
         UtilClass.keeleCore = this;
         saveDefaultConfig();

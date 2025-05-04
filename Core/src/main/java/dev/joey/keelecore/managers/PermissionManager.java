@@ -7,6 +7,7 @@ import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
 import java.util.UUID;
@@ -16,8 +17,12 @@ import java.util.function.Consumer;
 
 public class PermissionManager {
 
-    private static final DBManager manager = new DBManager(KeeleCore.getInstance());
+    private static DBManager manager;
     private static final Map<UUID, KeelePlayer> playerCache = new ConcurrentHashMap<>();
+
+    public static void init(JavaPlugin plugin) {
+        manager = new DBManager(plugin);
+    }
 
     public static CompletableFuture<KeelePlayer> getPlayer(UUID uuid) {
         KeelePlayer cached = playerCache.get(uuid);
@@ -40,7 +45,7 @@ public class PermissionManager {
         playerCache.put(uuid, player);
 
         // Save to DB asynchronously
-        manager.savePlayerDataAsync(uuid, player.getName(), player.getRank());
+        manager.savePlayerDataAsync(uuid, player.getName(), player.getRank(), player.isVanished());
 
         return CompletableFuture.completedFuture(player);
     }
@@ -93,17 +98,8 @@ public class PermissionManager {
             }
         }
 
-        // Update DB
-        getPlayer(uuid).thenCompose(loaded -> {
-            KeelePlayer kp = (loaded != null) ? loaded : new KeelePlayer(player);
-
-            System.out.println("[DB] Setting vanish state for " + player.getName() + " (" + uuid + ") to " + vanished);
-
-            return put(kp).thenApply(updated -> {
-                System.out.println("[DB] Vanish state updated for " + player.getName() + ": " + vanished);
-                return updated;
-            });
-        });
+        vanishedKP.setVanished(vanished);
+        //});
     }
 
     public static boolean isVanished(Player player) {
@@ -111,29 +107,29 @@ public class PermissionManager {
         return kp != null && kp.isVanished();
     }
 
-    public static void getVanishValueFromDatabaseAsync(Player player, Consumer<Boolean> callback) {
-        getPlayer(player.getUniqueId())
-                .thenAccept(kp -> {
-                    boolean isVanished = kp != null && kp.isVanished();
-                    callback.accept(isVanished);
-                });
-    }
-
-    public static void getRank(Player player) {
-        UUID uuid = player.getUniqueId();
-
-        getPlayer(uuid).thenCompose(loaded -> {
-            KeelePlayer kp = (loaded != null) ? loaded : new KeelePlayer(player);
-            kp.setPlayer(player);
-            System.out.println("[DB] Loaded player data for " + player.getName() + " (" + uuid + ") with rank " + kp.getRank().name() + " BEFORE");
-
-            return put(kp).thenApply(updated -> {
-                updateDisplayNames(player, updated.getRank());
-                System.out.println("[DB] Finalized player rank for " + player.getName() + " as " + updated.getRank().name());
-                return updated;
-            });
-        });
-    }
+//    public static void getVanishValueFromDatabaseAsync(Player player, Consumer<Boolean> callback) {
+//        getPlayer(player.getUniqueId())
+//                .thenAccept(kp -> {
+//                    boolean isVanished = kp != null && kp.isVanished();
+//                    callback.accept(isVanished);
+//                });
+//    }
+//
+//    public static void getRank(Player player) {
+//        UUID uuid = player.getUniqueId();
+//
+//        getPlayer(uuid).thenCompose(loaded -> {
+//            KeelePlayer kp = (loaded != null) ? loaded : new KeelePlayer(player);
+//            kp.setPlayer(player);
+//            System.out.println("[DB] Loaded player data for " + player.getName() + " (" + uuid + ") with rank " + kp.getRank().name() + " BEFORE");
+//
+//            return put(kp).thenApply(updated -> {
+//                updateDisplayNames(player, updated.getRank());
+//                System.out.println("[DB] Finalized player rank for " + player.getName() + " as " + updated.getRank().name());
+//                return updated;
+//            });
+//        });
+//    }
 
     public static void setRank(Player player, PlayerRank newRank) {
         UUID uuid = player.getUniqueId();

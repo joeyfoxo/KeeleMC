@@ -6,5 +6,5 @@ authors: [ Joey ]
 description: Core Hub Plugin
 website: https://joeyfox.dev
 
-depend:
-  - KeeleCore
+depend: [ KeeleCore ]
+softdepend: [ KeeleCore ]

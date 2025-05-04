@@ -73,7 +73,7 @@
             <groupId>dev.joey</groupId>
             <artifactId>KeeleCore</artifactId>
             <version>1.0</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
