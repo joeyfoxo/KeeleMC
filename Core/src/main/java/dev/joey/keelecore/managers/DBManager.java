@@ -25,17 +25,42 @@ public class DBManager {
 
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl("jdbc:mysql://" + config.getString("database.host") + ":" +
-                config.getInt("database.port") + "/" + config.getString("database.name") + "?useSSL=false");
+                config.getInt("database.port") + "/" + config.getString("database.name") +
+                "?useSSL=false&allowPublicKeyRetrieval=true");
         hikariConfig.setUsername(config.getString("database.user"));
         hikariConfig.setPassword(config.getString("database.password"));
         hikariConfig.setMaximumPoolSize(10);
         hikariConfig.setPoolName("KeeleMCPool");
 
         dataSource = new HikariDataSource(hikariConfig);
+
+        initializeTables();
+
     }
 
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
+    }
+
+    private void initializeTables() {
+        String sql = """
+            CREATE TABLE IF NOT EXISTS players (
+                uuid VARCHAR(36) PRIMARY KEY,
+                name VARCHAR(16) NOT NULL,
+                `rank` VARCHAR(32) NOT NULL,
+                vanished BOOLEAN NOT NULL DEFAULT FALSE
+            );
+        """;
+
+        Bukkit.getScheduler().runTaskAsynchronously(KeeleCore.getInstance(), () -> {
+            try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+                stmt.execute(sql);
+                System.out.println("[DB] ✅ Table 'players' ensured.");
+            } catch (SQLException e) {
+                System.err.println("[DB] ❌ Failed to initialize tables:");
+                e.printStackTrace();
+            }
+        });
     }
 
     public void close() {
