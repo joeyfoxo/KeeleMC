@@ -33,8 +33,7 @@ public class DBManager {
         hikariConfig.setPoolName("KeeleMCPool");
 
         dataSource = new HikariDataSource(hikariConfig);
-
-        initializeTables();
+        ensureSchema();
 
     }
 
@@ -42,22 +41,20 @@ public class DBManager {
         return dataSource.getConnection();
     }
 
-    private void initializeTables() {
-        String sql = """
-            CREATE TABLE IF NOT EXISTS players (
-                uuid VARCHAR(36) PRIMARY KEY,
-                name VARCHAR(16) NOT NULL,
-                `rank` VARCHAR(32) NOT NULL,
-                vanished BOOLEAN NOT NULL DEFAULT FALSE
-            );
-        """;
-
+    public void ensureSchema() {
         Bukkit.getScheduler().runTaskAsynchronously(KeeleCore.getInstance(), () -> {
-            try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
-                stmt.execute(sql);
-                System.out.println("[DB] ✅ Table 'players' ensured.");
+            try (Connection conn = getConnection();
+                 Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS players (
+                    uuid VARCHAR(36) NOT NULL PRIMARY KEY,
+                    name VARCHAR(64) NOT NULL,
+                    `rank` VARCHAR(32) NOT NULL,
+                    vanished BOOLEAN NOT NULL DEFAULT FALSE
+                )
+            """);
+                System.out.println("[DB] Ensured player table exists.");
             } catch (SQLException e) {
-                System.err.println("[DB] ❌ Failed to initialize tables:");
                 e.printStackTrace();
             }
         });
