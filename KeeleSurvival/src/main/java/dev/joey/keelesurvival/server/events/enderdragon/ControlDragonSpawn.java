@@ -60,10 +60,10 @@ public class ControlDragonSpawn {
             int portalX = battle.getEndPortalLocation().getBlockX();
             int portalY = battle.getEndPortalLocation().getBlockY() + 1;
             int portalZ = battle.getEndPortalLocation().getBlockZ();
-            world.spawnEntity(new Location(world, portalX + 3.4, portalY, portalZ + 0.5), EntityType.ENDER_CRYSTAL).setInvulnerable(true);
-            world.spawnEntity(new Location(world, portalX - 2.4, portalY, portalZ + 0.5), EntityType.ENDER_CRYSTAL).setInvulnerable(true);
-            world.spawnEntity(new Location(world, portalX + 0.5, portalY, portalZ + 3.4), EntityType.ENDER_CRYSTAL).setInvulnerable(true);
-            world.spawnEntity(new Location(world, portalX + 0.5, portalY, portalZ - 2.4), EntityType.ENDER_CRYSTAL).setInvulnerable(true);
+            world.spawnEntity(new Location(world, portalX + 3.4, portalY, portalZ + 0.5), EntityType.END_CRYSTAL).setInvulnerable(true);
+            world.spawnEntity(new Location(world, portalX - 2.4, portalY, portalZ + 0.5), EntityType.END_CRYSTAL).setInvulnerable(true);
+            world.spawnEntity(new Location(world, portalX + 0.5, portalY, portalZ + 3.4), EntityType.END_CRYSTAL).setInvulnerable(true);
+            world.spawnEntity(new Location(world, portalX + 0.5, portalY, portalZ - 2.4), EntityType.END_CRYSTAL).setInvulnerable(true);
 
             battle.initiateRespawn();
 

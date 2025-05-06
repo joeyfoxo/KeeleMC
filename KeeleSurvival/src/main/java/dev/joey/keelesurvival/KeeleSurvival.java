@@ -53,13 +53,13 @@ public final class KeeleSurvival extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player != null) {
-                configFileHandler.getPlayerFile().set("player.balance." + player.getUniqueId(), Storage.getPlayerBalance().get(player.getUniqueId()));
-                configFileHandler.getPlayerFile().set("player.bounties." + player.getUniqueId(), Bounty.getPlayerBounties().get(player.getUniqueId()));
-                configFileHandler.getPlayerFile().set("player.kills." + player.getUniqueId(), HeadEvent.playerKills.get(player.getUniqueId()));
-            }
-        }
+//        for (Player player : Bukkit.getOnlinePlayers()) {
+//            if (player != null) {
+//                configFileHandler.getPlayerFile().set("player.balance." + player.getUniqueId(), Storage.getPlayerBalance().get(player.getUniqueId()));
+//                configFileHandler.getPlayerFile().set("player.bounties." + player.getUniqueId(), Bounty.getPlayerBounties().get(player.getUniqueId()));
+//                configFileHandler.getPlayerFile().set("player.kills." + player.getUniqueId(), HeadEvent.playerKills.get(player.getUniqueId()));
+//            }
+//        }
         getConfig().set("dragonProgressSeconds", ControlDragonSpawn.secondsElapsed);
         saveConfig();
         configFileHandler.saveFiles();

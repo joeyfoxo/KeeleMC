@@ -1,12 +1,18 @@
 package dev.joey.keelesurvival.managers.supers;
 
+import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.admin.permissions.RankGuard;
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
+import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.util.UtilClass;
 import dev.joey.keelesurvival.server.economy.Storage;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class SuperCommand {
+public class SuperCommand extends dev.joey.keelecore.managers.supers.SuperCommand {
 
     protected boolean commandSenderCheck(CommandSender commandSender) {
         if (!(commandSender instanceof Player)) {
@@ -41,17 +47,12 @@ public class SuperCommand {
         }
     }
 
-    protected boolean noPermission(Player player, String... permissions) {
+    protected boolean noPermission(KeelePlayer keelePlayer, PlayerRank rank) {
+        return keelePlayer.getRank().hasPermissionLevel(rank);
+    }
 
-        for (String perms : permissions) {
-
-            if (!player.hasPermission(perms)) {
-                UtilClass.sendPlayerMessage(player, "Invalid Rank", UtilClass.error);
-                return true;
-            }
-
-        }
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         return false;
-
     }
 }

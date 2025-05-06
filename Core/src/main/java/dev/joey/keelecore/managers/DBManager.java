@@ -83,11 +83,8 @@ public class DBManager {
                     // If online, bind the live player
                     KeelePlayer player = new KeelePlayer(uuid, name, rank);
 
-                    player.setPlayer(Bukkit.getPlayer(uuid));
                     player.setVanished(vanished);
-                    if (vanished) {
-                        PermissionManager.setVanished(player.getPlayer(), vanished);
-                    }
+                    player.setRank(rank);
 
                     Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> future.complete(player));
                     return;

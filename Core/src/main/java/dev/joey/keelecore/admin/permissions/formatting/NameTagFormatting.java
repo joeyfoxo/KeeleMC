@@ -1,6 +1,8 @@
 package dev.joey.keelecore.admin.permissions.formatting;
 
+import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -30,5 +32,15 @@ public class NameTagFormatting {
 
         team.addEntry(player.getName());
         player.setScoreboard(scoreboard);
+
+
+        Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> {
+            //NameTagFormatting.updateNameTag(player, rank);
+            Component display = rank.getPrefix()
+                    .append(Component.text(player.getName()))
+                    .append(rank.getSuffix());
+            player.displayName(display);
+            player.playerListName(display);
+        });
     }
 }

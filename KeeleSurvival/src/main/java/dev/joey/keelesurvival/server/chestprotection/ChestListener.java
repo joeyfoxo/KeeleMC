@@ -60,7 +60,7 @@ public class ChestListener extends ChestLocking implements Listener {
                     if (particleLocation != null) {
                         Collection<Player> nearbyPLayers = particleLocation.getNearbyPlayers(20);
 
-                        new ParticleBuilder(Particle.REDSTONE)
+                        new ParticleBuilder(Particle.DUST)
                                 .color(255, 0, 0)
                                 .count(5)
                                 .location(particleLocation)

@@ -1,5 +1,8 @@
 package dev.joey.keelesurvival.server.bounties;
 
+import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
+import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelesurvival.managers.supers.SuperCommand;
 import dev.joey.keelesurvival.server.economy.Storage;
 import dev.joey.keelecore.util.UtilClass;
@@ -96,7 +99,9 @@ public class BountyCommand extends SuperCommand implements CommandExecutor {
 
             if (strings[0].equalsIgnoreCase("remove")) {
 
-                if (noPermission(player, "ks.bountyremove")) return true;
+                KeelePlayer ke = PermissionManager.getCached(player.getUniqueId());
+
+                if (!noPermission(ke, PlayerRank.ADMIN)) return true;
 
                 Player target = Bukkit.getPlayer(strings[1]);
 

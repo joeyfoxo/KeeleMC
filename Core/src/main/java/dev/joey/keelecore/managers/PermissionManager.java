@@ -142,7 +142,7 @@ public class PermissionManager {
             System.out.println("[DB] Setting rank for " + player.getName() + " (" + uuid + ") to " + newRank.name());
 
             return put(kp).thenApply(updated -> {
-                updateDisplayNames(player, updated.getRank());
+                NameTagFormatting.updateNameTag(player, updated.getRank());
                 System.out.println("[DB] Rank updated for " + player.getName() + " to " + updated.getRank().name());
                 return updated;
             });
@@ -152,12 +152,4 @@ public class PermissionManager {
     public static void setRank(Player player, String input) {
         setRank(player, PlayerRank.valueOf(input.toUpperCase()));
     }
-
-    private static void updateDisplayNames(Player player, PlayerRank rank) {
-        Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> {
-            Component display = rank.getPrefix().append(Component.text(player.getName()));
-            player.displayName(display);
-            player.playerListName(display);
-            NameTagFormatting.updateNameTag(player, rank);
-        });
-    }}
+}

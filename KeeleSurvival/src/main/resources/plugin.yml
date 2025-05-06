@@ -7,7 +7,6 @@ depend:
   - Vault
   - GriefPrevention
   - FastAsyncWorldEdit
-  - ClueScrolls
 
 description: A plugin for keele's survival server
 website: https://joeyfox.dev

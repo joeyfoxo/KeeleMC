@@ -1,0 +1,63 @@
+name: KeeleSurvival
+version: '1.0'
+main: dev.joey.keelesurvival.KeeleSurvival
+api-version: 1.19
+authors: [ Joey ]
+depend:
+  - Vault
+  - GriefPrevention
+  - FastAsyncWorldEdit
+
+description: A plugin for keele's survival server
+website: https://joeyfox.dev
+commands:
+  pay:
+    description: Allows a player to transfer money
+
+  balance:
+    description: Allows a player to transfer money
+    aliases:
+      - bal
+      - balance
+      - money
+      - mon
+
+  eco:
+    description: Forces economy
+    aliases:
+      - economy
+
+  lock:
+    description: Locks a chest whilst player is looking
+  unlock:
+    description: Unlocks a chest whilst player is looking
+  access:
+    description: Sets a players access for a chest
+    aliases:
+      - trust
+      - containertrust
+  wild:
+    description: Teleports the player to a random spot
+    aliases:
+      - wilderness
+      - wildteleport
+  bounty:
+    description: Allows a player to set a bounty
+    aliases:
+      - moneyhead
+      - head
+
+  book:
+    description: Gives the starter book
+
+  sell:
+    description: Allows a player to set a bounty
+    aliases:
+      - headsell
+      - sellhand
+
+  withdraw:
+    description: Withdraws money from the bank
+    aliases:
+      - wd
+      - take

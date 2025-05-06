@@ -1,5 +1,7 @@
 package dev.joey.keelecore.managers.supers;
 
+import dev.joey.keelecore.admin.permissions.RankGuard;
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.util.UtilClass;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
@@ -42,5 +44,8 @@ public abstract class SuperCommand implements CommandExecutor, TabCompleter {
                                       @NotNull String[] args) {
         // Default: no suggestions — override in child command
         return Collections.emptyList();
+    }
+    protected  boolean noAccessMessage(Object instance, KeelePlayer keelePlayer) {
+        return RankGuard.hasRequiredRank(instance, keelePlayer);
     }
 }

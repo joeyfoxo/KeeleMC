@@ -2,6 +2,8 @@ package dev.joey.keelesurvival.server.economy.commands;
 
 import static dev.joey.keelesurvival.KeeleSurvival.getEconomy;
 
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
+import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelesurvival.managers.supers.SuperCommand;
 import dev.joey.keelesurvival.server.economy.Storage;
 import dev.joey.keelesurvival.util.ConfigFileHandler;
@@ -23,8 +25,9 @@ public class EcoCommand extends SuperCommand implements CommandExecutor {
 
         Player player = (Player) commandSender;
 
+        KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
 
-        if (noPermission(player, "ks.eco", "ks.admin")) return true;
+        if (noAccessMessage(this, keelePlayer)) return true;
 
         if (strings.length == 3) {
 

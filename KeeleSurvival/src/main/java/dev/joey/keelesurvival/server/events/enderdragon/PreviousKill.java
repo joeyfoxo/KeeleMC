@@ -46,7 +46,7 @@ public class PreviousKill implements Listener {
 
                 for (int i = 0; i < topPlayers.size(); i++) {
 
-                    Player player = Bukkit.getPlayer(topPlayers.get(i));
+                    Player player = event.getEntity().getKiller();
 
                     switch (i) {
                         case 0 -> {
@@ -62,7 +62,7 @@ public class PreviousKill implements Listener {
                             player.addPotionEffects(List.of(
                                     new PotionEffect(PotionEffectType.HEALTH_BOOST, potionEffectTime, 1, true, false),
                                     new PotionEffect(PotionEffectType.LUCK, potionEffectTime, 1, true, false),
-                                    new PotionEffect(PotionEffectType.INCREASE_DAMAGE, keeleSurvival.getConfig().getInt("dragonSpawnSeconds"), 1, true, false))
+                                    new PotionEffect(PotionEffectType.STRENGTH, keeleSurvival.getConfig().getInt("dragonSpawnSeconds"), 1, true, false))
                             );
                         }
                         case 1 -> {
@@ -77,7 +77,7 @@ public class PreviousKill implements Listener {
                             player.addPotionEffects(List.of(
                                     new PotionEffect(PotionEffectType.HEALTH_BOOST, potionEffectTime / 2, 1, true, false),
                                     new PotionEffect(PotionEffectType.LUCK, potionEffectTime, 1, true, false),
-                                    new PotionEffect(PotionEffectType.INCREASE_DAMAGE, keeleSurvival.getConfig().getInt("dragonSpawnSeconds"), 1, true, false))
+                                    new PotionEffect(PotionEffectType.STRENGTH, keeleSurvival.getConfig().getInt("dragonSpawnSeconds"), 1, true, false))
                             );
                         }
 
@@ -92,7 +92,7 @@ public class PreviousKill implements Listener {
                             player.addPotionEffects(List.of(
                                     new PotionEffect(PotionEffectType.HEALTH_BOOST, potionEffectTime / 3, 0, true, false),
                                     new PotionEffect(PotionEffectType.LUCK, potionEffectTime / 3, 0, true, false),
-                                    new PotionEffect(PotionEffectType.INCREASE_DAMAGE, keeleSurvival.getConfig().getInt("dragonSpawnSeconds"), 1, true, false))
+                                    new PotionEffect(PotionEffectType.STRENGTH, keeleSurvival.getConfig().getInt("dragonSpawnSeconds"), 1, true, false))
                             );
                         }
                         case 3,4,5,6,7,8,9 -> {
@@ -102,7 +102,7 @@ public class PreviousKill implements Listener {
                                     .color(TextColor.color(new Color(0, 255, 255).getRGB()))
                                     .decorate(TextDecoration.UNDERLINED));
 
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, keeleSurvival.getConfig().getInt("dragonSpawnSeconds"), 1, true, false));
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, keeleSurvival.getConfig().getInt("dragonSpawnSeconds"), 1, true, false));
 
                         }
                     }

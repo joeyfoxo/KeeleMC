@@ -17,6 +17,5 @@ public class ListenerManager {
         new DailyRestart();
         //new AutoAnnouncer();
         new ArmourListener();
-
     }
 }

@@ -22,9 +22,17 @@ public class Bounty {
     static HashMap<UUID, Double> playerBounties = new HashMap<>();
 
     static Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-    static Team team = scoreboard.registerNewTeam("bounty");
+    static Team team;
 
     public static Team getTeam() {
+        // Remove existing team if it exists
+        Team existing = scoreboard.getTeam("bounty");
+        if (existing != null) {
+            existing.unregister();
+        }
+
+        // Register a new team
+        team = scoreboard.registerNewTeam("bounty");
         team.color(NamedTextColor.RED);
         return team;
     }

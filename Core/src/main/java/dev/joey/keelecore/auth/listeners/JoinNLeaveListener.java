@@ -1,13 +1,12 @@
 package dev.joey.keelecore.auth.listeners;
 
 import dev.joey.keelecore.KeeleCore;
-import dev.joey.keelecore.admin.permissions.RankGuard;
+import dev.joey.keelecore.admin.permissions.formatting.NameTagFormatting;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PermissionManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
@@ -25,8 +24,7 @@ public class JoinNLeaveListener implements Listener {
 
             keelePlayer.setPlayer(player);
             PermissionManager.setVanished(player, keelePlayer.isVanished());
-
-
+            NameTagFormatting.updateNameTag(player, keelePlayer.getRank());
         });
     }
 
