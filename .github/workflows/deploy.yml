@@ -24,9 +24,9 @@ jobs:
         BRANCH="${GITHUB_REF##*/}"
         echo "Deploying branch: $BRANCH"
         if [[ "$BRANCH" == "development" ]]; then
-          ssh root@49.13.78.86 "cd /root/LiveServer/GitHub && git pull origin development && ./deploy-development.sh \$(cat deploy-targets.txt)"
+          ssh root@49.13.78.86 "cd /root/LiveServer/GitHub && git pull origin development && ./deploy-development.sh \$(cat deploy.txt)"
         elif [[ "$BRANCH" == "master" ]]; then
-          ssh root@49.13.78.86 "cd /root/LiveServer/GitHub && git pull origin master && ./deploy-master.sh \$(cat deploy-targets.txt)"
+          ssh root@49.13.78.86 "cd /root/LiveServer/GitHub && git pull origin master && ./deploy-master.sh \$(cat deploy.txt)"
         else
           echo "Unsupported branch: $BRANCH"
           exit 1
