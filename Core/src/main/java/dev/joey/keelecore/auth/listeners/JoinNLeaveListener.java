@@ -20,7 +20,7 @@ public class JoinNLeaveListener implements Listener {
     @EventHandler
     public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        System.out.println("TESTING NEW DEPLOYMENT ");
+        System.out.println("TESTING NEW DEPLOYMENT " + player.getName());
         PermissionManager.getPlayer(player.getUniqueId()).thenAccept(keelePlayer -> {
 
             keelePlayer.setPlayer(player);
