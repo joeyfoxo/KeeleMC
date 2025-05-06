@@ -44,7 +44,7 @@ public class DBManager {
     public void ensureSchema() {
 
         System.out.println("[DB] Ensuring schema...");
-        Bukkit.getScheduler().runTaskAsynchronously(KeeleCore.getInstance(), () -> {
+        Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> {
             System.out.println("[DB] Ensuring schema in async task...");
             try (Connection conn = getConnection();
                  Statement stmt = conn.createStatement()) {
