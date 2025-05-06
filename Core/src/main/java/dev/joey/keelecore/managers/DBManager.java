@@ -33,38 +33,11 @@ public class DBManager {
         hikariConfig.setPoolName("KeeleMCPool");
 
         dataSource = new HikariDataSource(hikariConfig);
-        ensureSchema();
 
     }
 
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
-    }
-
-    public void ensureSchema() {
-
-        System.out.println("[DB] Ensuring schema...");
-        Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> {
-            System.out.println("[DB] Ensuring schema in async task...");
-            try (Connection conn = getConnection();
-                 Statement stmt = conn.createStatement()) {
-
-                stmt.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS players (
-                    uuid VARCHAR(36) NOT NULL PRIMARY KEY,
-                    name VARCHAR(64) NOT NULL,
-                    `rank` VARCHAR(32) NOT NULL,
-                    vanished BOOLEAN NOT NULL DEFAULT FALSE
-                )
-            """);
-
-                System.out.println("[DB] Ensured 'players' table exists.");
-
-            } catch (SQLException e) {
-                System.err.println("[DB] Failed to ensure schema:");
-                e.printStackTrace();
-            }
-        });
     }
 
     public void close() {
