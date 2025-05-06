@@ -42,9 +42,13 @@ public class DBManager {
     }
 
     public void ensureSchema() {
+
+        System.out.println("[DB] Ensuring schema...");
         Bukkit.getScheduler().runTaskAsynchronously(KeeleCore.getInstance(), () -> {
+            System.out.println("[DB] Ensuring schema in async task...");
             try (Connection conn = getConnection();
                  Statement stmt = conn.createStatement()) {
+
                 stmt.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS players (
                     uuid VARCHAR(36) NOT NULL PRIMARY KEY,
@@ -53,8 +57,11 @@ public class DBManager {
                     vanished BOOLEAN NOT NULL DEFAULT FALSE
                 )
             """);
-                System.out.println("[DB] Ensured player table exists.");
+
+                System.out.println("[DB] Ensured 'players' table exists.");
+
             } catch (SQLException e) {
+                System.err.println("[DB] Failed to ensure schema:");
                 e.printStackTrace();
             }
         });
