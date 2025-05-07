@@ -6,7 +6,7 @@ public final class CravingChaos extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        System.out.println("CravingChaos plugin has been enabled!");
 
     }
 
