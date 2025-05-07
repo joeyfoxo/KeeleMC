@@ -1,17 +1,20 @@
 package dev.joeyfox.cravingChaos;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import dev.joeyfox.cravingChaos.game.CravingGame;
+import dev.joeyfox.cravingChaos.game.CravingGameStart;
+import dev.joeyfoxo.core.Core;
 
-public final class CravingChaos extends JavaPlugin {
+public final class CravingChaos extends Core<CravingGame> {
 
     @Override
     public void onEnable() {
-        System.out.println("CravingChaos plugin has been enabled!");
-
+        super.onEnable(); // This will call createGameInstance() inside Core
+        setKeeleMiniCore(this);
+        new CravingGameStart(getGame());
     }
 
     @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+    protected CravingGame createGameInstance() {
+        return new CravingGame();
     }
 }
