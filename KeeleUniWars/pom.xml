@@ -114,13 +114,13 @@
             <groupId>dev.joey</groupId>
             <artifactId>KeeleCore</artifactId>
             <version>1.0</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>dev.joeyfoxo</groupId>
             <artifactId>MiniGameCore</artifactId>
             <version>1.0</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
