@@ -17,7 +17,7 @@ public class CravingCageHandler extends CoreCageHandler<CravingGame> {
 
     @Override
     public Location findNextAvailableCage(Team<CravingGame> team, TeamPlayer<CravingGame> player) {
-        Location base = new Location(Bukkit.getWorld("world"), 0, 100, 0);
+        Location base = new Location(Bukkit.getWorld("glass"), 0, 105, 0);
         List<TeamPlayer<CravingGame>> playersInTeam = team.getTeamMembers().stream().toList();
         int index = playersInTeam.indexOf(player);
 
