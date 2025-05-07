@@ -1,6 +1,7 @@
 package dev.joeyfoxo.core.game.teams;
 
 import dev.joeyfoxo.core.game.CoreGame;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class TeamPlayer<G extends CoreGame<G>> {
@@ -9,6 +10,7 @@ public class TeamPlayer<G extends CoreGame<G>> {
     Player player;
     boolean isSpectator = false;
     CoreGame<G> game;
+    Location spawnLocation;
 
     public TeamPlayer(CoreGame<G> game, TeamColors teamColor, Player player) {
         this.teamColor = teamColor;
@@ -34,5 +36,13 @@ public class TeamPlayer<G extends CoreGame<G>> {
 
     public void setSpectator(boolean spectator) {
         isSpectator = spectator;
+    }
+
+    public void setSpawnLocation(Location spawnLocation) {
+        this.spawnLocation = spawnLocation;
+    }
+
+    public Location getSpawnLocation() {
+        return spawnLocation;
     }
 }

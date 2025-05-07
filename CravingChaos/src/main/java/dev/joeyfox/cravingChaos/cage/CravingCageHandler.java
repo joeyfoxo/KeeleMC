@@ -35,9 +35,13 @@ public class CravingCageHandler extends CoreCageHandler<CravingGame> {
 
         // Put players on opposite sides along the X-axis
         if (index == 0) {
-            return base.clone().add((double) -CravingSettings.getCageSize() / 2, 0, 0); // West side
+            base = base.clone().add((double) -CravingSettings.getCageSize() / 4, 0, 0); // West side
+            player.setSpawnLocation(base);
+            return base;
         } else if (index == 1) {
-            return base.clone().add((double) CravingSettings.getCageSize() / 2, 0, 0); // East side
+            base = base.clone().add((double) CravingSettings.getCageSize() / 4, 0, 0); // West side
+            player.setSpawnLocation(base);
+            return base;
         }
 
         return base; // Fallback
