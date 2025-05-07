@@ -12,19 +12,19 @@ import java.util.concurrent.TimeUnit;
 
 import static dev.joeyfoxo.keeleuniwars.generator.WallsGenerator.center;
 
-public class WarsGameStart<G extends WallsGame<G>> extends CoreGameStart<G> {
-    G game;
+public class WarsGameStart extends CoreGameStart<WallsGame> {
+    WallsGame game;
 
     WallsGenerator wallsGenerator = new WallsGenerator();
     boolean ready = false;
 
-    public WarsGameStart(G game) {
+    public WarsGameStart(WallsGame game) {
         super(game);
         this.game = game;
 //        super.setMinimumPlayers(CoreSettings.minPlayers); -- Can edit if needs
 //        super.setCountdownMins(CoreSettings.countdownMins); -- Can edit if needs
-        new Settings<>(game, world);
-        new CageHandler<>(game);
+        new Settings(game, world);
+        new CageHandler(game);
         new BukkitRunnable() {
 
             @Override
@@ -52,7 +52,7 @@ public class WarsGameStart<G extends WallsGame<G>> extends CoreGameStart<G> {
             public void run() {
 
                 if (countdownSeconds <= 0) {
-                    new WarsInGame<>(game, world);
+                    new WarsInGame(game, world);
                     game.setGameStatus(GameStatus.WALLS_UP);
                     cancel();
                 }

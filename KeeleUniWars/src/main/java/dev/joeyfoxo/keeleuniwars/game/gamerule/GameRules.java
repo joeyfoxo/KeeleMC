@@ -12,11 +12,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-public class GameRules<G extends WallsGame<G>> implements Listener {
+public class GameRules implements Listener {
 
-    G game;
+    WallsGame game;
 
-    public GameRules(G game, World world) {
+    public GameRules(WallsGame game, World world) {
 
         this.game = game;
         setGameRule(world, GameRule.ANNOUNCE_ADVANCEMENTS, false);

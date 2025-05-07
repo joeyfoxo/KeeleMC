@@ -20,65 +20,45 @@ import static org.codehaus.plexus.util.FileUtils.deleteDirectory;
  *
  * @param <G> The type of game this core class is managing. Must extend CoreGame.
  */
-public class Core<G extends CoreGame<G>> extends JavaPlugin {
-
+public abstract class Core<G extends CoreGame<G>> extends JavaPlugin {
     private static JavaPlugin keeleMiniCore;
+    private G game;
 
-    /**
-     * Called when the plugin is enabled.
-     * Sets the static keeleMiniCore field to this instance and starts a new game.
-     */
     @Override
     public void onEnable() {
         setKeeleMiniCore(this);
-        G game = (G) CoreGame.getInstance();
+        this.game = createGameInstance();
         new CoreGameStart<>(game);
     }
 
-    /**
-     * Called when the plugin is disabled.
-     * Currently, does nothing.
-     */
     @Override
     public void onDisable() {
+        if (game != null) {
+            game.shutdown(); // Add this method in CoreGame subclasses
+        }
 
         for (World world : Bukkit.getWorlds()) {
+            if (!world.getName().startsWith("game_")) continue;
 
-        Logger logger = getLogger();
-
-        if (world != null) {
             Bukkit.unloadWorld(world, false);
-            logger.info("World " + world.getName() + " has been unloaded.");
-        } else {
-            logger.warning("World " + world.getName() + " is not loaded or does not exist.");
-        }
-
-
-        File worldFolder = new File(Bukkit.getServer().getWorldContainer(), world.getName());
-            if (UtilClass.deleteDirectory(worldFolder)) {
-                logger.info("World " + world.getName() + " has been deleted.");
-            } else {
-                logger.warning("Failed to delete world " + world.getName() + ".");
+            File folder = new File(Bukkit.getWorldContainer(), world.getName());
+            if (UtilClass.deleteDirectory(folder)) {
+                getLogger().info("Deleted world: " + world.getName());
             }
         }
-
     }
 
-    /**
-     * Sets the static keeleMiniCore field to the given plugin instance.
-     *
-     * @param plugin The plugin instance to set keeleMiniCore to.
-     */
-    public static void setKeeleMiniCore(JavaPlugin plugin) {
-        keeleMiniCore = plugin;
+    protected abstract G createGameInstance();
+
+    public G getGame() {
+        return game;
     }
 
-    /**
-     * Returns the static keeleMiniCore field.
-     *
-     * @return The static keeleMiniCore field.
-     */
     public static JavaPlugin getKeeleMiniCore() {
         return keeleMiniCore;
+    }
+
+    public static void setKeeleMiniCore(JavaPlugin plugin) {
+        keeleMiniCore = plugin;
     }
 }

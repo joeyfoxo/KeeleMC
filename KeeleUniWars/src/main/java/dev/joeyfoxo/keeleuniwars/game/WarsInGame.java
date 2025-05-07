@@ -2,6 +2,7 @@ package dev.joeyfoxo.keeleuniwars.game;
 
 import dev.joey.keelecore.util.UtilClass;
 import dev.joeyfoxo.core.Core;
+import dev.joeyfoxo.core.game.CoreGame;
 import dev.joeyfoxo.core.game.CoreInGame;
 import dev.joeyfoxo.core.game.GameStatus;
 import dev.joeyfoxo.keeleuniwars.util.Util;
@@ -23,15 +24,13 @@ import java.util.Random;
 import static dev.joeyfoxo.keeleuniwars.game.Settings.wallCountDownMinutes;
 import static dev.joeyfoxo.keeleuniwars.generator.WallsGenerator.*;
 
-public class WarsInGame<G extends WallsGame<G>> extends CoreInGame<G> {
+public class WarsInGame extends CoreGame<WallsGame> {
 
-    G game;
+    WallsGame game;
 
-    public WarsInGame(G game, World world) {
-        super(game);
+    public WarsInGame(WallsGame game, World world) {
         this.game = game;
         wallCountDown(world);
-        gameRunnable();
     }
 
     public void wallCountDown(World world) {
@@ -72,11 +71,6 @@ public class WarsInGame<G extends WallsGame<G>> extends CoreInGame<G> {
                 secondsLeft--;
             }
         }.runTaskTimer(Util.keeleUniWars, 0, 20); // Run every second
-    }
-
-    @Override
-    public void gameRunnable() {
-        super.gameRunnable();
     }
 
     public void dropTheWalls(World world) {

@@ -12,11 +12,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-public class GameHandler<G extends WallsGame<G>> implements Listener {
+public class GameHandler implements Listener {
 
-    G game;
+    WallsGame game;
 
-    public GameHandler(G game) {
+    public GameHandler(WallsGame game) {
         Core.getKeeleMiniCore().getServer().getPluginManager().registerEvents(this, Core.getKeeleMiniCore());
         this.game = game;
     }
@@ -31,10 +31,10 @@ public class GameHandler<G extends WallsGame<G>> implements Listener {
                 return;
             }
 
-            WallsPlayer<G> victimPlayer = game.getPlayer(victim);
-            WallsPlayer<G> attackerPlayer = game.getPlayer(attacker);
-            WallsTeam<G> victimTeam = game.getTeam(victimPlayer);
-            WallsTeam<G> attackerTeam = game.getTeam(attackerPlayer);
+            WallsPlayer victimPlayer = game.getPlayer(victim);
+            WallsPlayer attackerPlayer = game.getPlayer(attacker);
+            WallsTeam victimTeam = game.getTeam(victimPlayer);
+            WallsTeam attackerTeam = game.getTeam(attackerPlayer);
 
             if (victimTeam.getTeamMembers().contains(attackerPlayer) || attackerTeam.getTeamMembers().contains(victimPlayer)) {
                 event.setCancelled(true);
@@ -52,7 +52,7 @@ public class GameHandler<G extends WallsGame<G>> implements Listener {
 
         event.setCancelled(true);
         Player player = event.getPlayer();
-        WallsPlayer<? extends WallsGame<G>> wallsPlayer = game.getPlayer(player);
+        WallsPlayer wallsPlayer = game.getPlayer(player);
         wallsPlayer.setSpectator(true);
 
         if (wallsPlayer.isSpectator()) {

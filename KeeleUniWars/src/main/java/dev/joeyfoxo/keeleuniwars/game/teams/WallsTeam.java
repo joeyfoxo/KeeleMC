@@ -4,23 +4,17 @@ import dev.joeyfoxo.core.game.teams.Team;
 import dev.joeyfoxo.core.game.teams.TeamColors;
 import dev.joeyfoxo.keeleuniwars.game.WallsGame;
 
-public class WallsTeam<G extends WallsGame<G>> extends Team<G> {
+public class WallsTeam extends Team<WallsGame> {
 
-    WallsGame<G> wallsGame;
-    TeamColors teamColors;
-
-    public WallsTeam(WallsGame<G> wallsGame, TeamColors teamColor) {
-        super(wallsGame, teamColor);
-        this.wallsGame = wallsGame;
-        this.teamColors = teamColor;
+    public WallsTeam(WallsGame game, TeamColors teamColor) {
+        super(game, teamColor);
     }
 
-    public void addPlayer(WallsPlayer<G> player) {
-        super.players.add(player);
+    public void addPlayer(WallsPlayer player) {
+        getTeamMembers().add(player); // Use getter from base class
     }
 
-    public void removePlayer(WallsPlayer<G> player) {
-        players.remove(player);
+    public void removePlayer(WallsPlayer player) {
+        getTeamMembers().remove(player); // Use getter from base class
     }
-
 }

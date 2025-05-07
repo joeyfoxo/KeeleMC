@@ -20,37 +20,30 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class CoreCageHandler<G extends CoreGame<G>> implements Listener {
 
-    G game;
-    protected HashMap<Team<G>, HashMap<UUID, Location>> teamSpawnLocations = new HashMap<>();
-
-    protected World world = Core.getKeeleMiniCore().getServer().getWorlds().get(0);
+    protected final G game;
+    protected final Map<Team<G>, Map<UUID, Location>> teamSpawnLocations = new HashMap<>();
 
     public CoreCageHandler(G game) {
-        Core.getKeeleMiniCore().getServer().getPluginManager().registerEvents(this, Core.getKeeleMiniCore());
         this.game = game;
+        Bukkit.getPluginManager().registerEvents(this, Core.getKeeleMiniCore());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPreJoin(AsyncPlayerPreLoginEvent event) {
-        if (game.getGameStatus() == GameStatus.NOT_READY) {
+        GameStatus status = game.getGameStatus();
+        if (status == GameStatus.NOT_READY) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
-                    Component.empty());
-            return;
-        }
-
-        if (game.getGameStatus() == GameStatus.IN_GAME  || game.getGameStatus() == GameStatus.WALLS_UP) {
+                    Component.text("Game is not ready."));
+        } else if (status == GameStatus.IN_GAME || status == GameStatus.WALLS_UP) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
                     Component.text("Game is in progress!"));
-            return;
-        }
-
-        if (game.getAlivePlayerCount() >= game.getMaxPlayers()) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, Component.text("Game is full!"));
+        } else if (game.getAlivePlayerCount() >= game.getMaxPlayers()) {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL,
+                    Component.text("Game is full!"));
         }
     }
 
@@ -58,29 +51,29 @@ public abstract class CoreCageHandler<G extends CoreGame<G>> implements Listener
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Team<G> team = game.getTeamWithFewestMembers();
-        System.out.println(team.getTeamColor());
-        TeamPlayer<G> teamPlayer;
-        if (team != null) {
-            if (game.getPlayer(player) == null) {
-                teamPlayer = game.createTeamPlayer(game, team, player);
-            } else {
-                teamPlayer = game.getPlayer(player);
-            }
 
-            team.addPlayer(teamPlayer);
-            Location cageLocation = findNextAvailableCage(team, teamPlayer);
-            player.teleport(cageLocation);
-            teamSpawnLocations.computeIfAbsent(team, k -> new HashMap<>()).putIfAbsent(player.getUniqueId(), cageLocation);
+        if (team == null) {
+            player.kick(Component.text("Unable to join game: no teams available."));
+            return;
         }
+
+        TeamPlayer<G> teamPlayer = game.getPlayer(player);
+        if (teamPlayer == null) {
+            teamPlayer = game.createTeamPlayer(team, player);
+        }
+
+        team.addPlayer(teamPlayer);
+
+        Location cageLocation = findNextAvailableCage(team, teamPlayer);
+        teamSpawnLocations.computeIfAbsent(team, k -> new HashMap<>()).put(player.getUniqueId(), cageLocation);
+        player.teleport(cageLocation);
     }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (game.getGameStatus() == GameStatus.WAITING) {
-            // Allow player to turn around but not to change location
-            if (!event.getFrom().getBlock().equals(event.getTo().getBlock())) {
-                event.setCancelled(true);
-            }
+        if (game.getGameStatus() == GameStatus.WAITING &&
+                !event.getFrom().getBlock().equals(event.getTo().getBlock())) {
+            event.setCancelled(true);
         }
     }
 
@@ -93,32 +86,22 @@ public abstract class CoreCageHandler<G extends CoreGame<G>> implements Listener
 
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        UUID playerId = player.getUniqueId();
-        Team<G> team = null;
-        for (Team<G> t : teamSpawnLocations.keySet()) {
-            if (teamSpawnLocations.get(t).containsKey(playerId)) {
-                team = t;
-                break;
-            }
-        }
+        UUID playerId = event.getPlayer().getUniqueId();
+        World world = event.getPlayer().getWorld();
 
-        if (team != null) {
-            TeamPlayer<G> teamPlayer = team.getTeamMembers().stream()
-                    .filter(p -> p.getPlayer().getUniqueId().equals(playerId))
-                    .findFirst()
-                    .orElse(null);
-            
-            if (teamPlayer != null) {
-                Location cageLocation = teamSpawnLocations.get(team).remove(playerId).subtract(0, 1, 0);
-                // Remove the cage location from the team's spawn locations
-                System.out.println("Spawn Block:" +  world.getBlockAt(cageLocation).getType());
-                team.removePlayer(teamPlayer);
-                game.removePlayer(teamPlayer);
+        teamSpawnLocations.forEach((team, spawns) -> {
+            if (spawns.containsKey(playerId)) {
+                Location cageLocation = spawns.remove(playerId).subtract(0, 1, 0);
                 world.getBlockAt(cageLocation).setType(Material.AIR);
+
+                team.getTeamMembers().removeIf(p -> p.getPlayer().getUniqueId().equals(playerId));
+                game.getAlivePlayers().removeIf(p -> p.getPlayer().getUniqueId().equals(playerId));
             }
-        }
+        });
     }
 
+    /**
+     * Define how cage spawn locations are allocated for each team/player.
+     */
     public abstract Location findNextAvailableCage(Team<G> team, TeamPlayer<G> player);
 }
