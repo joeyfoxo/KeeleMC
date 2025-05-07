@@ -5,17 +5,49 @@ import dev.joeyfox.cravingChaos.game.CravingSettings;
 import dev.joeyfoxo.core.game.events.CoreCageHandler;
 import dev.joeyfoxo.core.game.teams.Team;
 import dev.joeyfoxo.core.game.teams.TeamPlayer;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class CravingCageHandler extends CoreCageHandler<CravingGame> {
 
+    private final CravingGame game;
+
     public CravingCageHandler(CravingGame game) {
         super(game);
+        this.game = game;
+    }
+
+
+    @Override
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        Team<CravingGame> team = game.getTeamWithFewestMembers();
+
+        if (team == null) {
+            player.kick(Component.text("Unable to join game: no teams available."));
+            return;
+        }
+
+        TeamPlayer<CravingGame> teamPlayer = game.getPlayer(player);
+        if (teamPlayer == null) {
+            teamPlayer = game.createTeamPlayer(team, player);
+        }
+
+        team.addPlayer(teamPlayer);
+
+        Location cageLocation = findNextAvailableCage(team, teamPlayer);
+        teamSpawnLocations.computeIfAbsent(team, k -> new HashMap<>()).put(player.getUniqueId(), cageLocation);
+        player.teleport(cageLocation);
     }
 
     @Override

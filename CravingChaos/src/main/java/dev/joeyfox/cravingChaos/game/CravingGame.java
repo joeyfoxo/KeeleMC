@@ -13,8 +13,10 @@ public class CravingGame extends CoreGame<CravingGame> {
 
     private static CravingGame instance;
 
-    private final Team<CravingGame> redTeam = new Team<>(this, TeamColors.RED);
-    private final Team<CravingGame> blueTeam = new Team<>(this, TeamColors.BLUE);
+    Team<CravingGame> redTeam = new Team<>(this, TeamColors.RED);
+    Team<CravingGame> greenTeam = new Team<>(this, TeamColors.GREEN);
+    Team<CravingGame> yellowTeam = new Team<>(this, TeamColors.YELLOW);
+    Team<CravingGame> blueTeam = new Team<>(this, TeamColors.BLUE);
 
     public CravingGame() {
         populateTeams();
@@ -23,6 +25,8 @@ public class CravingGame extends CoreGame<CravingGame> {
     @Override
     protected void populateTeams() {
         teamsList.add(redTeam);
+        teamsList.add(greenTeam);
+        teamsList.add(yellowTeam);
         teamsList.add(blueTeam);
     }
 
@@ -44,7 +48,7 @@ public class CravingGame extends CoreGame<CravingGame> {
 
     @Override
     public Team<CravingGame> getTeamWithFewestMembers() {
-        return Stream.of(redTeam, blueTeam)
+        return Stream.of(redTeam, greenTeam, yellowTeam, blueTeam)
                 .min(Comparator.comparingInt(team -> team.getTeamMembers().size()))
                 .orElse(null);
     }
