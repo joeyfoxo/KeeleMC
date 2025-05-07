@@ -5,6 +5,7 @@ api-version: '1.21'
 authors: [Joeyfoxo]
 description: Another Furry Plugin
 website: https://joeyfox.dev
+load: STARTUP
 
 depend:
   - KeeleCore
