@@ -11,6 +11,7 @@ public final class CravingChaos extends Core<CravingGame> {
         super.onEnable(); // This will call createGameInstance() inside Core
         setKeeleMiniCore(this);
         new CravingGameStart(getGame());
+        System.out.println("CravingChaos has been enabled!");
     }
 
     @Override
