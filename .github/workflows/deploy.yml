@@ -19,16 +19,20 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H 49.13.78.86 >> ~/.ssh/known_hosts
 
+      - name: Read deploy targets
+        id: read_targets
+        run: echo "TARGETS=$(cat deploy.txt | tr '\n' ' ')" >> $GITHUB_ENV
+
       - name: Deploy to VPS
         run: |
           BRANCH="${GITHUB_REF##*/}"
           echo "🚀 Deploying branch: $BRANCH"
           DEPLOY_SCRIPT="deploy-$BRANCH.sh"
-          
+
           ssh root@49.13.78.86 "\
             cd /root/LiveServer/GitHub && \
             git fetch origin && \
             git checkout $BRANCH && \
             git pull origin $BRANCH && \
             chmod +x $DEPLOY_SCRIPT && \
-            ./$DEPLOY_SCRIPT \$(cat deploy.txt)"
+            ./$DEPLOY_SCRIPT ${{ env.TARGETS }}"
