@@ -8,7 +8,7 @@ public class CravingSettings extends CoreSettings<CravingGame> {
         super(game);
 
         CoreSettings.maxPlayers = 2;
-        CoreSettings.minPlayers = 2;
+        CoreSettings.minPlayers = 1;
 
     }
 }

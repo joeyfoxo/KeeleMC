@@ -35,6 +35,7 @@ public class CoreGameStart<G extends CoreGame<G>> {
     public CoreGameStart(G game) {
         this.game = game;
         new CoreSettings<>(game);
+        new CoreInGame<>(game);
     }
 
     /**

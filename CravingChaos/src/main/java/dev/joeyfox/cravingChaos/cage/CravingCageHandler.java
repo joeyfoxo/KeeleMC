@@ -6,6 +6,7 @@ import dev.joeyfoxo.core.game.teams.Team;
 import dev.joeyfoxo.core.game.teams.TeamPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.util.List;
 
@@ -17,7 +18,9 @@ public class CravingCageHandler extends CoreCageHandler<CravingGame> {
 
     @Override
     public Location findNextAvailableCage(Team<CravingGame> team, TeamPlayer<CravingGame> player) {
-        Location base = new Location(Bukkit.getWorld("glass"), 0, 105, 0);
+        World world = Bukkit.getWorld("glass");
+        Location location = new Location(world, 0, world.getHighestBlockYAt(0, 0), 0);
+        Location base = new Location(world, location.getX(), location.getY() + 1, location.getZ());
         List<TeamPlayer<CravingGame>> playersInTeam = team.getTeamMembers().stream().toList();
         int index = playersInTeam.indexOf(player);
 

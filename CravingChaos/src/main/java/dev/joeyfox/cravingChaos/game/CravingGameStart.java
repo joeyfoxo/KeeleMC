@@ -18,7 +18,8 @@ public class CravingGameStart extends CoreGameStart<CravingGame> {
         WorldGenerator.generateEmptyGlassWorld("glass");
         CravingSettings settings = new CravingSettings(game);
         CravingCageHandler cravingCageHandler = new CravingCageHandler(game);
-        game.setGameStatus(GameStatus.WAITING);
+        //game.setGameStatus(GameStatus.IN_GAME);
+        //todo: Just as a temp fix so im not stuck in the air
 
         game.setTeamed(false); // Disable team logic
 

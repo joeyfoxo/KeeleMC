@@ -13,6 +13,7 @@ public class CoreInGame<G extends CoreGame<G>> {
 
     public CoreInGame(G game) {
         this.game = game;
+        gameRunnable();
     }
 
     public void gameRunnable() {
@@ -30,7 +31,8 @@ public class CoreInGame<G extends CoreGame<G>> {
                         }
                     } else {
 
-                        if (game.getAlivePlayerCount() <= 1) {
+                        //if (game.getAlivePlayerCount() <= 1) {
+                        if (game.getAlivePlayerCount() < 1) {
                             UtilClass.sendPlayerMessage(Bukkit.getOnlinePlayers(), Component.text("Game over!")
                                     .color(TextColor.color(UtilClass.information)));
                             game.setGameStatus(GameStatus.FINISHED);
