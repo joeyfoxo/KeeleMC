@@ -23,7 +23,8 @@ public class PlayerEvents implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         TeamPlayer<CravingGame> teamPlayer = game.getPlayer(player);
-        if (game.getGameStatus() != GameStatus.IN_GAME) {
+        if (game.getGameStatus() == GameStatus.IN_GAME) {
+        //if (game.getGameStatus() != GameStatus.IN_GAME) {
             player.teleport(teamPlayer.getSpawnLocation());
             event.setCancelled(true);
             return;
