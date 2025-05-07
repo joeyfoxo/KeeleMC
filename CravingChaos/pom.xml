@@ -17,6 +17,7 @@
   </properties>
 
   <build>
+    <finalName>${project.artifactId}-${project.version}</finalName>
     <defaultGoal>clean package</defaultGoal>
     <plugins>
       <plugin>
@@ -35,9 +36,15 @@
         <executions>
           <execution>
             <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
+            <goals><goal>shade</goal></goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <artifactSet>
+                <includes>
+                  <include>dev.joeyfoxo:MiniGameCore</include>
+                </includes>
+              </artifactSet>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -80,7 +87,6 @@
       <groupId>dev.joeyfoxo</groupId>
       <artifactId>MiniGameCore</artifactId>
       <version>1.0</version>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
