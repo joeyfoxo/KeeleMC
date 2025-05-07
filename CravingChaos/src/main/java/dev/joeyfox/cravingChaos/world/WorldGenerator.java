@@ -19,7 +19,7 @@ public class WorldGenerator {
                     boolean isWall = (x == -half || x == half || z == -half || z == half || y == 0);
                     if (isWall) {
                         mutableLoc.set(center.getX() + x, center.getY() + y, center.getZ() + z);
-                        world.getBlockAt(mutableLoc).setType(Material.BARRIER, false);
+                        world.getBlockAt(mutableLoc).setType(Material.GLASS, false);
                     }
                 }
             }
