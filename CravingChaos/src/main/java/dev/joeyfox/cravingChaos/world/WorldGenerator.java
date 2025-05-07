@@ -17,9 +17,13 @@ public class WorldGenerator {
             for (int y = 0; y <= height; y++) {
                 for (int z = -half; z <= half; z++) {
                     boolean isWall = (x == -half || x == half || z == -half || z == half || y == 0);
+                    boolean isRoof = y == height;
+                    mutableLoc.set(center.getX() + x, center.getY() + y, center.getZ() + z);
+
                     if (isWall) {
-                        mutableLoc.set(center.getX() + x, center.getY() + y, center.getZ() + z);
                         world.getBlockAt(mutableLoc).setType(Material.GLASS, false);
+                    } else if (isRoof) {
+                        world.getBlockAt(mutableLoc).setType(Material.BARRIER, false);
                     }
                 }
             }

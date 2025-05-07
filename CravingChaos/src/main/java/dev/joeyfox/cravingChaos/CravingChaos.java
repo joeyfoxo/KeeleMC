@@ -2,6 +2,7 @@ package dev.joeyfox.cravingChaos;
 
 import dev.joeyfox.cravingChaos.game.CravingGame;
 import dev.joeyfox.cravingChaos.game.CravingGameStart;
+import dev.joeyfox.cravingChaos.game.CravingSettings;
 import dev.joeyfox.cravingChaos.world.VoidWorldGen;
 import dev.joeyfox.cravingChaos.world.WorldGenerator;
 import dev.joeyfoxo.core.Core;
@@ -23,7 +24,7 @@ public class CravingChaos extends Core<CravingGame> {
             new CravingGameStart(getGame());
             System.out.println("CravingChaos has been enabled!");
                 if (world != null) {
-                    WorldGenerator.buildGlassBox(world, new Location(world, 0, 100, 0), 50, 50);
+                    WorldGenerator.buildGlassBox(world, new Location(world, 0, 100, 0), CravingSettings.getCageHeight(), CravingSettings.getCageSize());
                 }
             });
     }
