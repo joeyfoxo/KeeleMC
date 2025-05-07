@@ -31,7 +31,7 @@ public class WorldGenerator {
 
         if (world == null) throw new IllegalStateException("World creation failed");
 
-        buildGlassBox(world, new Location(world, 0, 100, 0), 50, 100);
+        buildGlassBox(world, new Location(world, 0, 100, 0), 50, 50);
         return world;
     }
 
@@ -41,7 +41,7 @@ public class WorldGenerator {
         for (int x = -half; x <= half; x++) {
             for (int y = 0; y <= height; y++) {
                 for (int z = -half; z <= half; z++) {
-                    boolean isWall = (x == -half || x == half || z == -half || z == half || y == 0 || y == height);
+                    boolean isWall = (x == -half || x == half || z == -half || z == half || y == 0);
                     Location loc = center.clone().add(x, y, z);
                     world.getBlockAt(loc).setType(isWall ? Material.GLASS : Material.AIR, false);
                 }
