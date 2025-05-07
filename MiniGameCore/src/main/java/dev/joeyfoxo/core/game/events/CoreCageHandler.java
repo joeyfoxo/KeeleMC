@@ -34,17 +34,19 @@ public abstract class CoreCageHandler<G extends CoreGame<G>> implements Listener
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPreJoin(AsyncPlayerPreLoginEvent event) {
-        GameStatus status = game.getGameStatus();
-        if (status == GameStatus.NOT_READY) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
-                    Component.text("Game is not ready."));
-        } else if (status == GameStatus.IN_GAME || status == GameStatus.WALLS_UP) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
-                    Component.text("Game is in progress!"));
-        } else if (game.getAlivePlayerCount() >= game.getMaxPlayers()) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL,
-                    Component.text("Game is full!"));
-        }
+
+        //TODO: TEMP - remove after
+//        GameStatus status = game.getGameStatus();
+//        if (status == GameStatus.NOT_READY) {
+//            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+//                    Component.text("Game is not ready."));
+//        } else if (status == GameStatus.IN_GAME || status == GameStatus.WALLS_UP) {
+//            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+//                    Component.text("Game is in progress!"));
+//        } else if (game.getAlivePlayerCount() >= game.getMaxPlayers()) {
+//            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL,
+//                    Component.text("Game is full!"));
+//        }
     }
 
     @EventHandler
