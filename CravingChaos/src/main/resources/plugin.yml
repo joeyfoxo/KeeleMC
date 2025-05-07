@@ -5,7 +5,11 @@ api-version: '1.21'
 authors: [Joeyfoxo]
 description: Another Furry Plugin
 website: https://joeyfox.dev
-load: POSTWORLD
+load: STARTUP
 
 depend:
   - KeeleCore
+
+worlds:
+  glass:
+    generator: CravingChaos

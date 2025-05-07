@@ -5,6 +5,7 @@ import dev.joeyfoxo.core.game.CoreGameStart;
 import dev.joeyfoxo.core.game.CoreGame;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;

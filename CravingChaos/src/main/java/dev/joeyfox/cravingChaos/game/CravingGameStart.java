@@ -15,7 +15,6 @@ public class CravingGameStart extends CoreGameStart<CravingGame> {
     public CravingGameStart(CravingGame game) {
         super(game);
         this.game = game;
-        WorldGenerator.generateEmptyGlassWorld("glass");
         CravingSettings settings = new CravingSettings(game);
         CravingCageHandler cravingCageHandler = new CravingCageHandler(game);
         game.setGameStatus(GameStatus.IN_GAME);
