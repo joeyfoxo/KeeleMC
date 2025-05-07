@@ -1,5 +1,6 @@
 package dev.joeyfox.cravingChaos.game;
 
+import dev.joeyfox.cravingChaos.game.events.PlayerEvents;
 import dev.joeyfoxo.core.game.CoreSettings;
 
 public class CravingSettings extends CoreSettings<CravingGame> {
@@ -12,6 +13,8 @@ public class CravingSettings extends CoreSettings<CravingGame> {
 
         CoreSettings.maxPlayers = 2;
         CoreSettings.minPlayers = 1;
+
+        new PlayerEvents(game);
 
     }
 
