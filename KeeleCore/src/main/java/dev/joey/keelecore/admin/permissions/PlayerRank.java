@@ -93,6 +93,7 @@ public enum PlayerRank {
     public boolean hasPermissionLevel(PlayerRank required) {
         boolean result = this.ordinal() >= required.ordinal();
         System.out.println("[DEBUG] " + this + ".hasPermissionLevel(" + required + ") = " + result);
+
         return result;
     }
 
