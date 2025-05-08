@@ -1,7 +1,7 @@
 package dev.joeyfox.keeleIronBridge;
 
-import com.velocitypowered.api.event.Subscribe;
 import com.google.inject.Inject;
+import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -35,6 +35,7 @@ public class KeeleIronBridge {
         proxy.getChannelRegistrar().register(MinecraftChannelIdentifier.from("keele:rank_query"));
         // Register the event listener
         proxy.getEventManager().register(this, new JoinEvent(this));
+
     }
 
     public Logger getLogger() {

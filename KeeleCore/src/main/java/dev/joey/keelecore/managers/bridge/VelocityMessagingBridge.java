@@ -8,6 +8,7 @@ import dev.joey.keelecore.managers.PermissionManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import java.util.List;
 import java.util.UUID;
 
 public class VelocityMessagingBridge implements PluginMessageListener {
@@ -20,13 +21,15 @@ public class VelocityMessagingBridge implements PluginMessageListener {
         if (subchannel.equals("get_rank")) {
             UUID targetUUID = UUID.fromString(in.readUTF());
             PermissionManager.getPlayer(targetUUID).thenAccept(keelePlayer -> {
-
                 String rank = keelePlayer.getRank().name();
+                List<String> permissions = keelePlayer.getRank().getPermissions();
 
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("rank_response");
                 out.writeUTF(targetUUID.toString());
                 out.writeUTF(rank);
+                out.writeInt(permissions.size());
+                permissions.forEach(out::writeUTF);
 
                 player.sendPluginMessage(KeeleCore.getInstance(), "keele:rank_query", out.toByteArray());
             });
