@@ -27,7 +27,7 @@ public class JoinNLeaveListener implements Listener {
     }
 
     @EventHandler
-    public void onLogin(PlayerLoginEvent event) {
+    public void onLogin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
