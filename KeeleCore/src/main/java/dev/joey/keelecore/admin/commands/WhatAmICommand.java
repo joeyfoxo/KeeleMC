@@ -90,7 +90,7 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
                 String colorCode = required != null ? required.getColorCode() : "&7"; // Default to gray
 
                 Component line = LegacyComponentSerializer.legacyAmpersand()
-                        .deserialize(colorCode + "- " + cmd);
+                        .deserialize(colorCode + cmd);
 
                 player.sendMessage(line);
             }
