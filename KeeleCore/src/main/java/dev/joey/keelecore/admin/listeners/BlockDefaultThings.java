@@ -1,5 +1,8 @@
 package dev.joey.keelecore.admin.listeners;
 
+import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
+import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
@@ -33,6 +36,7 @@ public class BlockDefaultThings implements Listener {
 
         Player player = event.getPlayer();
         String command = event.getMessage();
+        KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
         List<String> blockedCommands = new ArrayList<>(Arrays.asList(
                 "plugin", "pl", "plugins",
                 "?", "help", "about",
@@ -41,7 +45,7 @@ public class BlockDefaultThings implements Listener {
                 "icanhasbukkit", "litebans", "luckperms",
                 "paper", "spigot", "spark",
                 "velocity", "waterfall", "bungee"));
-        if (!player.getUniqueId().equals(UUID.fromString("0d3df835-eed7-49a2-be2a-82be4d64bc27"))) {
+        if (!keelePlayer.getRank().hasPermissionLevel(PlayerRank.DEV)) {
             for (String blockedCommand : blockedCommands) {
                 if (command.contains(blockedCommand)) {
                     event.setCancelled(true);
