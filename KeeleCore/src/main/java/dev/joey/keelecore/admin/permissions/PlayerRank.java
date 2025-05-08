@@ -94,6 +94,13 @@ public enum PlayerRank {
         return LegacyComponentSerializer.legacyAmpersand().deserialize(suffix);
     }
 
+    public String getColorCode() {
+        if (prefix.length() >= 2 && prefix.startsWith("&")) {
+            return prefix.substring(0, 2);
+        }
+        return "&f"; // Default to white if not found
+    }
+
     // --- Rank Comparison using level ---
 
     public boolean hasPermissionLevel(PlayerRank required) {

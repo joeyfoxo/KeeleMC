@@ -9,6 +9,7 @@ import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -86,12 +87,10 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
 
             for (String cmd : allowedCommands) {
                 PlayerRank required = rankMap.get(cmd);
-                Component line = Component.text("- " + cmd);
+                String colorCode = required != null ? required.getColorCode() : "&7"; // Default to gray
 
-                if (required != null) {
-                    line = line.append(Component.text(" - "))
-                            .append(required.getPrefix());
-                }
+                Component line = LegacyComponentSerializer.legacyAmpersand()
+                        .deserialize(colorCode + "- " + cmd);
 
                 player.sendMessage(line);
             }
