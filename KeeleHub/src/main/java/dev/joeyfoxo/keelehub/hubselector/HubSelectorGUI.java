@@ -99,38 +99,28 @@ public class HubSelectorGUI implements PlayerGUI, Listener {
                         .build()
         );
 
-//        createGUIItem(Material.OAK_DOOR,
-//                "Towny",
-//                TextColor.color(255, 221, 0),
-//                1,
-//                4,
-//                Component.text()
-//                        .content("Version 1.16-1.19.3")
-//                        .color(TextColor.color(84, 84, 84))
-//                        .decoration(TextDecoration.ITALIC, false)
-//                        .build(),
-//                Component.text().content("").build(),
-//                Component.text()
-//                        .content("WORK IN PROGRESS")
-//                        .color(TextColor.color(141, 0, 0))
-//                        .decoration(TextDecoration.ITALIC, false)
-//                        .decoration(TextDecoration.BOLD, true)
-//                        .build(),
-//                Component.text()
-//                        .content("Classic Towny where you can")
-//                        .color(TextColor.color(134, 134, 134))
-//                        .decoration(TextDecoration.ITALIC, false)
-//                        .build(),
-//                Component.text()
-//                        .content("build bases and build an empire")
-//                        .color(TextColor.color(134, 134, 134))
-//                        .decoration(TextDecoration.ITALIC, false)
-//                        .build(),
-//                Component.text()
-//                        .content("with your friends!")
-//                        .color(TextColor.color(134, 134, 134))
-//                        .decoration(TextDecoration.ITALIC, false)
-//                        .build());
+        createGUIItem(Material.BARRIER,
+                "Modded (Forge)",
+                TextColor.color(163, 73, 164),
+                1,
+                4,
+                Component.text()
+                        .content("Requires Forge Client")
+                        .color(TextColor.color(112, 6, 0))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text().content("").build(),
+                Component.text()
+                        .content("Join our Forge modpack server")
+                        .color(TextColor.color(134, 134, 134))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text()
+                        .content("You must install our mods.")
+                        .color(TextColor.color(134, 134, 134))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build()
+        );
 
 
         createGUIItem(Material.TNT,
@@ -194,7 +184,7 @@ public class HubSelectorGUI implements PlayerGUI, Listener {
                     case 1 -> {
                         output = ByteStreams.newDataOutput();
                         output.writeUTF("Connect");
-                        output.writeUTF("towny");
+                        output.writeUTF("modded");
                         player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
                     }
                     case 2 -> {
