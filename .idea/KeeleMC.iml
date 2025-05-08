@@ -19,6 +19,7 @@
       <sourceFolder url="file://$MODULE_DIR$/KeeleCore/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/KeeleCore/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/KeeleIronBridge/src/main/java" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
