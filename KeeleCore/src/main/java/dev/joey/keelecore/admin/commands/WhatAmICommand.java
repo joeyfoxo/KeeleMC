@@ -14,6 +14,8 @@ import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
 
 import java.lang.reflect.Field;
 import java.util.*;
