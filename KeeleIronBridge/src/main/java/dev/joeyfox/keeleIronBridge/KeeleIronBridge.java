@@ -6,7 +6,7 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import dev.joeyfox.keeleIronBridge.events.JoinEvent;
+import dev.joeyfox.keeleIronBridge.events.PlayerPermissionListener;
 import org.slf4j.Logger;
 
 @Plugin(
@@ -31,10 +31,12 @@ public class KeeleIronBridge {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        // Register the plugin message channel
-        proxy.getChannelRegistrar().register(MinecraftChannelIdentifier.from("keele:rank_query"));
-        // Register the event listener
-        proxy.getEventManager().register(this, new JoinEvent(this));
+        MinecraftChannelIdentifier channel = MinecraftChannelIdentifier.from("keele:playerinfo");
+        proxy.getChannelRegistrar().register(channel);
+
+        proxy.getEventManager().register(this, new PlayerPermissionListener());
+
+        getLogger().info("Registered playerinfo channel and permission listener.");
 
     }
 

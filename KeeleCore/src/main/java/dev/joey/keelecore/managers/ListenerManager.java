@@ -23,7 +23,9 @@ public class ListenerManager {
 
 
         VelocityMessagingBridge velocityMessagingBridge = new VelocityMessagingBridge();
-        Bukkit.getMessenger().registerIncomingPluginChannel(KeeleCore.getInstance(), "keele:rank_query", velocityMessagingBridge);
-        Bukkit.getMessenger().registerOutgoingPluginChannel(KeeleCore.getInstance(), "keele:rank_query");
+        Bukkit.getMessenger().registerOutgoingPluginChannel(KeeleCore.getInstance(), "keele:playerinfo");
+        Bukkit.getMessenger().registerIncomingPluginChannel(KeeleCore.getInstance(), "keele:playerinfo",
+                velocityMessagingBridge);
+
     }
 }
