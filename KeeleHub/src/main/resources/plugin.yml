@@ -3,7 +3,7 @@ version: '${project.version}'
 main: dev.joeyfoxo.keelehub.KeeleHub
 api-version: 1.19
 authors: [ Joey ]
-description: Core Hub Plugin
+description: Just Another Furry Hub
 website: https://joeyfox.dev
 
 depend: [ KeeleCore ]

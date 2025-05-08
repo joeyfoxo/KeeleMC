@@ -3,7 +3,7 @@ version: '${project.version}'
 main: dev.joeyfoxo.keeleuniwars.KeeleUniWars
 api-version: 1.19
 authors: [ Joey ]
-description: Core Walls Plugin
+description: Just Another Furry Walls
 website: https://joeyfox.dev
 
 depend:

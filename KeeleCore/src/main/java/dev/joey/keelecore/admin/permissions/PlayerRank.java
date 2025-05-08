@@ -16,6 +16,8 @@ public enum PlayerRank {
             "velocity.command.server",
             "velocity.command.shutdown",
             "velocity.command.glist",
+                "minecraft.command.op",
+                "minecraft.command.deop",
             "velocity.command.send",
             "keelecore.bypass"
         )),
@@ -26,6 +28,8 @@ public enum PlayerRank {
             "velocity.command.dump",
             "velocity.command.heap",
             "velocity.command.server",
+                "minecraft.command.op",
+                "minecraft.command.deop",
             "velocity.command.send",
             "keelecore.debug"
         )),

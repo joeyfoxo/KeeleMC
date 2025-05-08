@@ -3,7 +3,7 @@ version: '1.0'
 main: dev.joeyfox.cravingChaos.CravingChaos
 api-version: '1.21'
 authors: [Joeyfoxo]
-description: Another Furry Plugin
+description: Just Another Furry Plugin
 website: https://joeyfox.dev
 load: STARTUP
 

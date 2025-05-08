@@ -8,7 +8,7 @@ depend:
   - GriefPrevention
   - FastAsyncWorldEdit
 
-description: A plugin for keele's survival server
+description: Just Another Furry Survival
 website: https://joeyfox.dev
 commands:
   pay:

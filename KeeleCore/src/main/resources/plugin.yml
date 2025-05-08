@@ -3,7 +3,7 @@ version: '${project.version}'
 main: dev.joey.keelecore.KeeleCore
 api-version: 1.19
 authors: [ Joey ]
-description: The Core for the keele server
+description: Just Another Furry Core
 website: https://joeyfox.dev
 
 commands:
