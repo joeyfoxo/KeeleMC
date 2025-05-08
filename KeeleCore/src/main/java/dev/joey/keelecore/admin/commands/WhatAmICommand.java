@@ -44,7 +44,10 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
         for (Command cmd : commandMap.getKnownCommands().values()) {
             String requiredPermission = cmd.getPermission();
 
-            if (requiredPermission == null || requiredPermission.isEmpty() || player.hasPermission(requiredPermission)) {
+            if (requiredPermission == null || requiredPermission.isEmpty()) {
+                continue; // Skip commands without permissions
+            }
+            if (player.hasPermission(requiredPermission)) {
                 allowedCommands.add("/" + cmd.getLabel());
             }
         }
@@ -55,11 +58,6 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
         for (Class<? extends SuperCommand> clazz : commandClasses) {
             RequireRank requireRank = clazz.getAnnotation(RequireRank.class);
             String command1 = "/" + clazz.getSimpleName().replace("Command", "").toLowerCase();
-            if (requireRank == null) {
-                allowedCommands.add(command1);
-                System.out.println("Added as null: " + command1);
-                continue;
-            }
             System.out.println(keelePlayer.getRank().name() + " has permission level " + requireRank.value());
             System.out.println("Required permission level: " + requireRank.value());
             System.out.println("Player has permission: " + keelePlayer.getRank().hasPermissionLevel(requireRank.value()));
