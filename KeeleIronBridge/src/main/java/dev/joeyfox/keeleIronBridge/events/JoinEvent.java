@@ -14,39 +14,34 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import dev.joeyfox.keeleIronBridge.KeeleIronBridge;
-import dev.joeyfox.keeleIronBridge.cache.PermissionCache;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class JoinEvent {
 
     private final KeeleIronBridge plugin;
-    private final PermissionCache permissionCache;
     public static final MinecraftChannelIdentifier CHANNEL =
             MinecraftChannelIdentifier.from("keele:rank_query");
 
-    // Tracks which players have had their permissions fully loaded
-    private final Set<UUID> loadedPlayers = ConcurrentHashMap.newKeySet();
+    // Store permissions temporarily until PermissionsSetupEvent is fired
+    private final Map<UUID, List<String>> tempPermissions = new HashMap<>();
 
     public JoinEvent(KeeleIronBridge plugin) {
         this.plugin = plugin;
-        this.permissionCache = new PermissionCache();
     }
 
     @Subscribe
     public void onServerConnected(ServerConnectedEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        plugin.getLogger().info("[JoinEvent] Player connected: " + player.getUsername() + " (" + uuid + ")");
-        plugin.getLogger().info("[JoinEvent] Sending rank query to backend...");
+
+        plugin.getLogger().info("Sending rank query for " + player.getUsername() + " (" + uuid + ")");
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("get_rank");
         out.writeUTF(uuid.toString());
 
         event.getServer().sendPluginMessage(CHANNEL, out.toByteArray());
-        plugin.getLogger().info("[JoinEvent] Plugin message sent to server for UUID: " + uuid);
     }
 
     @Subscribe
@@ -61,22 +56,15 @@ public class JoinEvent {
         UUID uuid = UUID.fromString(in.readUTF());
         String rank = in.readUTF();
         int count = in.readInt();
-
-        plugin.getLogger().info("[JoinEvent] Plugin message received for UUID: " + uuid);
-        plugin.getLogger().info("[JoinEvent] Rank: " + rank + ", Permissions count: " + count);
-
         List<String> perms = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            String perm = in.readUTF();
-            perms.add(perm);
-            plugin.getLogger().info("[JoinEvent] -> Perm: " + perm);
+            perms.add(in.readUTF());
         }
 
-        permissionCache.update(uuid, perms);
-        loadedPlayers.add(uuid);
+        tempPermissions.put(uuid, perms); // store only for permission setup
 
-        plugin.getLogger().info("[JoinEvent] Cached permissions for UUID: " + uuid);
-        plugin.getLogger().info("[JoinEvent] Permission cache now has: " + permissionCache.getPermissions(uuid));
+        plugin.getLogger().info("Received rank for " + uuid + ": " + rank);
+        plugin.getLogger().info("Permissions: " + perms);
     }
 
     @Subscribe
@@ -84,37 +72,19 @@ public class JoinEvent {
         if (!(event.getSubject() instanceof Player player)) return;
 
         UUID uuid = player.getUniqueId();
-        plugin.getLogger().info("[JoinEvent] Permission setup for: " + player.getUsername() + " (" + uuid + ")");
-
-        List<String> perms = permissionCache.getPermissions(uuid);
-        boolean isLoaded = loadedPlayers.contains(uuid);
-        plugin.getLogger().info("[JoinEvent] Permissions loaded? " + isLoaded + ", Found: " + perms);
+        List<String> perms = tempPermissions.remove(uuid); // remove after use
 
         if (perms == null) {
-            plugin.getLogger().warn("[JoinEvent] Permissions not loaded yet for " + player.getUsername() + ", using empty list.");
-            perms = Collections.emptyList();
+            plugin.getLogger().info("Permissions not yet received for " + player.getUsername());
+            return;
         }
 
-        PermissionProvider defaultProv = event.getProvider();
-        List<String> finalPerms = perms;
+        plugin.getLogger().info("Applying permissions for " + player.getUsername() + ": " + perms);
+
         PermissionProvider provider = subject -> {
-            PermissionFunction fallback = defaultProv.createFunction(subject);
-            return node -> {
-                boolean loaded = loadedPlayers.contains(uuid);
-                plugin.getLogger().info("[JoinEvent] Checking perm '" + node + "' for " + player.getUsername() + ", loaded: " + loaded);
-
-                if (!loaded) {
-                    plugin.getLogger().warn("[JoinEvent] -> Fallback value used for: " + node);
-                    return fallback.getPermissionValue(node); // safer than denying
-                }
-
-                boolean has = finalPerms.contains(node);
-                plugin.getLogger().info("[JoinEvent] -> Perm " + node + ": " + (has ? "GRANTED" : "FALLBACK"));
-                return has ? Tristate.TRUE : fallback.getPermissionValue(node);
-            };
+            return node -> perms.contains(node) ? Tristate.TRUE : Tristate.UNDEFINED;
         };
 
-        plugin.getLogger().info("[JoinEvent] Applying PermissionProvider to " + player.getUsername());
         event.setProvider(provider);
     }
 }
