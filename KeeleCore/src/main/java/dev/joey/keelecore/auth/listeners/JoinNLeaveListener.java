@@ -32,6 +32,7 @@ public class JoinNLeaveListener implements Listener {
 
         PermissionManager.getPlayer(uuid).thenAccept(keelePlayer -> {
             keelePlayer.setPlayer(player);
+            keelePlayer.setName(player.getName());
             PermissionManager.setVanished(player, keelePlayer.isVanished());
             NameTagFormatting.updateNameTag(player, keelePlayer.getRank());
 

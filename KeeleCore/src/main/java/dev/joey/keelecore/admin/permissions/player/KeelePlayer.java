@@ -78,4 +78,8 @@ public class KeelePlayer {
     public boolean isVanished() {
         return isVanished;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

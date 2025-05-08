@@ -137,6 +137,7 @@ public class PermissionManager {
         getPlayer(uuid).thenCompose(loaded -> {
             KeelePlayer kp = (loaded != null) ? loaded : new KeelePlayer(player);
             kp.setPlayer(player);
+            kp.setName(player.getName());
             kp.setRank(newRank);
 
             System.out.println("[DB] Setting rank for " + player.getName() + " (" + uuid + ") to " + newRank.name());
