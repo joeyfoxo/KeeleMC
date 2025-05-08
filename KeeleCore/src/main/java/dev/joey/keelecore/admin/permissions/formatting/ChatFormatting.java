@@ -76,12 +76,12 @@ public class ChatFormatting implements Listener {
         TextComponent.Builder builder = Component.text();
 
         Component hoverText = switch (rank) {
-            case OWNER -> deserialize("&c&lOwner&r\n\nOwners own the server and handle all the \nadministrative tasks");
-            case DEV -> deserialize("&4&lDev&r\n\nDevelopers work behind the scenes to maintain the\nserver and give the best experience");
-            case ADMIN -> deserialize("&4&lAdmin&r\n\nAdmins are in charge of keeping the \nserver running smoothly");
-            case MOD -> deserialize("&b&lMod&r\n\nModerators enforce rules and provide \nhelp to players");
-            case STUDENT -> deserialize("&a&lStudent&r\n\nStudents are members of Keele University");
-            case GUEST -> deserialize("&9&lGuest&r\n\nGuests are either alumni of Keele \nor external invitees");
+            case OWNER -> deserialize("&c&lOWNER&r\n\nOwners own the server and handle all the \nadministrative tasks");
+            case DEV -> deserialize("&4&lDDEV&r\n\nDevelopers work behind the scenes to maintain the\nserver and give the best experience");
+            case ADMIN -> deserialize("&4&lADMIN&r\n\nAdmins are in charge of keeping the \nserver running smoothly");
+            case MOD -> deserialize("&b&lMOD&r\n\nModerators enforce rules and provide \nhelp to players");
+            case STUDENT -> deserialize("&a&lSTUDENT&r\n\nStudents are members of Keele University");
+            case GUEST, PLAYER -> deserialize("&9&lGUEST&r\n\nGuests are either alumni of Keele \nor external invitees");
             default -> null;
         };
 
