@@ -87,11 +87,5 @@
     </dependency>
 
     <!-- Local KeeleCore (ensure it's in local .m2 repo or built first) -->
-    <dependency>
-      <groupId>dev.joey</groupId>
-      <artifactId>KeeleCore</artifactId>
-      <version>1.0</version>
-        <scope>compile</scope>
-    </dependency>
   </dependencies>
 </project>
