@@ -13,7 +13,11 @@
         <module name="KeeleHub" />
         <module name="keeleironbridge" />
         <module name="KeeleUniWars" />
+        <module name="KeeleIronBridge" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="keeleironbridge" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>
