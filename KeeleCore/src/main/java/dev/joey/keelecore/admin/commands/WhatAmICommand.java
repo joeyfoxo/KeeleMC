@@ -39,6 +39,9 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
             return true;
         }
 
+        System.out.println(keelePlayer.getRank().name());
+        System.out.println(keelePlayer.getRank().getPermissions());
+
         Set<String> allowedCommands = new TreeSet<>();
 
         for (Command cmd : commandMap.getKnownCommands().values()) {
