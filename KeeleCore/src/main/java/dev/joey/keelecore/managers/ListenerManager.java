@@ -20,6 +20,8 @@ public class ListenerManager {
         //new AutoAnnouncer();
         new ArmourListener();
 
+        Bukkit.getMessenger().registerOutgoingPluginChannel(KeeleCore.getInstance(), "keele:rank");
+
 
 //        Bukkit.getMessenger().registerOutgoingPluginChannel(KeeleCore.getInstance(), "keele:playerinfo");
 //        Bukkit.getMessenger().registerIncomingPluginChannel(KeeleCore.getInstance(), "keele:playerinfo",
