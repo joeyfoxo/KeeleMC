@@ -53,14 +53,6 @@ public class JoinNLeaveListener implements Listener {
 
                 player.sendPluginMessage(KeeleCore.getInstance(), "keele:rank", out.toByteArray());
 
-                System.out.println("[KeeleCore] Sent rank plugin message to Velocity:");
-                System.out.println(" - Player: " + player.getName() + " (" + uuid + ")");
-                System.out.println(" - Rank: " + rank);
-                System.out.println(" - Permissions (" + permissions.size() + "):");
-                for (String perm : permissions) {
-                    System.out.println("   • " + perm);
-                }
-
             } catch (IOException e) {
                 System.out.println("[KeeleCore] Failed to send rank plugin message to Velocity for player: " + player.getName());
                 e.printStackTrace();
