@@ -34,7 +34,7 @@ public class KeeleIronBridge {
         MinecraftChannelIdentifier channel = MinecraftChannelIdentifier.from("keele:playerinfo");
         proxy.getChannelRegistrar().register(channel);
 
-        proxy.getEventManager().register(this, new PlayerPermissionListener());
+        proxy.getEventManager().register(this, new PlayerPermissionListener(this));
 
         getLogger().info("Registered playerinfo channel and permission listener.");
 
@@ -42,5 +42,9 @@ public class KeeleIronBridge {
 
     public Logger getLogger() {
         return logger;
+    }
+
+    public ProxyServer getProxy() {
+        return proxy;
     }
 }
