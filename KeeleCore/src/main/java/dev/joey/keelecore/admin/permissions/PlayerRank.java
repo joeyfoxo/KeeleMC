@@ -90,11 +90,8 @@ public enum PlayerRank {
 
     // --- Rank Comparison ---
 
-    public boolean hasPermissionLevel(PlayerRank required) {
-        boolean result = this.ordinal() >= required.ordinal();
-        System.out.println("[DEBUG] " + this + ".hasPermissionLevel(" + required + ") = " + result);
-
-        return result;
+    public boolean hasPermissionLevel(PlayerRank other) {
+        return this.ordinal() <= other.ordinal();
     }
 
     public boolean hasPermissionLevel(String rankString) {

@@ -56,7 +56,7 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
             System.out.println("RequireRank: " + requireRank);
             System.out.println("Player rank: " + keelePlayer.getRank());
             System.out.println(RankGuard.hasRequiredRank(clazz, keelePlayer) ? "Allowed" : "Not allowed");
-            if (RankGuard.hasRequiredRank(clazz, keelePlayer)) {
+            if (!RankGuard.hasRequiredRank(clazz, keelePlayer)) {
                 String name = "/" + clazz.getSimpleName().replace("Command", "").toLowerCase();
                 allowedCommands.add(name);
             }
