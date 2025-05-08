@@ -4,7 +4,6 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.joey.keelecore.KeeleCore;
-import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PermissionManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -20,15 +19,17 @@ public class VelocityMessagingBridge implements PluginMessageListener {
         String subchannel = in.readUTF();
         if (subchannel.equals("get_rank")) {
             UUID targetUUID = UUID.fromString(in.readUTF());
-            KeelePlayer keelePlayer = PermissionManager.getCached(targetUUID);
-            String rank = keelePlayer.getRank().name();
+            PermissionManager.getPlayer(targetUUID).thenAccept(keelePlayer -> {
 
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("rank_response");
-            out.writeUTF(targetUUID.toString());
-            out.writeUTF(rank);
+                String rank = keelePlayer.getRank().name();
 
-            player.sendPluginMessage(KeeleCore.getInstance(), "keele:rank_query", out.toByteArray());
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("rank_response");
+                out.writeUTF(targetUUID.toString());
+                out.writeUTF(rank);
+
+                player.sendPluginMessage(KeeleCore.getInstance(), "keele:rank_query", out.toByteArray());
+            });
         }
     }
 }
