@@ -4,7 +4,6 @@ import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.listeners.BlockDefaultThings;
 import dev.joey.keelecore.armour.galaxy.ArmourListener;
 import dev.joey.keelecore.auth.listeners.JoinNLeaveListener;
-import dev.joey.keelecore.managers.bridge.VelocityMessagingBridge;
 import dev.joey.keelecore.server.restarting.DailyRestart;
 import dev.joey.keelecore.admin.permissions.formatting.ChatFormatting;
 import org.bukkit.Bukkit;
@@ -22,10 +21,9 @@ public class ListenerManager {
         new ArmourListener();
 
 
-        VelocityMessagingBridge velocityMessagingBridge = new VelocityMessagingBridge();
-        Bukkit.getMessenger().registerOutgoingPluginChannel(KeeleCore.getInstance(), "keele:playerinfo");
-        Bukkit.getMessenger().registerIncomingPluginChannel(KeeleCore.getInstance(), "keele:playerinfo",
-                velocityMessagingBridge);
+//        Bukkit.getMessenger().registerOutgoingPluginChannel(KeeleCore.getInstance(), "keele:playerinfo");
+//        Bukkit.getMessenger().registerIncomingPluginChannel(KeeleCore.getInstance(), "keele:playerinfo",
+//                velocityMessagingBridge);
 
     }
 }
