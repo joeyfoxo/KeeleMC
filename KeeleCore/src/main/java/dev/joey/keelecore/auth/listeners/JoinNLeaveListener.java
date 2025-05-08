@@ -4,10 +4,12 @@ import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.formatting.NameTagFormatting;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PermissionManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.permissions.PermissionAttachment;
 
@@ -24,14 +26,16 @@ public class JoinNLeaveListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
-        PermissionManager.getPlayer(player.getUniqueId()).thenAccept(keelePlayer -> {
+        UUID uuid = player.getUniqueId();
 
+        PermissionManager.getPlayer(uuid).thenAccept(keelePlayer -> {
             keelePlayer.setPlayer(player);
             PermissionManager.setVanished(player, keelePlayer.isVanished());
             NameTagFormatting.updateNameTag(player, keelePlayer.getRank());
 
+            // Prepare plugin message
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             DataOutputStream data = new DataOutputStream(out);
 
@@ -40,16 +44,25 @@ public class JoinNLeaveListener implements Listener {
                 List<String> permissions = keelePlayer.getRank().getPermissions();
 
                 data.writeUTF(keelePlayer.getUuid().toString());   // UUID
-                data.writeUTF(rank);                               // Rank
-                data.writeInt(permissions.size());                 // Number of permissions
+                data.writeUTF(rank);                               // Rank name
+                data.writeInt(permissions.size());                 // Permission count
 
                 for (String permission : permissions) {
-                    data.writeUTF(permission);                     // Each permission string
+                    data.writeUTF(permission);
                 }
 
                 player.sendPluginMessage(KeeleCore.getInstance(), "keele:rank", out.toByteArray());
 
+                Bukkit.getLogger().info("[KeeleCore] Sent rank plugin message to Velocity:");
+                Bukkit.getLogger().info(" - Player: " + player.getName() + " (" + uuid + ")");
+                Bukkit.getLogger().info(" - Rank: " + rank);
+                Bukkit.getLogger().info(" - Permissions (" + permissions.size() + "):");
+                for (String perm : permissions) {
+                    Bukkit.getLogger().info("   • " + perm);
+                }
+
             } catch (IOException e) {
+                Bukkit.getLogger().severe("[KeeleCore] Failed to send rank plugin message to Velocity for player: " + player.getName());
                 e.printStackTrace();
             }
         });
@@ -60,12 +73,6 @@ public class JoinNLeaveListener implements Listener {
         UUID uuid = event.getPlayer().getUniqueId();
 
         KeelePlayer player = PermissionManager.getCached(uuid);
-
-        PermissionAttachment attachment = player.getPlayer().addAttachment(KeeleCore.getPlugin(KeeleCore.class));
-        for (String permission : player.getRank().getPermissions()) {
-            attachment.unsetPermission(permission);
-        }
-        player.getPlayer().removeAttachment(attachment);
 
         PermissionManager.put(player).thenRun(() -> PermissionManager.remove(player.getUuid()));
     }
