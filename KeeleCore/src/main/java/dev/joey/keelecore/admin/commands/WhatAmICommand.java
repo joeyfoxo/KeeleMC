@@ -68,13 +68,11 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
             }
         }
 
-        // Output result
         if (allowedCommands.isEmpty()) {
             player.sendMessage(Component.text("No commands available for your rank."));
         } else {
             player.sendMessage(Component.text("Commands you can use:"));
 
-            // Rediscover the SuperCommand classes for annotation info
             Map<String, PlayerRank> rankMap = new HashMap<>();
             for (Class<? extends SuperCommand> clazz : commandClasses) {
                 String name = "/" + clazz.getSimpleName().replace("Command", "").toLowerCase();
@@ -86,11 +84,22 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
 
             for (String cmd : allowedCommands) {
                 PlayerRank required = rankMap.get(cmd);
-                Component line = Component.text("- " + cmd);
 
+                Component line;
                 if (required != null) {
-                    line = line.append(Component.text(" "))
-                            .append(required.getPrefix());
+                    // Strip the formatting (e.g. &4&lADMIN -> just the color)
+                    String rawPrefix = required.getPrefix()
+                            .toString()
+                            .replaceAll("§[0-9a-fk-or]", "") // clean it if needed
+                            .replaceAll("\\s+", "");
+
+                    // Use the full prefix color (assumes it's only a color code)
+                    String colorCode = required.getPrefix().toString().replaceAll(".*§([0-9a-fA-F]).*", "$1");
+
+                    // Apply color to the whole command line
+                    line = Component.text("§" + colorCode + "- " + cmd, LegacyComponentSerializer.legacySection());
+                } else {
+                    line = Component.text("- " + cmd);
                 }
 
                 player.sendMessage(line);
