@@ -15,6 +15,8 @@ import java.util.UUID;
 public class VelocityMessagingBridge implements PluginMessageListener {
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+        System.out.println("[VelocityMessagingBridge] Received plugin message on channel: " + channel);
+        System.out.println(channel.equals("keele:rank_query") ? "[VelocityMessagingBridge] Subchannel: get_rank" : "[VelocityMessagingBridge] Subchannel: rank_response");
         if (!channel.equals("keele:rank_query")) return;
 
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
@@ -37,7 +39,9 @@ public class VelocityMessagingBridge implements PluginMessageListener {
                 System.out.println("[VelocityMessagingBridge] Permissions: " + permissions);
 
                 Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> {
+                    System.out.println("[VelocityMessagingBridge] Preparing to send plugin message to proxy...");
                     player.sendPluginMessage(KeeleCore.getInstance(), "keele:rank_query", out.toByteArray());
+                    System.out.println("[VelocityMessagingBridge] Sent plugin message to proxy.");
                 });
             });
         }

@@ -41,6 +41,10 @@ public class JoinEvent {
         out.writeUTF("get_rank");
         out.writeUTF(uuid.toString());
 
+        ByteArrayDataOutput now = ByteStreams.newDataOutput();
+        now.writeUTF("ping");
+        event.getServer().sendPluginMessage(MinecraftChannelIdentifier.from("test:ping"), now.toByteArray());
+
         event.getServer().sendPluginMessage(CHANNEL, out.toByteArray());
     }
 
