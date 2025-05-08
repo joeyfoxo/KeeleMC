@@ -11,6 +11,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.permissions.PermissionAttachment;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 public class JoinNLeaveListener implements Listener {
@@ -28,10 +32,25 @@ public class JoinNLeaveListener implements Listener {
             PermissionManager.setVanished(player, keelePlayer.isVanished());
             NameTagFormatting.updateNameTag(player, keelePlayer.getRank());
 
-            PermissionAttachment attachment = player.addAttachment(KeeleCore.getPlugin(KeeleCore.class));
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            DataOutputStream data = new DataOutputStream(out);
 
-            for (String permission : keelePlayer.getRank().getPermissions()) {
-                attachment.setPermission(permission, true);
+            try {
+                String rank = keelePlayer.getRank().name();
+                List<String> permissions = keelePlayer.getRank().getPermissions();
+
+                data.writeUTF(keelePlayer.getUuid().toString());   // UUID
+                data.writeUTF(rank);                               // Rank
+                data.writeInt(permissions.size());                 // Number of permissions
+
+                for (String permission : permissions) {
+                    data.writeUTF(permission);                     // Each permission string
+                }
+
+                player.sendPluginMessage(KeeleCore.getInstance(), "keele:rank", out.toByteArray());
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }

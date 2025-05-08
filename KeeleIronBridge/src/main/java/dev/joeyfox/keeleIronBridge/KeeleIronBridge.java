@@ -2,10 +2,12 @@ package dev.joeyfox.keeleIronBridge;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.permission.PermissionsSetupEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import dev.joeyfox.keeleIronBridge.events.IronPermissionProvider;
 import dev.joeyfox.keeleIronBridge.events.PlayerPermissionListener;
 import org.slf4j.Logger;
 
@@ -31,13 +33,12 @@ public class KeeleIronBridge {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        MinecraftChannelIdentifier channel = MinecraftChannelIdentifier.from("keele:playerinfo");
-        proxy.getChannelRegistrar().register(channel);
+        getProxy().getEventManager().register(this, new PlayerPermissionListener(getProxy()));
+    }
 
-        proxy.getEventManager().register(this, new PlayerPermissionListener(this));
-
-        getLogger().info("Registered playerinfo channel and permission listener.");
-
+    @Subscribe
+    public void on(PermissionsSetupEvent event) {
+        event.setProvider(new IronPermissionProvider());
     }
 
     public Logger getLogger() {
