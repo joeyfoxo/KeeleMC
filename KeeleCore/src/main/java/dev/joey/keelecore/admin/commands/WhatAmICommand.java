@@ -56,8 +56,12 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
         Reflections reflections = new Reflections("dev.joey.keelecore.admin.commands");
         Set<Class<? extends SuperCommand>> commandClasses = reflections.getSubTypesOf(SuperCommand.class);
         for (Class<? extends SuperCommand> clazz : commandClasses) {
-            RequireRank requireRank = clazz.getAnnotation(RequireRank.class);
             String command1 = "/" + clazz.getSimpleName().replace("Command", "").toLowerCase();
+            RequireRank requireRank = clazz.getAnnotation(RequireRank.class);
+            if (requireRank == null) {
+                allowedCommands.add(command1);
+                continue;
+            }
             System.out.println(keelePlayer.getRank().name() + " has permission level " + requireRank.value());
             System.out.println("Required permission level: " + requireRank.value());
             System.out.println("Player has permission: " + keelePlayer.getRank().hasPermissionLevel(requireRank.value()));
