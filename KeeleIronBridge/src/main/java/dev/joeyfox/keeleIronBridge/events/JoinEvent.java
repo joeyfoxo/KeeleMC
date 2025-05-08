@@ -5,8 +5,8 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
+import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.permission.PermissionsSetupEvent;
-import com.velocitypowered.api.event.player.PostLoginEvent;
 import com.velocitypowered.api.permission.PermissionFunction;
 import com.velocitypowered.api.permission.PermissionProvider;
 import com.velocitypowered.api.permission.Tristate;
@@ -26,7 +26,7 @@ public class JoinEvent {
     private final KeeleIronBridge plugin;
     private final PermissionCache permissionCache;
     public static final MinecraftChannelIdentifier CHANNEL =
-            MinecraftChannelIdentifier.from("keele", "rank_query");
+            MinecraftChannelIdentifier.from("keele:rank_query");
 
     public JoinEvent(KeeleIronBridge plugin) {
         this.plugin = plugin;
