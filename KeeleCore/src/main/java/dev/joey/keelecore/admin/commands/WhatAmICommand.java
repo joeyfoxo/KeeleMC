@@ -51,6 +51,10 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
         Reflections reflections = new Reflections("dev.joey.keelecore.admin.commands");
         Set<Class<? extends SuperCommand>> commandClasses = reflections.getSubTypesOf(SuperCommand.class);
         for (Class<? extends SuperCommand> clazz : commandClasses) {
+            System.out.println("Checking class: " + clazz.getName());
+            RequireRank requireRank = clazz.getAnnotation(RequireRank.class);
+            System.out.println("RequireRank: " + requireRank);
+            System.out.println("Player rank: " + keelePlayer.getRank());
             if (RankGuard.hasRequiredRank(clazz, keelePlayer)) {
                 String name = "/" + clazz.getSimpleName().replace("Command", "").toLowerCase();
                 allowedCommands.add(name);
