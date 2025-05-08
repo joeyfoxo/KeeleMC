@@ -31,13 +31,15 @@ public class JoinEvent {
         if (serverConnection.isPresent()) {
             ServerConnection server = serverConnection.get();
 
+            plugin.getLogger().info("Sending rank query for player: " + player.getUsername());
+
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("get_rank");
             out.writeUTF(player.getUniqueId().toString());
 
             server.sendPluginMessage(CHANNEL, out.toByteArray());
         } else {
-            System.out.println("Player {} is not connected to any server.");
+            plugin.getLogger().warn("Player " + player.getUsername() + " is not connected to any server.");
         }
     }
 
@@ -46,19 +48,19 @@ public class JoinEvent {
         if (!event.getIdentifier().equals(CHANNEL)) return;
         if (!(event.getSource() instanceof ServerConnection)) return;
 
-        event.setResult(PluginMessageEvent.ForwardResult.handled());
-
         ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
         String subchannel = in.readUTF();
+
         if (subchannel.equals("rank_response")) {
             UUID uuid = UUID.fromString(in.readUTF());
             String rank = in.readUTF();
 
-            System.out.println(("Received rank for {}: {}" + uuid + rank));
-            System.out.println("Applying permissions for rank: " + rank);
-            System.out.println("Player UUID: " + uuid);
+            plugin.getLogger().info("Received rank for " + uuid + ": " + rank);
+            plugin.getLogger().info("Applying permissions for rank: " + rank);
 
-            // Implement logic to apply permissions based on rank here
+            // TODO: Implement permission assignment based on the received rank
         }
+
+        event.setResult(PluginMessageEvent.ForwardResult.handled());
     }
 }
