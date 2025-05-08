@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
@@ -22,14 +23,10 @@ public class JoinNLeaveListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        PermissionManager.getPlayer(player.getUniqueId()).thenAccept(keelePlayer -> {
+    public void onLogin(PlayerLoginEvent event) {
 
-            keelePlayer.setPlayer(player);
-            PermissionManager.setVanished(player, keelePlayer.isVanished());
-            NameTagFormatting.updateNameTag(player, keelePlayer.getRank());
-
+        PermissionManager.getPlayer(event.getPlayer().getUniqueId()).thenAccept(keelePlayer -> {
+            Player player = event.getPlayer();
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF(player.getUniqueId().toString());
             out.writeUTF(keelePlayer.getRank().name()); // include rank
@@ -43,6 +40,18 @@ public class JoinNLeaveListener implements Listener {
                 player.sendPluginMessage(KeeleCore.getInstance(), "keele:playerinfo", out.toByteArray());
                 KeeleCore.getInstance().getLogger().info("Sent plugin message for " + player.getName());
             });
+        });
+
+    }
+
+    @EventHandler
+    public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        PermissionManager.getPlayer(player.getUniqueId()).thenAccept(keelePlayer -> {
+
+            keelePlayer.setPlayer(player);
+            PermissionManager.setVanished(player, keelePlayer.isVanished());
+            NameTagFormatting.updateNameTag(player, keelePlayer.getRank());
         });
     }
 
