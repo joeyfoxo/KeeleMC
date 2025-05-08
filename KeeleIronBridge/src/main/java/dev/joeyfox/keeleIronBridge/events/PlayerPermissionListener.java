@@ -53,10 +53,12 @@ public class PlayerPermissionListener {
         PermissionProvider defaultProvider = event.getProvider();
         PermissionProvider provider = subject -> {
             PermissionFunction fallback = defaultProvider.createFunction(subject);
-            return node -> perms.contains(node) ? Tristate.TRUE : fallback.getPermissionValue(node);
+            return node -> {
+                boolean has = perms.contains(node);
+                System.out.println("[Velocity] Permission check: " + node + " -> " + (has ? "GRANTED" : "fallback"));
+                return has ? Tristate.TRUE : fallback.getPermissionValue(node);
+            };
         };
-
-        System.out.println("[Velocity] Applying permissions to " + player.getUsername() + ": " + perms);
         event.setProvider(provider);
     }
 }
