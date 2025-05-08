@@ -1,6 +1,7 @@
 package dev.joey.keelecore.admin.commands;
 
 import dev.joey.keelecore.KeeleCore;
+import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.RequireRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.admin.permissions.RankGuard;
@@ -51,14 +52,15 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
         Reflections reflections = new Reflections("dev.joey.keelecore.admin.commands");
         Set<Class<? extends SuperCommand>> commandClasses = reflections.getSubTypesOf(SuperCommand.class);
         for (Class<? extends SuperCommand> clazz : commandClasses) {
-            System.out.println("Checking class: " + clazz.getName());
             RequireRank requireRank = clazz.getAnnotation(RequireRank.class);
-            System.out.println("RequireRank: " + requireRank);
-            System.out.println("Player rank: " + keelePlayer.getRank());
-            System.out.println(RankGuard.hasRequiredRank(clazz, keelePlayer) ? "Allowed" : "Not allowed");
-            if (!RankGuard.hasRequiredRank(clazz, keelePlayer)) {
-                String name = "/" + clazz.getSimpleName().replace("Command", "").toLowerCase();
-                allowedCommands.add(name);
+            String command1 = "/" + clazz.getSimpleName().replace("Command", "").toLowerCase();
+            if (requireRank == null) {
+                allowedCommands.add(command1);
+                continue;
+            }
+
+            if (keelePlayer.getRank().hasPermissionLevel(requireRank.value())) {
+                allowedCommands.add(command1);
             }
         }
 
