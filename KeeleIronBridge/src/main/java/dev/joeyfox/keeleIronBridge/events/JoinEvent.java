@@ -55,6 +55,8 @@ public class JoinEvent {
             String rank = in.readUTF();
 
             System.out.println(("Received rank for {}: {}" + uuid + rank));
+            System.out.println("Applying permissions for rank: " + rank);
+            System.out.println("Player UUID: " + uuid);
 
             // Implement logic to apply permissions based on rank here
         }
