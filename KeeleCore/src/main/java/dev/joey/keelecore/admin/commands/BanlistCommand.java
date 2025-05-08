@@ -47,9 +47,6 @@ public class BanlistCommand extends SuperCommand {
 
             // Try to get the staff rank
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(entry.getSource());
-            System.out.println("OfflinePlayer: " + offlinePlayer);
-            System.out.println("UUID: " + offlinePlayer.getUniqueId());
-            System.out.println("Name: " + offlinePlayer.getName());
             KeelePlayer staff = PermissionManager.getCached(offlinePlayer.getUniqueId());
 
             Component msg = Component.text(" • ")
