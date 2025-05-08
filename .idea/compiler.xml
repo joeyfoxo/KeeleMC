@@ -7,11 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="KeeleSurvival" />
-        <module name="KeeleCore" />
         <module name="MiniGameCore" />
         <module name="KeeleUniWars" />
         <module name="KeeleHub" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="KeeleCore" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

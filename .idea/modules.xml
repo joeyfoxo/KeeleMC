@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Core/KeeleCore.iml" filepath="$PROJECT_DIR$/Core/KeeleCore.iml" />
       <module fileurl="file://$PROJECT_DIR$/KeeleHub/KeeleHub.iml" filepath="$PROJECT_DIR$/KeeleHub/KeeleHub.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/KeeleMC.iml" filepath="$PROJECT_DIR$/.idea/KeeleMC.iml" />
       <module fileurl="file://$PROJECT_DIR$/KeeleSurvival/KeeleSurvival.iml" filepath="$PROJECT_DIR$/KeeleSurvival/KeeleSurvival.iml" />
