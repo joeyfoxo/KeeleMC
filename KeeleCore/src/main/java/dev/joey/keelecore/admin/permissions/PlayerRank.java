@@ -8,8 +8,18 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public enum PlayerRank {
     OWNER(6, "&c&lOWNER &r", "", List.of(
-            "velocity.command.*",
-            "minecraft.command.*"
+            "velocity.command.plugins",
+            "velocity.command.info",
+            "velocity.command.reload",
+            "velocity.command.dump",
+            "velocity.command.heap",
+            "velocity.command.server",
+            "velocity.command.shutdown",
+            "velocity.command.glist",
+            "minecraft.command.op",
+            "minecraft.command.deop",
+            "velocity.command.send",
+            "keelecore.bypass"
     )),
     DEV(5, "&4&lDEV &r", "", List.of(
             "velocity.command.plugins",
