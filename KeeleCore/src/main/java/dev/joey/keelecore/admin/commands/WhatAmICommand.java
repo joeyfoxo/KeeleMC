@@ -47,7 +47,7 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
         for (Command cmd : commandMap.getKnownCommands().values()) {
             String requiredPermission = cmd.getPermission();
 
-            if (requiredPermission == null || requiredPermission.isEmpty() || player.hasPermission(requiredPermission)) {
+            if (requiredPermission != null && !requiredPermission.isEmpty() && player.hasPermission(requiredPermission)) {
                 allowedCommands.add("/" + cmd.getLabel());
             }
         }
