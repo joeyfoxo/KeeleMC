@@ -26,12 +26,12 @@ public class PlayerPermissionListener {
 
         try (DataInputStream in = new DataInputStream(new ByteArrayInputStream(event.getData()))) {
             String uuidStr = in.readUTF();
+            String rank = in.readUTF();
             int permissionCount = in.readInt();
 
             List<String> permissions = new ArrayList<>();
             for (int i = 0; i < permissionCount; i++) {
-                String perm = in.readUTF();
-                permissions.add(perm);
+                permissions.add(in.readUTF());
             }
 
             UUID uuid = UUID.fromString(uuidStr);
