@@ -56,11 +56,17 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
             String command1 = "/" + clazz.getSimpleName().replace("Command", "").toLowerCase();
             if (requireRank == null) {
                 allowedCommands.add(command1);
+                System.out.println("Added as null: " + command1);
                 continue;
             }
-
+            System.out.println(keelePlayer.getRank().name() + " has permission level " + requireRank.value());
+            System.out.println("Required permission level: " + requireRank.value());
+            System.out.println("Player has permission: " + keelePlayer.getRank().hasPermissionLevel(requireRank.value()));
+            System.out.println("Command: " + command1);
             if (keelePlayer.getRank().hasPermissionLevel(requireRank.value())) {
+
                 allowedCommands.add(command1);
+                System.out.println("Added: " + command1);
             }
         }
 
