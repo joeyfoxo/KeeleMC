@@ -1,19 +1,16 @@
 package dev.joey.keelecore.auth.listeners;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.formatting.NameTagFormatting;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PermissionManager;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.permissions.PermissionAttachment;
 
-import java.util.List;
 import java.util.UUID;
 
 public class JoinNLeaveListener implements Listener {
@@ -23,35 +20,19 @@ public class JoinNLeaveListener implements Listener {
     }
 
     @EventHandler
-    public void onLogin(PlayerLoginEvent event) {
-
-        PermissionManager.getPlayer(event.getPlayer().getUniqueId()).thenAccept(keelePlayer -> {
-            Player player = event.getPlayer();
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF(player.getUniqueId().toString());
-            out.writeUTF(keelePlayer.getRank().name()); // include rank
-            List<String> permissions = keelePlayer.getRank().getPermissions();
-            out.writeInt(permissions.size());
-            for (String perm : permissions) {
-                out.writeUTF(perm);
-            }
-
-            Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> {
-                player.sendPluginMessage(KeeleCore.getInstance(), "keele:playerinfo", out.toByteArray());
-                KeeleCore.getInstance().getLogger().info("Sent plugin message for " + player.getName());
-            });
-        });
-
-    }
-
-    @EventHandler
-    public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
+    public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         PermissionManager.getPlayer(player.getUniqueId()).thenAccept(keelePlayer -> {
 
             keelePlayer.setPlayer(player);
             PermissionManager.setVanished(player, keelePlayer.isVanished());
             NameTagFormatting.updateNameTag(player, keelePlayer.getRank());
+
+            PermissionAttachment attachment = player.addAttachment(KeeleCore.getPlugin(KeeleCore.class));
+
+            for (String permission : keelePlayer.getRank().getPermissions()) {
+                attachment.setPermission(permission, true);
+            }
         });
     }
 
@@ -60,6 +41,13 @@ public class JoinNLeaveListener implements Listener {
         UUID uuid = event.getPlayer().getUniqueId();
 
         KeelePlayer player = PermissionManager.getCached(uuid);
+
+        PermissionAttachment attachment = player.getPlayer().addAttachment(KeeleCore.getPlugin(KeeleCore.class));
+        for (String permission : player.getRank().getPermissions()) {
+            attachment.unsetPermission(permission);
+        }
+        player.getPlayer().removeAttachment(attachment);
+
         PermissionManager.put(player).thenRun(() -> PermissionManager.remove(player.getUuid()));
     }
 }
