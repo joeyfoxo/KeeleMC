@@ -1,25 +1,22 @@
 package dev.joey.keelecore.admin.commands;
 
-import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.RequireRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
+import dev.joey.keelecore.admin.permissions.RankGuard;
 import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.reflections.Reflections;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
-@RequireRank(PlayerRank.HELPER)
 public class WhatAmICommand extends SuperCommand implements CommandExecutor {
 
     @Override
@@ -33,26 +30,34 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
             return true;
         }
 
+        Set<String> allowedCommands = new TreeSet<>();
+
+        // 1. Bukkit/Plugin commands via permission nodes
         CommandMap commandMap = getCommandMap();
         if (commandMap == null) {
             player.sendMessage(Component.text("Unable to load command map."));
             return true;
         }
 
-        System.out.println(keelePlayer.getRank().name());
-        System.out.println(keelePlayer.getRank().getPermissions());
-
-        Set<String> allowedCommands = new TreeSet<>();
-
         for (Command cmd : commandMap.getKnownCommands().values()) {
             String requiredPermission = cmd.getPermission();
 
-            if (requiredPermission != null && !requiredPermission.isEmpty() && player.hasPermission(requiredPermission)) {
+            if (requiredPermission == null || requiredPermission.isEmpty() || player.hasPermission(requiredPermission)) {
                 allowedCommands.add("/" + cmd.getLabel());
             }
         }
 
-        // Output to player
+        // 2. SuperCommand-based commands via @RequireRank
+        Reflections reflections = new Reflections("dev.joey.keelecore.admin.commands");
+        Set<Class<? extends SuperCommand>> commandClasses = reflections.getSubTypesOf(SuperCommand.class);
+        for (Class<? extends SuperCommand> clazz : commandClasses) {
+            if (RankGuard.hasRequiredRank(clazz, keelePlayer)) {
+                String name = "/" + clazz.getSimpleName().replace("Command", "").toLowerCase();
+                allowedCommands.add(name);
+            }
+        }
+
+        // Output result
         if (allowedCommands.isEmpty()) {
             player.sendMessage(Component.text("No commands available for your rank."));
         } else {
