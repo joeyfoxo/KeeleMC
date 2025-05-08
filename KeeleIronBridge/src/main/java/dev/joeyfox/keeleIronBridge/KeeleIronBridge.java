@@ -33,7 +33,9 @@ public class KeeleIronBridge {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        getProxy().getEventManager().register(this, new PlayerPermissionListener(getProxy()));
+        proxy.getChannelRegistrar().register(MinecraftChannelIdentifier.create("keele", "rank"));
+        proxy.getEventManager().register(this, new PlayerPermissionListener(proxy));
+        logger.info("[KeeleIronBridge] Registered plugin messaging channel: keele:rank");
     }
 
     @Subscribe

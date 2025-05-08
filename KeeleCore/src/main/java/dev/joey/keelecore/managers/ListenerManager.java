@@ -19,13 +19,5 @@ public class ListenerManager {
         new DailyRestart();
         //new AutoAnnouncer();
         new ArmourListener();
-
-        Bukkit.getMessenger().registerOutgoingPluginChannel(KeeleCore.getInstance(), "keele:rank");
-
-
-//        Bukkit.getMessenger().registerOutgoingPluginChannel(KeeleCore.getInstance(), "keele:playerinfo");
-//        Bukkit.getMessenger().registerIncomingPluginChannel(KeeleCore.getInstance(), "keele:playerinfo",
-//                velocityMessagingBridge);
-
     }
 }

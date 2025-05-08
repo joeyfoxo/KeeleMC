@@ -32,6 +32,8 @@ public final class KeeleCore extends JavaPlugin {
         new CommandManager();
         new ListenerManager();
 
+        Bukkit.getMessenger().registerOutgoingPluginChannel(KeeleCore.getInstance(), "keele:rank");
+
         // Every 2 Minutes
         Bukkit.getScheduler().runTaskTimer(this, this::saveData, 0, TimeUnit.MINUTES.toSeconds(2) * 20);
         Bukkit.getScheduler().runTaskTimer(this, new ColorCycleTask(), 0L, 2L); // every 5 ticks
