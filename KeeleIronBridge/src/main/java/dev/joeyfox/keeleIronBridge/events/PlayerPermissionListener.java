@@ -50,7 +50,7 @@ public class PlayerPermissionListener {
             return;
         }
 
-        PermissionProvider provider = _ -> {
+        PermissionProvider provider = subject -> {
             return node -> perms.contains(node) ? Tristate.TRUE : Tristate.UNDEFINED;
         };
 
