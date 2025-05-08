@@ -22,6 +22,7 @@ import java.util.UUID;
 public class JoinNLeaveListener implements Listener {
 
     public JoinNLeaveListener() {
+        Bukkit.getMessenger().registerOutgoingPluginChannel(KeeleCore.getInstance(), "keele:rank");
         KeeleCore.getPlugin(KeeleCore.class).getServer().getPluginManager().registerEvents(this, KeeleCore.getPlugin(KeeleCore.class));
     }
 
