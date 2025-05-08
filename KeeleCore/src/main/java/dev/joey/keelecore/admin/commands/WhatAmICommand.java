@@ -33,8 +33,6 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
             return true;
         }
 
-        Set<String> playerPermissions = new HashSet<>(keelePlayer.getRank().getPermissions());
-
         CommandMap commandMap = getCommandMap();
         if (commandMap == null) {
             player.sendMessage(Component.text("Unable to load command map."));
@@ -46,7 +44,7 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
         for (Command cmd : commandMap.getKnownCommands().values()) {
             String requiredPermission = cmd.getPermission();
 
-            if (requiredPermission == null || requiredPermission.isEmpty() || playerPermissions.contains(requiredPermission)) {
+            if (requiredPermission == null || requiredPermission.isEmpty() || player.hasPermission(requiredPermission)) {
                 allowedCommands.add("/" + cmd.getLabel());
             }
         }
