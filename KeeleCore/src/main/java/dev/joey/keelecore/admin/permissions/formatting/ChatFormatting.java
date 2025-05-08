@@ -81,7 +81,7 @@ public class ChatFormatting implements Listener {
             case ADMIN -> deserialize("&4&lADMIN&r\n\nAdmins are in charge of keeping the \nserver running smoothly");
             case MOD -> deserialize("&b&lMOD&r\n\nModerators enforce rules and provide \nhelp to players");
             case STUDENT -> deserialize("&a&lSTUDENT&r\n\nStudents are members of Keele University");
-            case GUEST, PLAYER -> deserialize("&9&lGUEST&r\n\nGuests are either alumni of Keele \nor external invitees");
+            case GUEST, PLAYER -> deserialize("&8&lGUEST&r\n\nGuests are either alumni of Keele \nor external invitees");
             default -> null;
         };
 
