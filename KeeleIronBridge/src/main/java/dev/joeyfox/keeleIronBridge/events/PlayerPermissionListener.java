@@ -50,8 +50,10 @@ public class PlayerPermissionListener {
             return;
         }
 
+        PermissionProvider defaultProvider = event.getProvider();
         PermissionProvider provider = subject -> {
-            return node -> perms.contains(node) ? Tristate.TRUE : Tristate.UNDEFINED;
+            PermissionFunction fallback = defaultProvider.createFunction(subject);
+            return node -> perms.contains(node) ? Tristate.TRUE : fallback.getPermissionValue(node);
         };
 
         System.out.println("[Velocity] Applying permissions to " + player.getUsername() + ": " + perms);
