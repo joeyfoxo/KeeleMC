@@ -73,8 +73,27 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
             player.sendMessage(Component.text("No commands available for your rank."));
         } else {
             player.sendMessage(Component.text("Commands you can use:"));
+
+            // Rediscover the SuperCommand classes for annotation info
+            Map<String, PlayerRank> rankMap = new HashMap<>();
+            for (Class<? extends SuperCommand> clazz : commandClasses) {
+                String name = "/" + clazz.getSimpleName().replace("Command", "").toLowerCase();
+                RequireRank rank = clazz.getAnnotation(RequireRank.class);
+                if (rank != null) {
+                    rankMap.put(name, rank.value());
+                }
+            }
+
             for (String cmd : allowedCommands) {
-                player.sendMessage(Component.text("- " + cmd));
+                PlayerRank required = rankMap.get(cmd);
+                Component line = Component.text("- " + cmd);
+
+                if (required != null) {
+                    line = line.append(Component.text(" "))
+                            .append(required.getPrefix());
+                }
+
+                player.sendMessage(line);
             }
         }
 
