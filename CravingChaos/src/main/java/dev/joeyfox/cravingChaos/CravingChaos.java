@@ -22,7 +22,6 @@ public class CravingChaos extends Core<CravingGame> {
             World world = Bukkit.createWorld(new WorldCreator("glass"));
             setKeeleMiniCore(this);
             new CravingGameStart(getGame());
-            System.out.println("CravingChaos has been enabled!");
                 if (world != null) {
                     WorldGenerator.buildGlassBox(world, new Location(world, 0, 100, 0), CravingSettings.getCageHeight(), CravingSettings.getCageSize());
                 }
