@@ -36,6 +36,13 @@ public class KeelePlayer {
         this.rank = rank;
     }
 
+    public KeelePlayer(UUID uuid) {
+        this.player = null;
+        this.name = null;
+        this.uuid = uuid;
+        this.rank = PlayerRank.PLAYER;
+    }
+
     public void setPlayer(Player player) {
         this.player = player;
     }

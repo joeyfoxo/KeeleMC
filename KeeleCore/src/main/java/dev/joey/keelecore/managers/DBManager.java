@@ -91,9 +91,13 @@ public class DBManager {
                     Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> future.complete(player));
                     return;
                 }
+                else {
 
-                System.out.println("[DB] No player record found for UUID: " + uuid);
+                    System.out.println("[DB] No player record found for UUID: " + uuid);
+                    KeelePlayer keelePlayer = new KeelePlayer(uuid);
+                    Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> future.complete(keelePlayer));
 
+                }
             } catch (SQLException | IllegalArgumentException e) {
                 e.printStackTrace();
             }
