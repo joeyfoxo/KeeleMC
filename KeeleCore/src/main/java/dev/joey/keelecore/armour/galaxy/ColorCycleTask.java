@@ -53,7 +53,6 @@ public class ColorCycleTask implements Runnable {
 
         container.set(TICK_KEY, PersistentDataType.INTEGER, localTick);
         item.setItemMeta(meta);
-    }
 
         float hue = (localTick % 360) / 360f;
         java.awt.Color awtColor = java.awt.Color.getHSBColor(hue, 1.0f, 1.0f);
