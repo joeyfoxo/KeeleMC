@@ -18,6 +18,7 @@ import org.reflections.Reflections;
 import java.lang.reflect.Field;
 import java.util.*;
 
+@RequireRank(PlayerRank.HELPER)
 public class WhatAmICommand extends SuperCommand implements CommandExecutor {
 
     @Override
