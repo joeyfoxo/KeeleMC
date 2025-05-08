@@ -5,8 +5,8 @@ import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.event.permission.PermissionsSetupEvent;
-import com.velocitypowered.api.permission.PermissionProvider;
 import com.velocitypowered.api.permission.PermissionFunction;
+import com.velocitypowered.api.permission.PermissionProvider;
 import com.velocitypowered.api.permission.Tristate;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
@@ -14,6 +14,7 @@ import dev.joeyfox.keeleIronBridge.KeeleIronBridge;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,6 +22,7 @@ public class PlayerPermissionListener {
 
     private final KeeleIronBridge plugin;
     private final Map<UUID, List<String>> tempPermissions = new ConcurrentHashMap<>();
+    private final Set<UUID> loadedPlayers = ConcurrentHashMap.newKeySet();
     private static final MinecraftChannelIdentifier CHANNEL = MinecraftChannelIdentifier.from("keele:playerinfo");
 
     public PlayerPermissionListener(KeeleIronBridge plugin) {
@@ -35,7 +37,7 @@ public class PlayerPermissionListener {
         ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
 
         UUID uuid = UUID.fromString(in.readUTF());
-        String rank = in.readUTF(); // optional rank name
+        String rank = in.readUTF();
         int count = in.readInt();
         List<String> perms = new java.util.ArrayList<>(count);
         for (int i = 0; i < count; i++) {
@@ -43,21 +45,9 @@ public class PlayerPermissionListener {
         }
 
         tempPermissions.put(uuid, perms);
-        System.out.println("[Velocity] Received permissions for " + uuid + " (rank: " + rank + "): " + perms);
+        loadedPlayers.add(uuid);
 
-        plugin.getProxy().getPlayer(uuid).ifPresent(player -> {
-            plugin.getProxy().getEventManager()
-                    .fire(new PermissionsSetupEvent(player, subject -> node -> Tristate.UNDEFINED))
-                    .thenAccept(setupEvent -> {
-                        PermissionProvider provider = subject -> node -> {
-                            Tristate result = perms.contains(node) ? Tristate.TRUE : Tristate.UNDEFINED;
-                            System.out.println("[Velocity] Re-applied permission check: " + node + " => " + result);
-                            return result;
-                        };
-                        setupEvent.setProvider(provider);
-                        System.out.println("[Velocity] Permission provider reapplied for " + player.getUsername());
-                    });
-        });
+        System.out.println("[Velocity] Received permissions for " + uuid + " (rank: " + rank + "): " + perms);
     }
 
     @Subscribe
@@ -65,18 +55,20 @@ public class PlayerPermissionListener {
         if (!(event.getSubject() instanceof Player player)) return;
 
         UUID uuid = player.getUniqueId();
-        List<String> perms = tempPermissions.remove(uuid);
+        List<String> perms = tempPermissions.get(uuid);
 
-        if (perms == null) {
-            System.out.println("[Velocity] No permissions received for " + player.getUsername() + ", using default.");
+        if (perms == null || !loadedPlayers.contains(uuid)) {
+            System.out.println("[Velocity] Permissions not yet received for " + player.getUsername() + ", denying all.");
+            event.setProvider(subject -> node -> {
+                System.out.println("[Velocity] DENY (waiting): " + node);
+                return Tristate.FALSE;
+            });
             return;
         }
 
-        PermissionProvider defaultProvider = event.getProvider();
         PermissionProvider provider = subject -> {
-            PermissionFunction fallback = defaultProvider.createFunction(subject);
             return node -> {
-                Tristate result = perms.contains(node) ? Tristate.TRUE : fallback.getPermissionValue(node);
+                Tristate result = perms.contains(node) ? Tristate.TRUE : Tristate.UNDEFINED;
                 System.out.println("[Velocity] Permission check: " + node + " => " + result);
                 return result;
             };
