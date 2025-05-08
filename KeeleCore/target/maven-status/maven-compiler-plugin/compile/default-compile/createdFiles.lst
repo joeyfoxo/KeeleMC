@@ -35,6 +35,7 @@ dev/joey/keelecore/admin/commands/DiscordCommand.class
 dev/joey/keelecore/admin/permissions/PlayerRank.class
 dev/joey/keelecore/admin/commands/BanlistCommand.class
 dev/joey/keelecore/admin/permissions/player/KeelePlayer.class
+dev/joey/keelecore/managers/bridge/VelocityMessagingBridge.class
 dev/joey/keelecore/admin/commands/RankCommand.class
 dev/joey/keelecore/admin/permissions/RequireRank.class
 dev/joey/keelecore/admin/commands/SpeedCommand.class

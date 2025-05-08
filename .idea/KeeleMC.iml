@@ -16,6 +16,9 @@
       <sourceFolder url="file://$MODULE_DIR$/CatchingChaos/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CravingChaos/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CravingChaos/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/KeeleCore/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/KeeleCore/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/KeeleIronBridge/src/main/java" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -34,5 +37,13 @@
     </orderEntry>
     <orderEntry type="library" name="Maven: org.abego.treelayout:org.abego.treelayout.core:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: net.kyori:adventure-api:4.16.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:31.0.1-jre" level="project" />
+    <orderEntry type="library" name="Maven: com.velocitypowered:velocity-api:3.4.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:2.0.9" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject:guice:6.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:33.3.1-jre" level="project" />
+    <orderEntry type="library" name="Maven: com.velocitypowered:velocity-api:4.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.velocitypowered:velocity-api:3.2.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.velocitypowered:velocity-api:3.3.0-SNAPSHOT" level="project" />
   </component>
 </module>
