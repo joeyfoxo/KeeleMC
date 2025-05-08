@@ -5,6 +5,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.managers.PermissionManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
@@ -31,7 +32,13 @@ public class VelocityMessagingBridge implements PluginMessageListener {
                 out.writeInt(permissions.size());
                 permissions.forEach(out::writeUTF);
 
-                player.sendPluginMessage(KeeleCore.getInstance(), "keele:rank_query", out.toByteArray());
+                System.out.println("[VelocityMessagingBridge] Sending rank response to player: " + player.getName() + " (" + targetUUID + ")");
+                System.out.println("[VelocityMessagingBridge] Rank: " + rank);
+                System.out.println("[VelocityMessagingBridge] Permissions: " + permissions);
+
+                Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> {
+                    player.sendPluginMessage(KeeleCore.getInstance(), "keele:rank_query", out.toByteArray());
+                });
             });
         }
     }

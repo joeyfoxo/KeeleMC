@@ -37,13 +37,16 @@ public class JoinEvent {
     @Subscribe
     public void onServerConnected(ServerConnectedEvent event) {
         Player player = event.getPlayer();
-        plugin.getLogger().info("Sending rank query for: " + player.getUsername());
+        UUID uuid = player.getUniqueId();
+        plugin.getLogger().info("[JoinEvent] Player connected: " + player.getUsername() + " (" + uuid + ")");
+        plugin.getLogger().info("[JoinEvent] Sending rank query to backend...");
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("get_rank");
-        out.writeUTF(player.getUniqueId().toString());
+        out.writeUTF(uuid.toString());
 
         event.getServer().sendPluginMessage(CHANNEL, out.toByteArray());
+        plugin.getLogger().info("[JoinEvent] Plugin message sent to server for UUID: " + uuid);
     }
 
     @Subscribe
@@ -58,19 +61,22 @@ public class JoinEvent {
         UUID uuid = UUID.fromString(in.readUTF());
         String rank = in.readUTF();
         int count = in.readInt();
+
+        plugin.getLogger().info("[JoinEvent] Plugin message received for UUID: " + uuid);
+        plugin.getLogger().info("[JoinEvent] Rank: " + rank + ", Permissions count: " + count);
+
         List<String> perms = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            perms.add(in.readUTF());
+            String perm = in.readUTF();
+            perms.add(perm);
+            plugin.getLogger().info("[JoinEvent] -> Perm: " + perm);
         }
 
         permissionCache.update(uuid, perms);
         loadedPlayers.add(uuid);
 
-        plugin.getLogger().info("Received rank for " + uuid + ": " + rank);
-        plugin.getLogger().info("Applying permissions for rank: " + rank);
-        plugin.getLogger().info("Perm list: " + perms);
-
-        event.setResult(PluginMessageEvent.ForwardResult.handled());
+        plugin.getLogger().info("[JoinEvent] Cached permissions for UUID: " + uuid);
+        plugin.getLogger().info("[JoinEvent] Permission cache now has: " + permissionCache.getPermissions(uuid));
     }
 
     @Subscribe
@@ -78,9 +84,14 @@ public class JoinEvent {
         if (!(event.getSubject() instanceof Player player)) return;
 
         UUID uuid = player.getUniqueId();
+        plugin.getLogger().info("[JoinEvent] Permission setup for: " + player.getUsername() + " (" + uuid + ")");
+
         List<String> perms = permissionCache.getPermissions(uuid);
+        boolean isLoaded = loadedPlayers.contains(uuid);
+        plugin.getLogger().info("[JoinEvent] Permissions loaded? " + isLoaded + ", Found: " + perms);
+
         if (perms == null) {
-            plugin.getLogger().warn("Permissions not loaded yet for " + player.getUsername() + ", denying by default.");
+            plugin.getLogger().warn("[JoinEvent] Permissions not loaded yet for " + player.getUsername() + ", using empty list.");
             perms = Collections.emptyList();
         }
 
@@ -89,15 +100,21 @@ public class JoinEvent {
         PermissionProvider provider = subject -> {
             PermissionFunction fallback = defaultProv.createFunction(subject);
             return node -> {
-                if (!loadedPlayers.contains(uuid)) {
-                    plugin.getLogger().warn("Blocking permission '" + node + "' for " + player.getUsername() + " (permissions not ready)");
-                    return Tristate.FALSE;
+                boolean loaded = loadedPlayers.contains(uuid);
+                plugin.getLogger().info("[JoinEvent] Checking perm '" + node + "' for " + player.getUsername() + ", loaded: " + loaded);
+
+                if (!loaded) {
+                    plugin.getLogger().warn("[JoinEvent] -> Fallback value used for: " + node);
+                    return fallback.getPermissionValue(node); // safer than denying
                 }
-                return finalPerms.contains(node) ? Tristate.TRUE : fallback.getPermissionValue(node);
+
+                boolean has = finalPerms.contains(node);
+                plugin.getLogger().info("[JoinEvent] -> Perm " + node + ": " + (has ? "GRANTED" : "FALLBACK"));
+                return has ? Tristate.TRUE : fallback.getPermissionValue(node);
             };
         };
 
-        plugin.getLogger().info("Setting permission provider for " + player.getUsername());
+        plugin.getLogger().info("[JoinEvent] Applying PermissionProvider to " + player.getUsername());
         event.setProvider(provider);
     }
 }
