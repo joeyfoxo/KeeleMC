@@ -71,6 +71,7 @@ public class JoinEvent {
 
             plugin.getLogger().info("Received rank for " + uuid + ": " + rank);
             plugin.getLogger().info("Applying permissions for rank: " + rank);
+            plugin.getLogger().info("Permissions: " + perms);
 
             // TODO: Implement permission assignment based on the received rank
         }
