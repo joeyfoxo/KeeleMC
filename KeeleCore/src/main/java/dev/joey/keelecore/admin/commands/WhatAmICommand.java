@@ -39,7 +39,7 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
         // 1. Bukkit/Plugin commands via permission nodes
         CommandMap commandMap = getCommandMap();
         if (commandMap == null) {
-            player.sendMessage(Component.text("Unable to load command map."));
+            player.sendMessage(Component.text("Unable to load command map"));
             return true;
         }
 
