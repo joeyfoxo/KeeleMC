@@ -10,12 +10,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.List;
 
 import static dev.joey.keelecore.util.UtilClass.keeleCore;
 
-public class DiscordCommand extends SuperCommand implements CommandExecutor {
+public class DiscordCommand extends SuperCommand {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
@@ -26,5 +28,10 @@ public class DiscordCommand extends SuperCommand implements CommandExecutor {
         UtilClass.sendPlayerMessage(player, "Join our discord at: " + keeleCore.getConfig().get("discord"), new Color(88, 101, 242).getRGB());
 
         return false;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+        return List.of();
     }
 }

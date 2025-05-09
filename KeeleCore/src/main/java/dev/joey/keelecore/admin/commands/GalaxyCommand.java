@@ -16,13 +16,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 @RequireRank(PlayerRank.DEV)
-public class GalaxyCommand extends SuperCommand implements CommandExecutor {
+public class GalaxyCommand extends SuperCommand {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
 
@@ -41,5 +42,10 @@ public class GalaxyCommand extends SuperCommand implements CommandExecutor {
         spigotPlayer.getInventory().addItem(armour.toArray(new ItemStack[0]));
         return true;
 
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+        return List.of();
     }
 }

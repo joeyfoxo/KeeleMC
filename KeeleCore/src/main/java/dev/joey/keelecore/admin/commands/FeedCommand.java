@@ -15,9 +15,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @RequireRank(PlayerRank.ADMIN)
-public class FeedCommand extends SuperCommand implements CommandExecutor {
+public class FeedCommand extends SuperCommand {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
@@ -47,5 +50,10 @@ public class FeedCommand extends SuperCommand implements CommandExecutor {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+        return List.of();
     }
 }

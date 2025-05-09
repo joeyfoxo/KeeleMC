@@ -18,9 +18,12 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @RequireRank(PlayerRank.MOD)
-public class VanishCommand extends SuperCommand implements CommandExecutor {
+public class VanishCommand extends SuperCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -61,6 +64,11 @@ public class VanishCommand extends SuperCommand implements CommandExecutor {
             head.setItemMeta(meta);
             player.getInventory().setHelmet(head);
         }
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+        return List.of();
     }
 
 

@@ -7,14 +7,18 @@ import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @RequireRank(PlayerRank.ADMIN)
-public class RankCommand extends SuperCommand implements CommandExecutor {
+public class RankCommand extends SuperCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender,
@@ -114,5 +118,33 @@ public class RankCommand extends SuperCommand implements CommandExecutor {
         }
 
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            return List.of("debug", "set", "remove").stream()
+                    .filter(sub -> sub.startsWith(args[0].toLowerCase()))
+                    .toList();
+        }
+
+        if (args.length == 2) {
+            String subcommand = args[0].toLowerCase();
+            if (subcommand.equals("set") || subcommand.equals("remove") || subcommand.equals("debug")) {
+                return Bukkit.getOnlinePlayers().stream()
+                        .map(Player::getName)
+                        .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
+                        .toList();
+            }
+        }
+
+        if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
+            return java.util.Arrays.stream(PlayerRank.values())
+                    .map(PlayerRank::name)
+                    .filter(rank -> rank.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        }
+
+        return List.of();
     }
 }

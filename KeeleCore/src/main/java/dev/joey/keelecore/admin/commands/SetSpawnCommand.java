@@ -13,11 +13,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 import static dev.joey.keelecore.util.UtilClass.keeleCore;
 
 @RequireRank(PlayerRank.DEV)
-public class SetSpawnCommand extends SuperCommand implements CommandExecutor {
+public class SetSpawnCommand extends SuperCommand {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (commandSenderCheck(sender)) return true;
@@ -35,5 +38,10 @@ public class SetSpawnCommand extends SuperCommand implements CommandExecutor {
         UtilClass.sendPlayerMessage(player, "Set spawn", UtilClass.success);
 
         return false;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+        return List.of();
     }
 }

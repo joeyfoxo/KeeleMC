@@ -13,10 +13,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @RequireRank(PlayerRank.ADMIN)
 
-public class GodCommand extends SuperCommand implements CommandExecutor {
+public class GodCommand extends SuperCommand {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
@@ -58,4 +61,14 @@ public class GodCommand extends SuperCommand implements CommandExecutor {
         return false;
     }
 
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            return Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .toList();
+        }
+        return List.of();
+    }
 }

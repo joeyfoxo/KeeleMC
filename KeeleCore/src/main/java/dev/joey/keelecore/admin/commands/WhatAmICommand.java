@@ -14,13 +14,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
 @RequireRank(PlayerRank.HELPER)
-public class WhatAmICommand extends SuperCommand implements CommandExecutor {
+public class WhatAmICommand extends SuperCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -108,5 +109,10 @@ public class WhatAmICommand extends SuperCommand implements CommandExecutor {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+        return List.of();
     }
 }

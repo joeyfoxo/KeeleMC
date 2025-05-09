@@ -15,13 +15,15 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.TimeZone;
 
 @RequireRank(PlayerRank.DEV)
-public class WhoISCommand extends SuperCommand implements CommandExecutor {
+public class WhoISCommand extends SuperCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -61,5 +63,10 @@ public class WhoISCommand extends SuperCommand implements CommandExecutor {
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
         return format.format(epoc);
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+        return List.of();
     }
 }
