@@ -56,7 +56,7 @@ public class CravingCageHandler extends CoreCageHandler<CravingGame> {
 
         // Find the top-most non-air block starting from a safe max height
         int y = 200;
-        while (y > 0 && world.getBlockAt(0, y, 0).getType() == Material.AIR) {
+        while (y > 0 && world.getBlockAt(0, y, 0).getType() == Material.AIR || y > 0 && world.getBlockAt(0, y, 0).getType() == Material.BARRIER) {
             y--;
         }
 
