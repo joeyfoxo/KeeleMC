@@ -13,7 +13,7 @@ public class CoreInGame<G extends CoreGame<G>> {
 
     public CoreInGame(G game) {
         this.game = game;
-        //gameRunnable();
+        gameRunnable();
     }
 
     public void gameRunnable() {

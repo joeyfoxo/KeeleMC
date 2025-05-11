@@ -17,9 +17,6 @@ public class CravingGameStart extends CoreGameStart<CravingGame> {
         this.game = game;
         CravingSettings settings = new CravingSettings(game);
         CravingCageHandler cravingCageHandler = new CravingCageHandler(game);
-        game.setGameStatus(GameStatus.IN_GAME);
-        //todo: Just as a temp fix so im not stuck in the air
-
         game.setTeamed(false); // Disable team logic
 
         new BukkitRunnable() {
@@ -42,6 +39,7 @@ public class CravingGameStart extends CoreGameStart<CravingGame> {
             public void run() {
                 if (countdownSeconds <= 0) {
                     game.setGameStatus(GameStatus.IN_GAME);
+                    new CravingInGame(game);
                     cancel();
                 }
             }
