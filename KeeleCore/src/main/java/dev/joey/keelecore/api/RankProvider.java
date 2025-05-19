@@ -11,6 +11,12 @@ public class RankProvider {
         api = Javalin.create();
         api.post("api/all-ranks", ctx -> {
             ctx.result(PlayerRank.listRanks());
-        }).start(5005);
+        });
+
+        // Optional health route
+        api.get("/", ctx -> ctx.result("Rank API is running"));
+
+        api.start(5005);
+        System.out.println("✅ Javalin API started on port 5005");
     }
 }
