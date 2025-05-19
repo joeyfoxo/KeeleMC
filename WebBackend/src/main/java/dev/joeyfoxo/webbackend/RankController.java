@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ranks")
+@RequestMapping("/api/")
 public class RankController {
 
     private final RestTemplate restTemplate = new RestTemplate();
