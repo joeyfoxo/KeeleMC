@@ -1,6 +1,7 @@
 package dev.joey.keelecore;
 
 import dev.joey.keelecore.api.RankController;
+import dev.joey.keelecore.api.RankProvider;
 import dev.joey.keelecore.armour.galaxy.ColorCycleTask;
 import dev.joey.keelecore.managers.CommandManager;
 import dev.joey.keelecore.managers.ListenerManager;
@@ -27,7 +28,7 @@ public final class KeeleCore extends JavaPlugin {
         // Set singleton
         instance = this;
         PermissionManager.init(this);
-        SpringApplication.run(RankController.class);
+        new RankProvider();
 
         UtilClass.keeleCore = this;
         saveDefaultConfig();
