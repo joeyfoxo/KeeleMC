@@ -38,7 +38,6 @@ public class CravingGameStart extends CoreGameStart<CravingGame> {
             @Override
             public void run() {
                 if (countdownSeconds <= 0) {
-                    game.setGameStatus(GameStatus.IN_GAME);
                     new CravingInGame(game);
                     cancel();
                 }

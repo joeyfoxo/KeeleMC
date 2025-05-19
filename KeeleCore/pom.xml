@@ -95,5 +95,10 @@
             <artifactId>HikariCP</artifactId>
             <version>5.1.0</version>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+            <version>3.4.5</version>
+        </dependency>
+        </dependencies>
 </project>
