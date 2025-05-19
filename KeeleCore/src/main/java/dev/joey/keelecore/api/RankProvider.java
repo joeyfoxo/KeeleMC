@@ -3,6 +3,9 @@ package dev.joey.keelecore.api;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import io.javalin.Javalin;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class RankProvider {
 
     Javalin api;
@@ -10,7 +13,11 @@ public class RankProvider {
     public RankProvider() {
         api = Javalin.create();
         api.post("/api/all-ranks", ctx -> {
-            ctx.result(PlayerRank.listRanks());
+            List<String> ranks = Arrays.stream(PlayerRank.values())
+                    .map(Enum::name)
+                    .map(String::toLowerCase)
+                    .toList();
+            ctx.json(ranks);
         });
 
         api.get("/api/get-all-ranks", ctx -> {
