@@ -1,6 +1,5 @@
 package dev.joey.keelecore;
 
-import dev.joey.keelecore.api.RankController;
 import dev.joey.keelecore.api.RankProvider;
 import dev.joey.keelecore.armour.galaxy.ColorCycleTask;
 import dev.joey.keelecore.managers.CommandManager;
@@ -9,7 +8,6 @@ import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.util.UtilClass;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.springframework.boot.SpringApplication;
 
 import java.util.concurrent.TimeUnit;
 
