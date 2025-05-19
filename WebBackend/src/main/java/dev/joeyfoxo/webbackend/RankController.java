@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost")
+@CrossOrigin(origins = "*")
 public class RankController {
 
     private final RestTemplate restTemplate = new RestTemplate();
