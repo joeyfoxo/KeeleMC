@@ -5,8 +5,10 @@ import io.javalin.Javalin;
 
 public class RankProvider {
 
+    Javalin api;
+
     public RankProvider() {
-        Javalin api = Javalin.create();
+        api = Javalin.create();
         api.post("api/all-ranks", ctx -> {
             ctx.result(PlayerRank.listRanks());
         }).start(5005);
