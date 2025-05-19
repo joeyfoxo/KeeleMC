@@ -13,6 +13,10 @@ public class RankProvider {
             ctx.result(PlayerRank.listRanks());
         });
 
+        api.get("/get-all-ranks", ctx -> {
+            ctx.result(PlayerRank.listRanks());
+        });
+
         // Optional health route
         api.get("/", ctx -> ctx.result("Rank API is running"));
 
