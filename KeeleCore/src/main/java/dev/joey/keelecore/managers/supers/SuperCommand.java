@@ -36,15 +36,6 @@ public abstract class SuperCommand implements CommandExecutor, TabCompleter {
         }
         return false;
     }
-
-    @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender,
-                                      @NotNull Command command,
-                                      @NotNull String alias,
-                                      @NotNull String[] args) {
-        // Default: no suggestions — override in child command
-        return Collections.emptyList();
-    }
     protected  boolean noAccessMessage(Object instance, KeelePlayer keelePlayer) {
         return RankGuard.hasRequiredRank(instance, keelePlayer);
     }

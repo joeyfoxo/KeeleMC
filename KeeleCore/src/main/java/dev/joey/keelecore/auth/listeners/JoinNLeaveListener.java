@@ -32,8 +32,16 @@ public class JoinNLeaveListener implements Listener {
 
         PermissionManager.getPlayer(uuid).thenAccept(keelePlayer -> {
             keelePlayer.setPlayer(player);
+            keelePlayer.setName(player.getName());
             PermissionManager.setVanished(player, keelePlayer.isVanished());
             NameTagFormatting.updateNameTag(player, keelePlayer.getRank());
+
+            PermissionAttachment attachment = player.addAttachment(KeeleCore.getInstance());
+            for (String permission : keelePlayer.getRank().getPermissions()) {
+                attachment.setPermission(permission, true);
+            }
+            keelePlayer.setAttachment(attachment);
+
 
             // Prepare plugin message
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -66,6 +74,10 @@ public class JoinNLeaveListener implements Listener {
 
         KeelePlayer player = PermissionManager.getCached(uuid);
 
-        PermissionManager.put(player).thenRun(() -> PermissionManager.remove(player.getUuid()));
+        if (player != null && player.getAttachment() != null) {
+            player.getPlayer().removeAttachment(player.getAttachment());
+
+            PermissionManager.put(player).thenRun(() -> PermissionManager.remove(player.getUuid()));
+        }
     }
 }

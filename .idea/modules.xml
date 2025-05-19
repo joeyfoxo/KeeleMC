@@ -5,11 +5,11 @@
       <module fileurl="file://$PROJECT_DIR$/CravingChaos/CravingChaos.iml" filepath="$PROJECT_DIR$/CravingChaos/CravingChaos.iml" />
       <module fileurl="file://$PROJECT_DIR$/KeeleCore/KeeleCore.iml" filepath="$PROJECT_DIR$/KeeleCore/KeeleCore.iml" />
       <module fileurl="file://$PROJECT_DIR$/KeeleHub/KeeleHub.iml" filepath="$PROJECT_DIR$/KeeleHub/KeeleHub.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KeeleIronBridge/KeeleIronBridge.iml" filepath="$PROJECT_DIR$/KeeleIronBridge/KeeleIronBridge.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/KeeleMC.iml" filepath="$PROJECT_DIR$/.idea/KeeleMC.iml" />
       <module fileurl="file://$PROJECT_DIR$/KeeleSurvival/KeeleSurvival.iml" filepath="$PROJECT_DIR$/KeeleSurvival/KeeleSurvival.iml" />
       <module fileurl="file://$PROJECT_DIR$/KeeleUniWars/KeeleUniWars.iml" filepath="$PROJECT_DIR$/KeeleUniWars/KeeleUniWars.iml" />
       <module fileurl="file://$PROJECT_DIR$/MiniGameCore/MiniGameCore.iml" filepath="$PROJECT_DIR$/MiniGameCore/MiniGameCore.iml" />
-      <module fileurl="file://$PROJECT_DIR$/KeeleIronBridge/keeleironbridge.iml" filepath="$PROJECT_DIR$/KeeleIronBridge/keeleironbridge.iml" />
     </modules>
   </component>
 </project>

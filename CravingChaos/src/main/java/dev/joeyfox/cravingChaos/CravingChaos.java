@@ -23,7 +23,8 @@ public class CravingChaos extends Core<CravingGame> {
             setKeeleMiniCore(this);
             new CravingGameStart(getGame());
                 if (world != null) {
-                    WorldGenerator.buildGlassBox(world, new Location(world, 0, 100, 0), CravingSettings.getCageHeight(), CravingSettings.getCageSize());
+                    WorldGenerator.buildGlassBox(world, new Location(world, 0, 100, 0),
+                            CravingSettings.getCageHeight(), CravingSettings.getCageSize());
                 }
             });
     }

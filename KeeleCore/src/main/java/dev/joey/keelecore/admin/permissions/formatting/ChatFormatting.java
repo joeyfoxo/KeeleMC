@@ -80,9 +80,9 @@ public class ChatFormatting implements Listener {
             case DEV -> deserialize("&4&lDDEV&r\n\nDevelopers work behind the scenes to maintain the\nserver and give the best experience");
             case ADMIN -> deserialize("&4&lADMIN&r\n\nAdmins are in charge of keeping the \nserver running smoothly");
             case MOD -> deserialize("&b&lMOD&r\n\nModerators enforce rules and provide \nhelp to players");
+            case HELPER -> deserialize("&d&lHELPER&r\n\nHelpers are here to assist players \nwith any questions they may have");
             case STUDENT -> deserialize("&a&lSTUDENT&r\n\nStudents are members of Keele University");
             case GUEST, PLAYER -> deserialize("&8&lGUEST&r\n\nGuests are either alumni of Keele \nor external invitees");
-            default -> null;
         };
 
         if (hoverText != null) {

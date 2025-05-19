@@ -4,6 +4,7 @@ import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.managers.PermissionManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
 
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ public class KeelePlayer {
     private UUID uuid;
     private PlayerRank rank;
     boolean isVanished = false;
+    private transient PermissionAttachment attachment;
 
     public KeelePlayer(Player player ,PlayerRank rank) {
         this.player = player;
@@ -77,5 +79,17 @@ public class KeelePlayer {
 
     public boolean isVanished() {
         return isVanished;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAttachment(PermissionAttachment attachment) {
+        this.attachment = attachment;
+    }
+
+    public PermissionAttachment getAttachment() {
+        return this.attachment;
     }
 }

@@ -15,9 +15,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @RequireRank(PlayerRank.ADMIN)
-public class GameModeCommand extends SuperCommand implements CommandExecutor {
+public class GameModeCommand extends SuperCommand {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
@@ -44,6 +47,19 @@ public class GameModeCommand extends SuperCommand implements CommandExecutor {
         changeGameMode(player, args);
 
         return false;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            return List.of("survival", "creative", "adventure", "spectator");
+        } else if (args.length == 2) {
+            return Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .toList();
+        }
+        return List.of();
     }
 
     private void changeGameMode(Player player, String[] args) {

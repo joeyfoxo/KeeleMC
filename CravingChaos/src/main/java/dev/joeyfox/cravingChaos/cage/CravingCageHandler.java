@@ -54,28 +54,36 @@ public class CravingCageHandler extends CoreCageHandler<CravingGame> {
     public Location findNextAvailableCage(Team<CravingGame> team, TeamPlayer<CravingGame> player) {
         World world = Bukkit.getWorld("glass");
 
-        // Find the top-most non-air block starting from a safe max height
+        // Find the top-most solid block starting from a safe max height
         int y = 200;
-        while (y > 0 && world.getBlockAt(0, y, 0).getType() == Material.AIR) {
+        while (y > 0 && (
+                world.getBlockAt(0, y, 0).getType() == Material.AIR ||
+                        world.getBlockAt(0, y, 0).getType() == Material.BARRIER
+        )) {
             y--;
         }
 
-        // Base teleport height just above the highest non-air block
         Location base = new Location(world, 0, y + 1, 0);
         List<TeamPlayer<CravingGame>> playersInTeam = team.getTeamMembers().stream().toList();
         int index = playersInTeam.indexOf(player);
 
-        // Put players on opposite sides along the X-axis
+        double offset = CravingSettings.getCageSize() / 4.0;
+        Location spawn;
+
         if (index == 0) {
-            base = base.clone().add((double) -CravingSettings.getCageSize() / 4, 0, 0); // West side
-            player.setSpawnLocation(base);
-            return base;
+            spawn = base.clone().add(-offset, 0, 0); // West
         } else if (index == 1) {
-            base = base.clone().add((double) CravingSettings.getCageSize() / 4, 0, 0); // West side
-            player.setSpawnLocation(base);
-            return base;
+            spawn = base.clone().add(offset, 0, 0); // East
+        } else {
+            spawn = base.clone(); // fallback
         }
 
-        return base; // Fallback
+        // Place wool block of team color below the player
+        Location woolLocation = spawn.clone().subtract(0, 1, 0);
+        Material wool = team.getTeamColor().getWoolMaterial();
+        world.getBlockAt(woolLocation).setType(wool);
+
+        player.setSpawnLocation(spawn);
+        return spawn;
     }
 }

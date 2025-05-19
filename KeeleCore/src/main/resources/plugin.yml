@@ -94,3 +94,6 @@ commands:
 
   galaxy:
     description: Galaxy commands
+
+  whatami:
+    description: Shows what you are

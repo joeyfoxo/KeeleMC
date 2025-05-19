@@ -15,11 +15,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 @RequireRank(PlayerRank.DEV)
-public class TimeSettingsCommand extends SuperCommand implements CommandExecutor {
+public class TimeSettingsCommand extends SuperCommand {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
@@ -76,5 +79,29 @@ public class TimeSettingsCommand extends SuperCommand implements CommandExecutor
             }
         }
         return false;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender,
+                                                @NotNull Command command,
+                                                @NotNull String alias,
+                                                @NotNull String[] args) {
+
+        if (args.length == 1) {
+            return Stream.of("set", "add")
+                    .filter(opt -> opt.startsWith(args[0].toLowerCase()))
+                    .toList();
+        }
+
+        if (args.length == 2) {
+
+            // Add named times
+            List<String> suggestions = new ArrayList<>(UtilClass.TimesTickFormat.nameToTicks.keySet());
+            return suggestions.stream()
+                    .filter(opt -> opt.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .toList();
+        }
+
+        return List.of();
     }
 }

@@ -37,15 +37,22 @@ public class ColorCycleTask implements Runnable {
         LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
-        // Local sync target ~30 ticks behind global to avoid chasing a moving target
         int syncTarget = globalTick - 30;
         int localTick = container.getOrDefault(TICK_KEY, PersistentDataType.INTEGER, syncTarget - 20);
 
-        // Catch up to syncTarget
-        if (localTick < syncTarget) {
-            localTick += 4; // speed up catch-up
+        // Instantly sync if more than 1 minute behind
+        if (syncTarget - localTick > 1200) {
+            localTick = syncTarget;
+        } else if (localTick < syncTarget) {
+            localTick += 4; // Smooth catch-up
             if (localTick > syncTarget) localTick = syncTarget;
         }
+
+        // Apply your color logic here using localTick
+        // e.g., meta.setColor(generateColorFromTick(localTick));
+
+        container.set(TICK_KEY, PersistentDataType.INTEGER, localTick);
+        item.setItemMeta(meta);
 
         float hue = (localTick % 360) / 360f;
         java.awt.Color awtColor = java.awt.Color.getHSBColor(hue, 1.0f, 1.0f);
