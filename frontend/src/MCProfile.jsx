@@ -16,6 +16,7 @@ const MCProfile = ({ username, rankIndex = 0 }) => {
     return (
         <div style={{ textAlign: 'center', fontFamily: 'monospace', marginTop: '30px' }}>
             <h2>{username}</h2>
+            <h2>TEST</h2>
             <img
                 src={skinURL}
                 alt={`${username}'s Minecraft skin`}
