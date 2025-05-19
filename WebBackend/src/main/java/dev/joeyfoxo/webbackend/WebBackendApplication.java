@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WebBackendApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(RankController.class, args);
+        SpringApplication.run(WebBackendApplication.class, args);
     }
 
 }
