@@ -9,7 +9,7 @@ public class RankProvider {
 
     public RankProvider() {
         api = Javalin.create();
-        api.post("api/all-ranks", ctx -> {
+        api.post("/api/all-ranks", ctx -> {
             ctx.result(PlayerRank.listRanks());
         });
 
