@@ -13,7 +13,6 @@ public class RankController {
     private final RestTemplate restTemplate = new RestTemplate();
     private static String url = "http://localhost:5005/api/";
 
-    // ✅ GET /api/all-ranks
     @GetMapping("/get-all-ranks")
     public ResponseEntity<List<String>> getRanksFromPlugin() {
         try {
@@ -28,7 +27,6 @@ public class RankController {
         }
     }
 
-    // ✅ POST /api/all-ranks
     @PostMapping("/all-ranks")
     public ResponseEntity<List<String>> postRanksFromPlugin() {
         try {
