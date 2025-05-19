@@ -13,7 +13,7 @@ public class RankProvider {
             ctx.result(PlayerRank.listRanks());
         });
 
-        api.get("/get-all-ranks", ctx -> {
+        api.get("/api/get-all-ranks", ctx -> {
             ctx.result(PlayerRank.listRanks());
         });
 
