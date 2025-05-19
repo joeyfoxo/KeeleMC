@@ -12,13 +12,6 @@ public class RankProvider {
 
     public RankProvider() {
         api = Javalin.create();
-        api.post("/api/all-ranks", ctx -> {
-            List<String> ranks = Arrays.stream(PlayerRank.values())
-                    .map(Enum::name)
-                    .map(String::toLowerCase)
-                    .toList();
-            ctx.json(ranks);
-        });
 
         api.get("/api/get-all-ranks", ctx -> {
             ctx.result(PlayerRank.listRanks());
