@@ -7,7 +7,7 @@ const MCProfile = ({ username, rankIndex = 0 }) => {
     const skinURL = `https://crafatar.com/renders/body/${username}?scale=10&default=MHF_Steve`;
 
     useEffect(() => {
-        fetch('http://46.13.78.86:8088/api/get-all-ranks')
+        fetch('http://rank.joeyfox.dev:8088/api/get-all-ranks')
             .then(res => res.json())
             .then(data => setRanks(data))
             .catch(() => setError('Failed to load rank'));
