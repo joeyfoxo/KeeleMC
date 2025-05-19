@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "https://rank.joeyfox.dev")
 public class RankController {
 
     private final RestTemplate restTemplate = new RestTemplate();
