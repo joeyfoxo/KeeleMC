@@ -15,6 +15,7 @@ public final class KeeleCore extends JavaPlugin {
 
     // Singleton instance
     private static KeeleCore instance;
+    private RankProvider rankProvider;
 
     // Expose globally
     public static KeeleCore getInstance() {
@@ -26,7 +27,7 @@ public final class KeeleCore extends JavaPlugin {
         // Set singleton
         instance = this;
         PermissionManager.init(this);
-        new RankProvider();
+        this.rankProvider = new RankProvider();
 
         UtilClass.keeleCore = this;
         saveDefaultConfig();

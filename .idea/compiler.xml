@@ -14,10 +14,16 @@
         <module name="keeleironbridge" />
         <module name="KeeleUniWars" />
         <module name="KeeleIronBridge" />
+        <module name="WebBackend" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="keeleironbridge" target="21" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="WebBackend" options="-parameters" />
+    </option>
   </component>
 </project>
