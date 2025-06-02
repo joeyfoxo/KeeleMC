@@ -22,18 +22,18 @@ public class APIRankHandler {
     public static void getPlayerRank(Context ctx) {
         try {
             UUID uuid = UUID.fromString(ctx.pathParam("uuid"));
-            KeelePlayer player = PermissionManager.getCached(uuid);
-            PlayerRank rank = player != null ? player.getRank() : null;
+            PermissionManager.getPlayer(uuid).thenAccept(player -> {
+                PlayerRank rank = player != null ? player.getRank() : null;
 
-            if (rank != null) {
-                ctx.json(Map.of("uuid", uuid, "rank", rank.name().toLowerCase()));
-            } else {
-                ctx.status(404).json(Map.of("error", "Player not found"));
-            }
+                if (rank != null) {
+                    ctx.json(Map.of("uuid", uuid, "rank", rank.name().toLowerCase()));
+                } else {
+                    ctx.status(404).json(Map.of("error", "Player not found"));
+                }
+            });
 
         } catch (IllegalArgumentException e) {
             ctx.status(400).json(Map.of("error", "Invalid UUID format"));
         }
     }
-
 }
