@@ -3,9 +3,6 @@ package dev.joey.keelecore.api;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import io.javalin.Javalin;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class RankProvider {
 
     Javalin api;
@@ -20,7 +17,7 @@ public class RankProvider {
         // Optional health route
         api.get("/", ctx -> ctx.result("Rank API is running"));
 
-        api.start(5005);
+        api = Javalin.create().start("127.0.0.1", 5005);
         System.out.println("✅ Javalin API started on port 5005");
     }
 }

@@ -7,37 +7,26 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/")
+//@CrossOrigin(origins = {
+//        "http://localhost",
+//})
 public class RankController {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private static String url = "http://localhost:5005/api/";
+    private static String url = "http://localhost:5005"; // Use localhost, NOT the domain
 
     @GetMapping("/get-all-ranks")
     public ResponseEntity<List<String>> getRanksFromPlugin() {
         try {
+            System.out.println("🔍 Calling Javalin API...");
             List<String> ranks = restTemplate.postForObject(
-                    url + "all-ranks",
-                    null,
-                    List.class
+                    url + "get-all-ranks", null, List.class
             );
+            System.out.println("✅ Got ranks: " + ranks);
             return ResponseEntity.ok(ranks);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(List.of());
-        }
-    }
-
-    @PostMapping("/all-ranks")
-    public ResponseEntity<List<String>> postRanksFromPlugin() {
-        try {
-            List<String> ranks = restTemplate.postForObject(
-                    url + "all-ranks",
-                    null,
-                    List.class
-            );
-            return ResponseEntity.ok(ranks);
-        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body(List.of());
         }
     }
