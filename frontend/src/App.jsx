@@ -4,7 +4,7 @@ import MCProfile from './MCProfile';
 function App() {
     return (
         <div>
-            <MCProfile username="Joeyfoxo" rankIndex={0} />
+            <MCProfile />
         </div>
     );
 }
