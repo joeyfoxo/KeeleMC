@@ -18,7 +18,7 @@ public class RankProvider {
 
     private void registerRoutes() {
         api.get("/api/get-all-ranks", APIRankHandler::getAllRanks);
-        api.get("/api/get-player-rank/:uuid", APIRankHandler::getPlayerRank);
+        api.get("/api/get-player-rank/{uuid}", APIRankHandler::getPlayerRank);
         api.get("/", APIRankHandler::healthCheck);
     }
 }
