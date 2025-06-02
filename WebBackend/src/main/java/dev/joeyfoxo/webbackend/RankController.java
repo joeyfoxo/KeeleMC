@@ -8,25 +8,23 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/")
-//@CrossOrigin(origins = {
-//        "http://localhost",
-//})
 public class RankController {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private static String url = "http://localhost:5005"; // Use localhost, NOT the domain
+    private static String url = "http://localhost:5005/api/";
 
     @GetMapping("/get-all-ranks")
     public ResponseEntity<List<String>> getRanksFromPlugin() {
         try {
             System.out.println("🔍 Calling Javalin API...");
-            List<String> ranks = restTemplate.postForObject(
-                    url + "get-all-ranks", null, List.class
+            List<String> ranks = restTemplate.getForObject(
+                    url + "get-all-ranks", List.class
             );
             System.out.println("✅ Got ranks: " + ranks);
             return ResponseEntity.ok(ranks);
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("❌ Failed to call Javalin API: " + e.getMessage());
             return ResponseEntity.status(500).body(List.of());
         }
     }

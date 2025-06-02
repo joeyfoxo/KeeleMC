@@ -3,6 +3,8 @@ package dev.joey.keelecore.api;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import io.javalin.Javalin;
 
+import java.util.List;
+
 public class RankProvider {
 
     Javalin api;
@@ -11,7 +13,7 @@ public class RankProvider {
         api = Javalin.create();
 
         api.get("/api/get-all-ranks", ctx -> {
-            ctx.result(PlayerRank.listRanks());
+            ctx.json(PlayerRank.listRanks());
         });
 
         // Optional health route
