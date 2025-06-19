@@ -5,40 +5,36 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"https://rank.joeyfox.dev"})
 public class RankController {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private static String url = "http://localhost:5005/api/";
+    private static final String JAVALIN_API_BASE = "http://localhost:5005/api";
 
-    @GetMapping("/get-all-ranks")
-    public ResponseEntity<List<String>> getRanksFromPlugin() {
+    // Generic helper for GET requests
+    private <T> ResponseEntity<T> genericGetforwardToJavalin(String path, Class<T> responseType) {
         try {
-            List<String> ranks = restTemplate.postForObject(
-                    url + "all-ranks",
-                    null,
-                    List.class
-            );
-            return ResponseEntity.ok(ranks);
+            String fullUrl = JAVALIN_API_BASE + path;
+            System.out.println("🔍 Proxying to: " + fullUrl);
+            T result = restTemplate.getForObject(fullUrl, responseType);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(List.of());
+            System.out.println("❌ Error calling Javalin: " + e.getMessage());
+            return ResponseEntity.status(500).build();
         }
     }
 
-    @PostMapping("/all-ranks")
-    public ResponseEntity<List<String>> postRanksFromPlugin() {
-        try {
-            List<String> ranks = restTemplate.postForObject(
-                    url + "all-ranks",
-                    null,
-                    List.class
-            );
-            return ResponseEntity.ok(ranks);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(List.of());
-        }
+    @GetMapping("/get-all-ranks")
+    public ResponseEntity<List> getAllRanks() {
+        return genericGetforwardToJavalin("/get-all-ranks", List.class);
+    }
+
+    @GetMapping("/get-player-rank/{uuid}")
+    public ResponseEntity<Map> getPlayerRank(@PathVariable String uuid) {
+        return genericGetforwardToJavalin("/get-player-rank/" + uuid, Map.class);
     }
 }

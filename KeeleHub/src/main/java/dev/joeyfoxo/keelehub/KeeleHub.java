@@ -10,7 +10,9 @@ public final class KeeleHub extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        keeleHub = this;
+        if (keeleHub == null) {
+            keeleHub = this;
+        }
         new ListenerManager();
         new CommandManager();
         keeleHub.getServer().getWorlds().forEach(world -> world.setDifficulty(Difficulty.EASY));

@@ -8,15 +8,16 @@ import dev.joeyfoxo.keelehub.player.Interactions;
 import dev.joeyfoxo.keelehub.player.JoinAndLeaveEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 
 public class ListenerManager {
 
     public ListenerManager() {
 
-        HubSelectorItem selectorItem = new HubSelectorItem();
+        ItemStack itemStack = new HubSelectorItem().getHubSelector();
 
-        new JoinAndLeaveEvents(selectorItem.getHubSelector());
-        new HubSelectorGUI(selectorItem.getHubSelector());
+        new HubSelectorGUI(itemStack);
+        new JoinAndLeaveEvents(itemStack);
         new DoubleJump();
         new HungerCheck();
         new Interactions();

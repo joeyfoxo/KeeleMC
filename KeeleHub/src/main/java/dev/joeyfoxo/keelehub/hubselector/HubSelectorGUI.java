@@ -3,15 +3,18 @@ package dev.joeyfoxo.keelehub.hubselector;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.joey.keelecore.util.PlayerGUI;
+import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -45,14 +48,28 @@ public class HubSelectorGUI implements PlayerGUI, Listener {
 
         Player player = event.getPlayer();
 
-        if ((event.getAction().isRightClick()
-                || event.getAction().isLeftClick())
-                && (player.getInventory().getItemInMainHand().isSimilar(selector)
-                || player.getInventory().getItemInOffHand().isSimilar(selector))) {
+        if (UtilClass.isPaper) {
 
-            openGUI(player);
+            if ((event.getAction().isRightClick()
+                    || event.getAction().isLeftClick())
+                    && (player.getInventory().getItemInMainHand().isSimilar(selector)
+                    || player.getInventory().getItemInOffHand().isSimilar(selector))) {
+
+                openGUI(player);
+            }
+        } else {
+            if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK
+                    || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK)
+                    && isSelectorItem(player.getInventory().getItemInMainHand())
+                    || isSelectorItem(player.getInventory().getItemInOffHand())) {
+
+                openGUI(player);
+            }
         }
+    }
 
+    private boolean isSelectorItem(ItemStack item) {
+        return item != null && item.getType() != Material.AIR && selector != null && item.isSimilar(selector);
     }
 
     private void createGUIItem(Material material, String title, TextColor color, int itemID, int ID, Component... lores) {
@@ -204,7 +221,12 @@ public class HubSelectorGUI implements PlayerGUI, Listener {
 
     @Override
     public void createGUI(InventoryHolder owner, int size, Component title) {
-        GUI = Bukkit.createInventory(owner, size, title);
+        if (UtilClass.isPaper) {
+            GUI = Bukkit.createInventory(owner, size, title);
+        } else {
+            String legacyTitle = LegacyComponentSerializer.legacySection().serialize(title);
+            GUI = Bukkit.createInventory(owner, size, legacyTitle);
+        }
         addItemsToGUI();
     }
 
@@ -224,7 +246,11 @@ public class HubSelectorGUI implements PlayerGUI, Listener {
     public ItemStack createItem(Material material, Component component) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(component);
+        if (UtilClass.isPaper) {
+            meta.displayName(component);
+        } else {
+            meta.setDisplayName(LegacyComponentSerializer.legacySection().serialize(component));
+        }
         item.setItemMeta(meta);
         return item;
     }
@@ -234,21 +260,33 @@ public class HubSelectorGUI implements PlayerGUI, Listener {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         meta.setCustomModelData(itemID);
-        meta.displayName(component);
+        if (UtilClass.isPaper) {
+            meta.displayName(component);
+        } else {
+            meta.setDisplayName(LegacyComponentSerializer.legacySection().serialize(component));
+        }
         item.setItemMeta(meta);
         return item;
     }
 
     @Override
     public ItemStack createItem(Material material, Component component, int itemID, List<Component> lore) {
-
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.lore(lore);
         meta.setCustomModelData(itemID);
-        meta.displayName(component);
+
+        if (UtilClass.isPaper) {
+            meta.displayName(component);
+            meta.lore(lore);
+        } else {
+            meta.setDisplayName(LegacyComponentSerializer.legacySection().serialize(component));
+            List<String> legacyLore = lore.stream()
+                    .map(c -> LegacyComponentSerializer.legacySection().serialize(c))
+                    .toList();
+            meta.setLore(legacyLore);
+        }
+
         item.setItemMeta(meta);
         return item;
-
     }
 }

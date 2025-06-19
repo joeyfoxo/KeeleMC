@@ -2,9 +2,11 @@ package dev.joey.keelecore.admin.permissions.formatting;
 
 import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -36,11 +38,23 @@ public class NameTagFormatting {
 
         Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> {
             //NameTagFormatting.updateNameTag(player, rank);
-            Component display = rank.getPrefix()
-                    .append(Component.text(player.getName()))
-                    .append(rank.getSuffix());
-            player.displayName(display);
-            player.playerListName(display);
+            if (UtilClass.isPaper) {
+                Component display = rank.getPrefix()
+                        .append(Component.text(player.getName()))
+                        .append(rank.getSuffix());
+                player.displayName(display);
+                player.playerListName(display);
+            }
+            else {
+                String display = LegacyComponentSerializer.legacyAmpersand().serialize(rank.getPrefix()
+                        .append(Component.text(player.getName()))
+                        .append(rank.getSuffix()));
+
+                display = ChatColor.translateAlternateColorCodes('&', display);
+
+                player.setDisplayName(display);
+                player.setPlayerListName(display);
+            }
         });
     }
 }

@@ -11,10 +11,12 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.UUID;
 
@@ -27,6 +29,47 @@ public class ChatFormatting implements Listener {
         this.rawFormat = UtilClass.keeleCore.getConfig().getString("format", "{prefix}{name}{suffix}: {message}");
         UtilClass.keeleCore.getServer().getPluginManager().registerEvents(this, UtilClass.keeleCore);
     }
+
+    @EventHandler (priority = EventPriority.LOWEST)
+    public void onSpigotChatLow(AsyncPlayerChatEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onSpigotChatHigh(AsyncPlayerChatEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
+        KeelePlayer kp = PermissionManager.getCached(uuid);
+
+        if (kp == null) {
+            event.getPlayer().sendMessage("§cFailed to load your player rank.");
+            return;
+        }
+
+        Player player = event.getPlayer();
+
+        String prefix = LegacyComponentSerializer.legacyAmpersand().serialize(handleGroupHoverEvent(kp.getRank()));
+        String suffix = LegacyComponentSerializer.legacyAmpersand().serialize(kp.getRank().getSuffix());
+        String name = player.getName();
+        String message = event.getMessage();
+
+        String formatted = rawFormat
+                .replace("{prefix}", prefix)
+                .replace("{name}", name)
+                .replace("{suffix}", suffix)
+                .replace("{message}", message);
+
+        formatted = ChatColor.translateAlternateColorCodes('&', formatted);
+
+
+        // Send formatted message as plain text to all players
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            online.sendMessage(formatted);
+        }
+
+        // Also send to console
+        Bukkit.getConsoleSender().sendMessage(formatted);
+    }
+
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChatLow(AsyncChatEvent e) {

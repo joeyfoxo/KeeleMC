@@ -16,14 +16,14 @@ public class HubSelectorItem {
 
     ItemStack selector = new ItemStack(Material.COMPASS);
     public HubSelectorItem() {
-        createHubSelector();
+        createHubSelector(selector);
     }
 
     public ItemStack getHubSelector() {
         return selector;
     }
 
-    private void createHubSelector() {
+    private void createHubSelector(ItemStack selector) {
 
         ItemMeta meta = selector.getItemMeta();
         meta.displayName(Component.text()

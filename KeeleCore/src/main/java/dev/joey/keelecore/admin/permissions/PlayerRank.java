@@ -126,10 +126,10 @@ public enum PlayerRank {
         }
     }
 
-    public static String listRanks() {
+    public static List<String> listRanks() {
         return Arrays.stream(values())
                 .map(Enum::name)
                 .map(String::toLowerCase)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.toList());
     }
 }

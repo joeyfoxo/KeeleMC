@@ -8,6 +8,7 @@ import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
@@ -138,4 +139,6 @@ public class UtilClass {
         }
         return directory.delete();
     }
+
+    public static boolean isPaper = Bukkit.getServer().getName().equalsIgnoreCase("Paper");
 }
