@@ -8,7 +8,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static dev.joey.keelecore.util.UtilClass.isPaper;
 import static dev.joey.keelecore.util.UtilClass.keeleCore;
 
 public class BlockDefaultThings implements Listener {
@@ -59,28 +62,33 @@ public class BlockDefaultThings implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent event) {
+        if (isPaper) {
+            Component message = Component.text("[", TextColor.color(UtilClass.gray))
+                    .append(Component.text("+", TextColor.color(UtilClass.success), TextDecoration.BOLD))
+                    .append(Component.text("] ", TextColor.color(UtilClass.gray)))
+                    .append(Component.text(event.getPlayer().getName(), TextColor.color(UtilClass.gray)));
 
-        event.joinMessage(Component.text()
-                .content("[").color(TextColor.color(UtilClass.gray))
-                .append(Component.text("+")
-                        .style(Style.style(TextColor.color(UtilClass.success), TextDecoration.BOLD)))
-                .append(Component.text("] ").color(TextColor.color(UtilClass.gray)))
-                .append(Component.text(event.getPlayer().getName()))
-                .color(TextColor.color(UtilClass.gray)).build());
-
-
+            event.joinMessage(message);
+        } else {
+            String legacy = "&7[&a&l+&7] &7" + event.getPlayer().getName();
+            event.setJoinMessage(ChatColor.translateAlternateColorCodes('&', legacy));
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onJoin(PlayerQuitEvent event) {
-        event.quitMessage(Component.text()
-                .content("[").color(TextColor.color(UtilClass.gray))
-                .append(Component.text("-")
-                        .style(Style.style(TextColor.color(UtilClass.error), TextDecoration.BOLD)))
-                .append(Component.text("] ").color(TextColor.color(UtilClass.gray)))
-                .append(Component.text(event.getPlayer().getName()))
-                .color(TextColor.color(UtilClass.gray)).build());
+    public void onLeave(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
 
+        if (isPaper) {
+            Component message = Component.text("[", TextColor.color(UtilClass.gray))
+                    .append(Component.text("-", TextColor.color(UtilClass.error), TextDecoration.BOLD))
+                    .append(Component.text("] ", TextColor.color(UtilClass.gray)))
+                    .append(Component.text(player.getName(), TextColor.color(UtilClass.gray)));
+
+            event.quitMessage(message);
+        } else {
+            String legacy = "&7[&c&l-&7] &7" + player.getName();
+            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', legacy));
+        }
     }
-
 }
