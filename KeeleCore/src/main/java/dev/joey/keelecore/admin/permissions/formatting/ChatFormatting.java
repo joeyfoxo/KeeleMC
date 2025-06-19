@@ -37,6 +37,11 @@ public class ChatFormatting implements Listener {
 
     @EventHandler
     public void onSpigotChatHigh(AsyncPlayerChatEvent event) {
+
+        if (UtilClass.isPaper) {
+            event.setCancelled(true);
+            return;
+        }
         UUID uuid = event.getPlayer().getUniqueId();
         KeelePlayer kp = PermissionManager.getCached(uuid);
 
