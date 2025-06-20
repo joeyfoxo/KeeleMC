@@ -40,7 +40,6 @@ public class ListenerManager {
                         continue;
                     }
 
-                    System.out.println("Running tickover for " + keelePlayer.getName());
                     for (Entity nearbyEntities : keelePlayer.getPlayer().getNearbyEntities(4, 4, 4)) {
                         System.out.println("Checking entity: " + nearbyEntities.getName());
                         if (nearbyEntities instanceof Player nearPlayer) {

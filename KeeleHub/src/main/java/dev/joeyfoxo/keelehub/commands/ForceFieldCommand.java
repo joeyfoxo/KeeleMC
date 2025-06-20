@@ -69,7 +69,7 @@ public class ForceFieldCommand extends SuperCommand {
             Vector direction = victimLoc.toVector().subtract(centerLoc.toVector()).normalize();
 
             // Reverse direction to push victim backwards relative to center
-            Vector pushBack = direction.multiply(-1);
+            Vector pushBack = direction.multiply(1);
 
             // Upwards velocity (adjust Y as needed)
             double upwardVelocity = 1.0;
