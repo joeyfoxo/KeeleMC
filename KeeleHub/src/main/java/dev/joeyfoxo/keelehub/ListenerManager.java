@@ -40,6 +40,9 @@ public class ListenerManager {
                         continue;
                     }
 
+                    if (!keelePlayer.isForceFieldEnabled()) {
+                        continue;
+                    }
                     for (Entity nearbyEntities : keelePlayer.getPlayer().getNearbyEntities(4, 4, 4)) {
                         if (nearbyEntities instanceof Player nearPlayer) {
                             ForceFieldCommand.forceFieldCheck(keelePlayer,

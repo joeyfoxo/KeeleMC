@@ -47,6 +47,10 @@ public class ForceFieldCommand extends SuperCommand {
     }
 
     public static void forceFieldCheck(KeelePlayer center, KeelePlayer victim) {
+
+        if (!center.isForceFieldEnabled()) {
+            return;
+        }
         Player centerPlayer = center.getPlayer(); // Assuming KeelePlayer has a method to get Bukkit Player
         Player victimPlayer = victim.getPlayer();
 
@@ -65,7 +69,7 @@ public class ForceFieldCommand extends SuperCommand {
             Vector pushBack = direction.multiply(1);
 
             // Upwards velocity (adjust Y as needed)
-            double upwardVelocity = 2.0;
+            double upwardVelocity = 1.0;
 
             // Combine upwards and backwards velocity
             Vector velocity = pushBack.multiply(1.2).setY(upwardVelocity);
@@ -74,7 +78,7 @@ public class ForceFieldCommand extends SuperCommand {
             victimPlayer.setVelocity(velocity);
 
             // Play popping sound at victim's location
-            victimLoc.getWorld().playSound(victimLoc, Sound.ENTITY_SLIME_SQUISH, 1.0f, 1.0f);
+            victimLoc.getWorld().playSound(victimLoc, Sound.BLOCK_SNIFFER_EGG_PLOP, 1.0f, 1.0f);
         }
     }
 }
