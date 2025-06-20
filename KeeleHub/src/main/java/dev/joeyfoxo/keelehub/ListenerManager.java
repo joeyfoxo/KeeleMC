@@ -41,9 +41,7 @@ public class ListenerManager {
                     }
 
                     for (Entity nearbyEntities : keelePlayer.getPlayer().getNearbyEntities(4, 4, 4)) {
-                        System.out.println("Checking entity: " + nearbyEntities.getName());
                         if (nearbyEntities instanceof Player nearPlayer) {
-                            System.out.println("Found nearby player: " + nearPlayer.getName());
                             ForceFieldCommand.forceFieldCheck(keelePlayer,
                                     PlayerPermManager.getCached(nearPlayer.getUniqueId()));
                         }

@@ -50,19 +50,12 @@ public class ForceFieldCommand extends SuperCommand {
         Player centerPlayer = center.getPlayer(); // Assuming KeelePlayer has a method to get Bukkit Player
         Player victimPlayer = victim.getPlayer();
 
-        System.out.println("ForceField Check: " + centerPlayer + " vs " + victimPlayer);
-
         if (centerPlayer == null || victimPlayer == null ||
                 victim.getRank().hasPermissionLevel(PlayerRank.ADMIN)) return;
 
         Location centerLoc = centerPlayer.getLocation();
         Location victimLoc = victimPlayer.getLocation();
 
-        System.out.println("Center Location: " + centerLoc);
-
-        System.out.println("Victim Location: " + victimLoc);
-
-        System.out.println("Distance: " + centerLoc.distance(victimLoc));
         // Check distance <= 4 blocks
         if (centerLoc.distance(victimLoc) <= 4) {
             // Calculate direction from center to victim
@@ -72,10 +65,10 @@ public class ForceFieldCommand extends SuperCommand {
             Vector pushBack = direction.multiply(1);
 
             // Upwards velocity (adjust Y as needed)
-            double upwardVelocity = 1.0;
+            double upwardVelocity = 2.0;
 
             // Combine upwards and backwards velocity
-            Vector velocity = pushBack.multiply(1.5).setY(upwardVelocity);
+            Vector velocity = pushBack.multiply(1.2).setY(upwardVelocity);
 
             // Set the victim's velocity
             victimPlayer.setVelocity(velocity);
