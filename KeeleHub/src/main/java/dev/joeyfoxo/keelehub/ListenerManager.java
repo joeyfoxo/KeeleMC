@@ -40,6 +40,9 @@ public class ListenerManager {
                         continue;
                     }
 
+
+                    //FORCEFIELD CHECK
+
                     if (!keelePlayer.isForceFieldEnabled()) {
                         continue;
                     }
@@ -49,6 +52,8 @@ public class ListenerManager {
                                     PlayerPermManager.getCached(nearPlayer.getUniqueId()));
                         }
                     }
+
+
                 }
 
             }

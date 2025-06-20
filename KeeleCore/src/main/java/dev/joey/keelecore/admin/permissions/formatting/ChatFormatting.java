@@ -122,7 +122,7 @@ public class ChatFormatting implements Listener {
         TextComponent.Builder builder = Component.text();
 
         Component hoverText = switch (rank) {
-            case OWNER -> deserialize("&c&lOWNER&r\n\nOwners own the server and handle all the \nadministrative tasks");
+            case OWNER -> deserialize("&c&lOWNER&r\n\nOwners own the server and oversee all \nadministrative tasks");
             case DEV -> deserialize("&4&lDDEV&r\n\nDevelopers work behind the scenes to maintain the\nserver and give the best experience");
             case ADMIN -> deserialize("&4&lADMIN&r\n\nAdmins are in charge of keeping the \nserver running smoothly");
             case MOD -> deserialize("&b&lMOD&r\n\nModerators enforce rules and provide \nhelp to players");

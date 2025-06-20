@@ -1,9 +1,15 @@
 package dev.joey.keelecore.auth.listeners;
 
 import dev.joey.keelecore.KeeleCore;
+import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.formatting.NameTagFormatting;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PlayerPermManager;
+import dev.joey.keelecore.util.UtilClass;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,6 +45,18 @@ public class JoinNLeaveListener implements Listener {
                 attachment.setPermission(permission, true);
             }
             keelePlayer.setAttachment(attachment);
+
+            //Test server port for Velocity compatibility
+            Server server = Bukkit.getServer();
+            PlayerRank rankToAccess = PlayerRank.MOD;
+            if (server.getPort() == 25569) {
+                if (!keelePlayer.getRank().hasPermissionLevel(rankToAccess)) {
+                    server.getPlayer(keelePlayer.getUuid()).kick
+                            (Component.text("✖ You lack permission. Required Rank: ", TextColor.color(0xFF5555))
+                            .append(rankToAccess.getPrefix()));
+                    return;
+                }
+            }
 
 
             // Prepare plugin message
