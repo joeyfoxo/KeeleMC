@@ -25,7 +25,7 @@ public class DBManager {
     public DBManager(JavaPlugin plugin) {
 
         if (manager == null) {
-            manager = new DBManager(plugin);
+            manager = this;
         }
         FileConfiguration config = plugin.getConfig();
 
