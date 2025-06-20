@@ -1,8 +1,6 @@
 package dev.joey.keelecore.admin.permissions.player;
 
 import dev.joey.keelecore.admin.permissions.PlayerRank;
-import dev.joey.keelecore.managers.PermissionManager;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 
@@ -16,13 +14,7 @@ public class KeelePlayer {
     private PlayerRank rank;
     boolean isVanished = false;
     private transient PermissionAttachment attachment;
-
-    public KeelePlayer(Player player ,PlayerRank rank) {
-        this.player = player;
-        this.name = player.getName();
-        this.uuid = player.getUniqueId();
-        this.rank = rank;
-    }
+    boolean forceFieldEnabled = false;
 
     public KeelePlayer(Player player) {
         this.player = player;
@@ -75,6 +67,13 @@ public class KeelePlayer {
 
     public void setVanished(boolean vanished) {
         isVanished = vanished;
+    }
+
+    public boolean isForceFieldEnabled() {
+        return forceFieldEnabled;
+    }
+    public void setForceFieldEnabled(boolean forceFieldEnabled) {
+        this.forceFieldEnabled = forceFieldEnabled;
     }
 
     public boolean isVanished() {

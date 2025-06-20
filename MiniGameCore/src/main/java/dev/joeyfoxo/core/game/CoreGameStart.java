@@ -36,6 +36,7 @@ public class CoreGameStart<G extends CoreGame<G>> {
         this.game = game;
         new CoreSettings<>(game);
         new CoreInGame<>(game);
+        startCountdown();
     }
 
     /**

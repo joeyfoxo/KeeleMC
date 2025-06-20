@@ -1,15 +1,13 @@
 package dev.joey.keelecore.admin.commands;
 
 import dev.joey.keelecore.admin.permissions.PlayerRank;
-import dev.joey.keelecore.admin.permissions.RankGuard;
 import dev.joey.keelecore.admin.permissions.RequireRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.managers.PermissionManager;
+import dev.joey.keelecore.managers.PlayerPermManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +27,7 @@ public class RankCommand extends SuperCommand {
         if (commandSenderCheck(sender)) return true;
 
         Player player = (Player) sender;
-        KeelePlayer executor = PermissionManager.getCached(player.getUniqueId());
+        KeelePlayer executor = PlayerPermManager.getCached(player.getUniqueId());
 
         if (UtilClass.noAccessMessage(this, executor)) {
             return true;
@@ -53,7 +51,7 @@ public class RankCommand extends SuperCommand {
                     UtilClass.sendPlayerMessage(executor, "Invalid rank. Available ranks: " + PlayerRank.listRanks(), UtilClass.error);
                     return true;
                 }
-                PermissionManager.setRank(player, rank);
+                PlayerPermManager.setRank(player, rank);
                 UtilClass.sendPlayerMessage(executor, "Your rank has been set to " + rank.name(), UtilClass.success);
             }
 
@@ -73,7 +71,7 @@ public class RankCommand extends SuperCommand {
                     return true;
                 }
 
-                KeelePlayer target = PermissionManager.getCached(targetPlayer.getUniqueId());
+                KeelePlayer target = PlayerPermManager.getCached(targetPlayer.getUniqueId());
                 PlayerRank newRank = PlayerRank.fromString(rankInput);
                 if (newRank == null) {
                     UtilClass.sendPlayerMessage(executor, "Invalid rank. Available ranks: " + PlayerRank.listRanks(), UtilClass.error);
@@ -85,7 +83,7 @@ public class RankCommand extends SuperCommand {
                     return true;
                 }
 
-                PermissionManager.setRank(targetPlayer, newRank);
+                PlayerPermManager.setRank(targetPlayer, newRank);
                 UtilClass.sendPlayerMessage(target, "Your rank has been set to " + newRank.name(), UtilClass.success);
                 UtilClass.sendPlayerMessage(executor, "Set " + target.getName() + "'s rank to " + newRank.name(), UtilClass.success);
             }
@@ -108,8 +106,8 @@ public class RankCommand extends SuperCommand {
                     return true;
                 }
 
-                KeelePlayer target = PermissionManager.getCached(targetPlayer.getUniqueId());
-                PermissionManager.setRank(targetPlayer, PlayerRank.PLAYER);
+                KeelePlayer target = PlayerPermManager.getCached(targetPlayer.getUniqueId());
+                PlayerPermManager.setRank(targetPlayer, PlayerRank.PLAYER);
                 UtilClass.sendPlayerMessage(target, "Your rank has been reset to PLAYER.", UtilClass.success);
                 UtilClass.sendPlayerMessage(executor, "Removed rank from " + target.getName() + ".", UtilClass.success);
             }

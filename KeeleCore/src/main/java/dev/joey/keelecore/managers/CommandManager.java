@@ -1,100 +1,93 @@
 package dev.joey.keelecore.managers;
 
+import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.commands.*;
-import dev.joey.keelecore.admin.commands.VanishCommand;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-import static dev.joey.keelecore.util.UtilClass.keeleCore;
 
 public class CommandManager {
 
     public CommandManager() {
 
         GameModeCommand gameModeCommand = new GameModeCommand();
-        keeleCore.getCommand("gamemode").setExecutor(gameModeCommand);
-        keeleCore.getCommand("gamemode").setTabCompleter(gameModeCommand);
+        KeeleCore.getInstance().getCommand("gamemode").setExecutor(gameModeCommand);
+        KeeleCore.getInstance().getCommand("gamemode").setTabCompleter(gameModeCommand);
 
         TimeSettingsCommand timeSettingsCommand = new TimeSettingsCommand();
-        keeleCore.getCommand("time").setExecutor(timeSettingsCommand);
-        keeleCore.getCommand("time").setTabCompleter(timeSettingsCommand);
+        KeeleCore.getInstance().getCommand("time").setExecutor(timeSettingsCommand);
+        KeeleCore.getInstance().getCommand("time").setTabCompleter(timeSettingsCommand);
 
         TeleportCommand teleportCommand = new TeleportCommand();
-        keeleCore.getCommand("teleport").setExecutor(teleportCommand);
-        keeleCore.getCommand("teleport").setTabCompleter(teleportCommand);
+        KeeleCore.getInstance().getCommand("teleport").setExecutor(teleportCommand);
+        KeeleCore.getInstance().getCommand("teleport").setTabCompleter(teleportCommand);
 
         VanishCommand vanishCommand = new VanishCommand();
-        keeleCore.getCommand("vanish").setExecutor(vanishCommand);
-        keeleCore.getCommand("vanish").setTabCompleter(vanishCommand);
+        KeeleCore.getInstance().getCommand("vanish").setExecutor(vanishCommand);
+        KeeleCore.getInstance().getCommand("vanish").setTabCompleter(vanishCommand);
 
         WhoISCommand whoISCommand = new WhoISCommand();
-        keeleCore.getCommand("whois").setExecutor(whoISCommand);
-        keeleCore.getCommand("whois").setTabCompleter(whoISCommand);
+        KeeleCore.getInstance().getCommand("whois").setExecutor(whoISCommand);
+        KeeleCore.getInstance().getCommand("whois").setTabCompleter(whoISCommand);
 
         GodCommand godCommand = new GodCommand();
-        keeleCore.getCommand("god").setExecutor(godCommand);
-        keeleCore.getCommand("god").setTabCompleter(godCommand);
+        KeeleCore.getInstance().getCommand("god").setExecutor(godCommand);
+        KeeleCore.getInstance().getCommand("god").setTabCompleter(godCommand);
 
         FeedCommand feedCommand = new FeedCommand();
-        keeleCore.getCommand("feed").setExecutor(feedCommand);
-        keeleCore.getCommand("feed").setTabCompleter(feedCommand);
+        KeeleCore.getInstance().getCommand("feed").setExecutor(feedCommand);
+        KeeleCore.getInstance().getCommand("feed").setTabCompleter(feedCommand);
 
         HealCommand healCommand = new HealCommand();
-        keeleCore.getCommand("heal").setExecutor(healCommand);
-        keeleCore.getCommand("heal").setTabCompleter(healCommand);
+        KeeleCore.getInstance().getCommand("heal").setExecutor(healCommand);
+        KeeleCore.getInstance().getCommand("heal").setTabCompleter(healCommand);
 
         AnnounceCommand announceCommand = new AnnounceCommand();
-        keeleCore.getCommand("announce").setExecutor(announceCommand);
-        keeleCore.getCommand("announce").setTabCompleter(announceCommand);
+        KeeleCore.getInstance().getCommand("announce").setExecutor(announceCommand);
+        KeeleCore.getInstance().getCommand("announce").setTabCompleter(announceCommand);
 
         SpeedCommand speedCommand = new SpeedCommand();
-        keeleCore.getCommand("speed").setExecutor(speedCommand);
-        keeleCore.getCommand("speed").setTabCompleter(speedCommand);
+        KeeleCore.getInstance().getCommand("speed").setExecutor(speedCommand);
+        KeeleCore.getInstance().getCommand("speed").setTabCompleter(speedCommand);
 
         SetSpawnCommand setSpawnCommand = new SetSpawnCommand();
-        keeleCore.getCommand("setspawn").setExecutor(setSpawnCommand);
-        keeleCore.getCommand("setspawn").setTabCompleter(setSpawnCommand);
+        KeeleCore.getInstance().getCommand("setspawn").setExecutor(setSpawnCommand);
+        KeeleCore.getInstance().getCommand("setspawn").setTabCompleter(setSpawnCommand);
 
         SpawnCommand spawnCommand = new SpawnCommand();
-        keeleCore.getCommand("spawn").setExecutor(spawnCommand);
-        keeleCore.getCommand("spawn").setTabCompleter(spawnCommand);
+        KeeleCore.getInstance().getCommand("spawn").setExecutor(spawnCommand);
+        KeeleCore.getInstance().getCommand("spawn").setTabCompleter(spawnCommand);
 
         HubCommand hubCommand = new HubCommand();
-        keeleCore.getCommand("hub").setExecutor(hubCommand);
+        KeeleCore.getInstance().getCommand("hub").setExecutor(hubCommand);
 
         DiscordCommand discordCommand = new DiscordCommand();
-        keeleCore.getCommand("discord").setExecutor(discordCommand);
-        keeleCore.getCommand("discord").setTabCompleter(discordCommand);
+        KeeleCore.getInstance().getCommand("discord").setExecutor(discordCommand);
+        KeeleCore.getInstance().getCommand("discord").setTabCompleter(discordCommand);
 
         RulesCommand rulesCommand = new RulesCommand();
-        keeleCore.getCommand("rules").setExecutor(rulesCommand);
+        KeeleCore.getInstance().getCommand("rules").setExecutor(rulesCommand);
 
         RankCommand rankCommand = new RankCommand();
-        keeleCore.getCommand("rank").setExecutor(rankCommand);
-        keeleCore.getCommand("rank").setTabCompleter(rankCommand);
+        KeeleCore.getInstance().getCommand("rank").setExecutor(rankCommand);
+        KeeleCore.getInstance().getCommand("rank").setTabCompleter(rankCommand);
 
         GalaxyCommand galaxyCommand = new GalaxyCommand();
-        keeleCore.getCommand("galaxy").setExecutor(galaxyCommand);
-        keeleCore.getCommand("galaxy").setTabCompleter(galaxyCommand);
+        KeeleCore.getInstance().getCommand("galaxy").setExecutor(galaxyCommand);
+        KeeleCore.getInstance().getCommand("galaxy").setTabCompleter(galaxyCommand);
 
         WhatAmICommand whatAmICommand = new WhatAmICommand();
-        keeleCore.getCommand("whatami").setExecutor(whatAmICommand);
-        keeleCore.getCommand("whatami").setTabCompleter(whatAmICommand);
+        KeeleCore.getInstance().getCommand("whatami").setExecutor(whatAmICommand);
+        KeeleCore.getInstance().getCommand("whatami").setTabCompleter(whatAmICommand);
 
         BanCommand banCommand = new BanCommand();
-        keeleCore.getCommand("ban").setExecutor(banCommand);
-        keeleCore.getCommand("ban").setTabCompleter(banCommand);
+        KeeleCore.getInstance().getCommand("ban").setExecutor(banCommand);
+        KeeleCore.getInstance().getCommand("ban").setTabCompleter(banCommand);
 
         UnbanCommand unbanCommand = new UnbanCommand();
-        keeleCore.getCommand("unban").setExecutor(unbanCommand);
-        keeleCore.getCommand("unban").setTabCompleter(unbanCommand);
+        KeeleCore.getInstance().getCommand("unban").setExecutor(unbanCommand);
+        KeeleCore.getInstance().getCommand("unban").setTabCompleter(unbanCommand);
 
         BanlistCommand banlistCommand = new BanlistCommand();
-        keeleCore.getCommand("banlist").setExecutor(banlistCommand);
-        keeleCore.getCommand("banlist").setTabCompleter(banlistCommand);
+        KeeleCore.getInstance().getCommand("banlist").setExecutor(banlistCommand);
+        KeeleCore.getInstance().getCommand("banlist").setTabCompleter(banlistCommand);
     }
 }

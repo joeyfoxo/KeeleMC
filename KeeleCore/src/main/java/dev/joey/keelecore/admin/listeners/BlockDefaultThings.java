@@ -1,15 +1,13 @@
 package dev.joey.keelecore.admin.listeners;
 
+import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.managers.PermissionManager;
+import dev.joey.keelecore.managers.PlayerPermManager;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,15 +20,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static dev.joey.keelecore.util.UtilClass.isPaper;
-import static dev.joey.keelecore.util.UtilClass.keeleCore;
 
 public class BlockDefaultThings implements Listener {
 
     public BlockDefaultThings() {
-        keeleCore.getServer().getPluginManager().registerEvents(this, keeleCore);
+        KeeleCore.getInstance().getServer().getPluginManager().registerEvents(this, KeeleCore.getInstance());
     }
 
 
@@ -39,7 +35,7 @@ public class BlockDefaultThings implements Listener {
 
         Player player = event.getPlayer();
         String command = event.getMessage();
-        KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
+        KeelePlayer keelePlayer = PlayerPermManager.getCached(player.getUniqueId());
         List<String> blockedCommands = new ArrayList<>(Arrays.asList(
                 "plugin", "pl", "plugins",
                 "?", "help", "about",

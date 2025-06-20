@@ -3,13 +3,11 @@ package dev.joey.keelecore.auth.listeners;
 import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.formatting.NameTagFormatting;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.managers.PermissionManager;
-import org.bukkit.Bukkit;
+import dev.joey.keelecore.managers.PlayerPermManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.permissions.PermissionAttachment;
 
@@ -30,10 +28,10 @@ public class JoinNLeaveListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        PermissionManager.getPlayer(uuid).thenAccept(keelePlayer -> {
+        PlayerPermManager.getPlayer(uuid).thenAccept(keelePlayer -> {
             keelePlayer.setPlayer(player);
             keelePlayer.setName(player.getName());
-            PermissionManager.setVanished(player, keelePlayer.isVanished());
+            PlayerPermManager.setVanished(player, keelePlayer.isVanished());
             NameTagFormatting.updateNameTag(player, keelePlayer.getRank());
 
             PermissionAttachment attachment = player.addAttachment(KeeleCore.getInstance());
@@ -72,12 +70,12 @@ public class JoinNLeaveListener implements Listener {
     public void onLeave(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
 
-        KeelePlayer player = PermissionManager.getCached(uuid);
+        KeelePlayer player = PlayerPermManager.getCached(uuid);
 
         if (player != null && player.getAttachment() != null) {
             player.getPlayer().removeAttachment(player.getAttachment());
 
-            PermissionManager.put(player).thenRun(() -> PermissionManager.remove(player.getUuid()));
+            PlayerPermManager.put(player).thenRun(() -> PlayerPermManager.remove(player.getUuid()));
         }
     }
 }

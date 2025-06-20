@@ -4,25 +4,18 @@ import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.formatting.NameTagFormatting;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
-public class PermissionManager {
+public class PlayerPermManager {
 
-    private static DBManager manager;
     private static final Map<UUID, KeelePlayer> playerCache = new ConcurrentHashMap<>();
-
-    public static void init(JavaPlugin plugin) {
-        manager = new DBManager(plugin);
-    }
 
     public static CompletableFuture<KeelePlayer> getPlayer(UUID uuid) {
         KeelePlayer cached = playerCache.get(uuid);
@@ -30,7 +23,7 @@ public class PermissionManager {
             return CompletableFuture.completedFuture(cached);
         }
 
-        return manager.loadPlayerAsync(uuid).thenApply(player -> {
+        return DBManager.getInstance().loadPlayerAsync(uuid).thenApply(player -> {
             if (player != null) {
                 playerCache.put(uuid, player);
             }
@@ -45,7 +38,7 @@ public class PermissionManager {
         playerCache.put(uuid, player);
 
         // Save to DB asynchronously
-        manager.savePlayerDataAsync(uuid, player.getName(), player.getRank(), player.isVanished());
+        DBManager.getInstance().savePlayerDataAsync(uuid, player.getName(), player.getRank(), player.isVanished());
 
         return CompletableFuture.completedFuture(player);
     }
@@ -152,5 +145,9 @@ public class PermissionManager {
 
     public static void setRank(Player player, String input) {
         setRank(player, PlayerRank.valueOf(input.toUpperCase()));
+    }
+
+    public static Map<UUID, KeelePlayer> getPlayers() {
+        return playerCache;
     }
 }

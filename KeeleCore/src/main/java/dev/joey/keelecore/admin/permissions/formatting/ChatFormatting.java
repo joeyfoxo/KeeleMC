@@ -1,8 +1,9 @@
 package dev.joey.keelecore.admin.permissions.formatting;
 
+import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.managers.PermissionManager;
+import dev.joey.keelecore.managers.PlayerPermManager;
 import dev.joey.keelecore.util.UtilClass;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
@@ -25,9 +26,9 @@ public class ChatFormatting implements Listener {
     private final String rawFormat;
 
     public ChatFormatting() {
-        UtilClass.keeleCore.saveDefaultConfig();
-        this.rawFormat = UtilClass.keeleCore.getConfig().getString("format", "{prefix}{name}{suffix}: {message}");
-        UtilClass.keeleCore.getServer().getPluginManager().registerEvents(this, UtilClass.keeleCore);
+        KeeleCore.getInstance().saveDefaultConfig();
+        this.rawFormat = KeeleCore.getInstance().getConfig().getString("format", "{prefix}{name}{suffix}: {message}");
+        KeeleCore.getInstance().getServer().getPluginManager().registerEvents(this, KeeleCore.getInstance());
     }
 
     @EventHandler (priority = EventPriority.LOWEST)
@@ -43,7 +44,7 @@ public class ChatFormatting implements Listener {
             return;
         }
         UUID uuid = event.getPlayer().getUniqueId();
-        KeelePlayer kp = PermissionManager.getCached(uuid);
+        KeelePlayer kp = PlayerPermManager.getCached(uuid);
 
         if (kp == null) {
             event.getPlayer().sendMessage("§cFailed to load your player rank.");
@@ -84,7 +85,7 @@ public class ChatFormatting implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChatHigh(AsyncChatEvent e) {
         UUID uuid = e.getPlayer().getUniqueId();
-        KeelePlayer kp = PermissionManager.getCached(uuid);
+        KeelePlayer kp = PlayerPermManager.getCached(uuid);
 
         if (kp == null) {
             e.getPlayer().sendMessage(Component.text("§cFailed to load your player rank."));
@@ -114,9 +115,6 @@ public class ChatFormatting implements Listener {
         for (Player online : Bukkit.getOnlinePlayers()) {
             online.sendMessage(finalMessage);
         }
-
-        // Optionally log to console
-        Bukkit.getConsoleSender().sendMessage(finalMessage);
     }
 
     private Component handleGroupHoverEvent(PlayerRank rank) {

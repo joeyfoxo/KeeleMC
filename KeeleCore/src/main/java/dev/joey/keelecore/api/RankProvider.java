@@ -1,6 +1,5 @@
 package dev.joey.keelecore.api;
 
-import dev.joey.keelecore.managers.PermissionManager;
 import io.javalin.Javalin;
 
 public class RankProvider {

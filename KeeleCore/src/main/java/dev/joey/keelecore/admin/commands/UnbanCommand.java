@@ -3,12 +3,11 @@ package dev.joey.keelecore.admin.commands;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.RequireRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.managers.PermissionManager;
+import dev.joey.keelecore.managers.PlayerPermManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,7 +25,7 @@ public class UnbanCommand extends SuperCommand {
 
         if (commandSenderCheck(sender)) return true;
         Player player = (Player) sender;
-        KeelePlayer kPlayer = PermissionManager.getCached(player.getUniqueId());
+        KeelePlayer kPlayer = PlayerPermManager.getCached(player.getUniqueId());
         if (UtilClass.noAccessMessage(this, kPlayer)) return true;
 
         if (args.length != 1) {

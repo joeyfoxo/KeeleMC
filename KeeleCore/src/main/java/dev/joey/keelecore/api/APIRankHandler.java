@@ -1,8 +1,7 @@
 package dev.joey.keelecore.api;
 
 import dev.joey.keelecore.admin.permissions.PlayerRank;
-import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.managers.PermissionManager;
+import dev.joey.keelecore.managers.PlayerPermManager;
 import io.javalin.http.Context;
 
 import java.util.Map;
@@ -22,7 +21,7 @@ public class APIRankHandler {
     public static void getPlayerRank(Context ctx) {
         try {
             UUID uuid = UUID.fromString(ctx.pathParam("uuid"));
-            PermissionManager.getPlayer(uuid).thenAccept(player -> {
+            PlayerPermManager.getPlayer(uuid).thenAccept(player -> {
                 PlayerRank rank = player != null ? player.getRank() : null;
 
                 if (rank != null) {
