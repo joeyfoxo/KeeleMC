@@ -1,5 +1,7 @@
 package dev.joeyfoxo.keelehub.Interactables;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import dev.joey.keelecore.util.GUI.GUIListener;
 import dev.joey.keelecore.util.ItemTagHandler;
 import dev.joeyfoxo.keelehub.Interactables.hubselector.HubSelector;
@@ -13,10 +15,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
+import static dev.joeyfoxo.keelehub.KeeleHub.keeleHub;
+
 public class ItemListener extends GUIListener implements Listener {
 
     public ItemListener() {
-        KeeleHub.keeleHub.getServer().getPluginManager().registerEvents(this, KeeleHub.keeleHub);
+        keeleHub.getServer().getPluginManager().registerEvents(this, keeleHub);
     }
 
     @EventHandler
@@ -40,6 +44,27 @@ public class ItemListener extends GUIListener implements Listener {
 
     @EventHandler
     public void onPlayerClick(InventoryClickEvent event) {
+
+        ItemStack clicked = event.getCurrentItem();
+        if (clicked == null || clicked.getType().isAir()) return;
+        Player player = (Player) event.getWhoClicked();
+
+        String inventoryItem = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
+        String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
+
+        ByteArrayDataOutput output;
+
+        switch (gamemodeItem) {
+            case "survival" -> {
+                    output = ByteStreams.newDataOutput();
+                    output.writeUTF("Connect");
+                    output.writeUTF("survival");
+                    player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
+                }
+            default -> {
+                player.sendMessage("§cUnknown gamemode item.");
+            }
+        }
 
     }
 

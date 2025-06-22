@@ -1,6 +1,7 @@
 package dev.joeyfoxo.keelehub.Interactables.hubselector;
 
 import dev.joey.keelecore.util.GUI.GUI;
+import dev.joey.keelecore.util.ItemTagHandler;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -9,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 public class HubSelector extends GUI {
 
@@ -53,6 +55,8 @@ public class HubSelector extends GUI {
                         .decoration(TextDecoration.ITALIC, false)
                         .build()
         );
+
+        ItemTagHandler.setTag(survival, "gamemode", PersistentDataType.STRING, "survival");
 
         gui.setItem(0, survival);
     }
