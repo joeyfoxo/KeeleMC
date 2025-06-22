@@ -2,7 +2,9 @@ package dev.joeyfoxo.keelehub.Interactables;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import dev.joey.keelecore.util.GUI.GUI;
 import dev.joey.keelecore.util.GUI.GUIListener;
+import dev.joey.keelecore.util.GUI.GUIRegistry;
 import dev.joey.keelecore.util.ItemTagHandler;
 import dev.joeyfoxo.keelehub.Interactables.hubselector.HubSelector;
 import dev.joeyfoxo.keelehub.KeeleHub;
@@ -54,8 +56,11 @@ public class ItemListener extends GUIListener implements Listener {
 
         String inventoryItem = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
         String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
+        GUI gui = GUIRegistry.getGUI(inventoryItem);
 
-        if (inventory.equals())
+        if (gui.getInventory().equals(inventory)) {
+            event.setCancelled(true);
+        }
 
         ByteArrayDataOutput output;
 
