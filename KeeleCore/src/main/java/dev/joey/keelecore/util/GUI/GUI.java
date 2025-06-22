@@ -19,7 +19,6 @@ import java.util.List;
 
 public abstract class GUI {
 
-    protected GUI gui;
     protected Inventory inventory;
 
     public GUI(ChatColor color, String title) {
@@ -33,7 +32,7 @@ public abstract class GUI {
     public abstract String usageTag();
 
     public void open(Player player) {
-        setupItems(gui);
+        setupItems(inventory);
         player.openInventory(inventory);
     }
 
@@ -41,19 +40,12 @@ public abstract class GUI {
         player.closeInventory();
     }
 
-    public void addItem(ItemStack item, int slot) {
-        inventory.setItem(slot, item);
-    }
-
     // To be implemented by subclasses to define their specific items
-    protected abstract void setupItems(GUI gui);
+    protected abstract void setupItems(Inventory gui);
 
     public Inventory getInventory() {
         return inventory;
     }
 
-    public GUI getGUI() {
-        return gui;
-    }
 }
 

@@ -7,10 +7,10 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class HubSelector extends GUI {
-
 
     public HubSelector(ChatColor color, String title) {
         super(color, title);
@@ -22,7 +22,7 @@ public class HubSelector extends GUI {
     }
 
     @Override
-    protected void setupItems(GUI gui) {
+    protected void setupItems(Inventory gui) {
         ItemStack survival = UtilClass.createItem(Material.GRASS_BLOCK,
                 "Survival",
                 TextColor.color(62, 237, 61),
@@ -54,6 +54,6 @@ public class HubSelector extends GUI {
                         .build()
         );
 
-        gui.addItem(survival, 0);
+        gui.setItem(0, survival);
     }
 }
