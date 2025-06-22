@@ -1,6 +1,7 @@
 package dev.joeyfoxo.keelehub.Interactables.hubselector;
 
 import dev.joey.keelecore.util.GUI.GUI;
+import dev.joey.keelecore.util.GUI.GUIRegistry;
 import dev.joey.keelecore.util.ItemTagHandler;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
@@ -16,6 +17,7 @@ public class HubSelector extends GUI {
 
     public HubSelector(ChatColor color, String title) {
         super(color, title);
+        GUIRegistry.register(this);
     }
 
     @Override
