@@ -1,5 +1,7 @@
 package dev.joeyfoxo.keelehub;
 
+import dev.joeyfoxo.keelehub.managers.CommandManager;
+import dev.joeyfoxo.keelehub.managers.ListenerManager;
 import org.bukkit.Difficulty;
 import org.bukkit.plugin.java.JavaPlugin;
 

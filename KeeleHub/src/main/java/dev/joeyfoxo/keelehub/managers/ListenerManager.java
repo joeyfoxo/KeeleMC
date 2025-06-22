@@ -1,29 +1,25 @@
-package dev.joeyfoxo.keelehub;
+package dev.joeyfoxo.keelehub.managers;
 
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PlayerPermManager;
+import dev.joeyfoxo.keelehub.KeeleHub;
 import dev.joeyfoxo.keelehub.commands.ForceFieldCommand;
-import dev.joeyfoxo.keelehub.hubselector.HubSelectorGUI;
-import dev.joeyfoxo.keelehub.hubselector.HubSelectorItem;
 import dev.joeyfoxo.keelehub.player.DoubleJump;
 import dev.joeyfoxo.keelehub.player.HungerCheck;
 import dev.joeyfoxo.keelehub.player.Interactions;
 import dev.joeyfoxo.keelehub.player.JoinAndLeaveEvents;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ListenerManager {
 
     public ListenerManager() {
 
-        ItemStack itemStack = new HubSelectorItem().getHubSelector();
+        ItemManager itemManager = new ItemManager();
 
-        new HubSelectorGUI(itemStack);
-        new JoinAndLeaveEvents(itemStack);
+        new ItemManager();
+        new JoinAndLeaveEvents(itemManager.getHubSelectorItem());
         new DoubleJump();
         new HungerCheck();
         new Interactions();

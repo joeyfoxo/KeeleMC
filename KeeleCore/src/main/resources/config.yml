@@ -18,12 +18,6 @@ rules:
   - "&c13) &6Raiding or attempted griefing a claimed base is prohibited"
   - "&c14) &aRaiding chests which are unlocked inside a claim is allowed"
 
-autoAnnounceTimer: -1
-
-autoAnnouncer:
-  - "&e&lThis Server is still in BETA please report any bugs or suggestions to: &r&6https://forms.gle/YmKYYSRaUpRDWKaP7"
-  - "&e&lPlease ensure you've read the rules"
-
 database:
   host: "localhost"
   port: 3306

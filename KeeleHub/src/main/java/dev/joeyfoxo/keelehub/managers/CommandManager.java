@@ -1,5 +1,6 @@
-package dev.joeyfoxo.keelehub;
+package dev.joeyfoxo.keelehub.managers;
 
+import dev.joeyfoxo.keelehub.KeeleHub;
 import dev.joeyfoxo.keelehub.commands.ForceFieldCommand;
 
 public class CommandManager {
