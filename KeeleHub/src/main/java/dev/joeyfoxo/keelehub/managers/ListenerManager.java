@@ -2,6 +2,7 @@ package dev.joeyfoxo.keelehub.managers;
 
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PlayerPermManager;
+import dev.joeyfoxo.keelehub.Interactables.ItemListener;
 import dev.joeyfoxo.keelehub.KeeleHub;
 import dev.joeyfoxo.keelehub.commands.ForceFieldCommand;
 import dev.joeyfoxo.keelehub.player.DoubleJump;
@@ -18,7 +19,7 @@ public class ListenerManager {
 
         ItemManager itemManager = new ItemManager();
 
-        new ItemManager();
+        new ItemListener();
         new JoinAndLeaveEvents(itemManager.getHubSelectorItem());
         new DoubleJump();
         new HungerCheck();
