@@ -50,6 +50,10 @@ public class ItemListener extends GUIListener implements Listener {
         if (clicked == null || clicked.getType().isAir()) return;
         Player player = (Player) event.getWhoClicked();
 
+        if (ItemTagHandler.hasTag(clicked, "inventory_item", PersistentDataType.STRING)) {
+            event.setCancelled(true);
+        }
+
         String inventoryItem = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
         String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
 
