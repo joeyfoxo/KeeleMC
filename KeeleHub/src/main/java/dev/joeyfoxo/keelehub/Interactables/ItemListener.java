@@ -21,6 +21,7 @@ public class ItemListener extends GUIListener implements Listener {
 
     public ItemListener() {
         keeleHub.getServer().getPluginManager().registerEvents(this, keeleHub);
+        keeleHub.getServer().getMessenger().registerOutgoingPluginChannel(keeleHub, "BungeeCord");
     }
 
     @EventHandler
