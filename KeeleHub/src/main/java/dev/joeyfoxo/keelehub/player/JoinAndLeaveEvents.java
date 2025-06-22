@@ -1,12 +1,7 @@
 package dev.joeyfoxo.keelehub.player;
 
 import dev.joey.keelecore.util.UtilClass;
-import dev.joeyfoxo.keelehub.hubselector.HubSelectorGUI;
-import dev.joeyfoxo.keelehub.hubselector.HubSelectorItem;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,7 +18,7 @@ public class JoinAndLeaveEvents implements Listener {
     private final ItemStack selector;
 
     public JoinAndLeaveEvents(ItemStack selector) {
-        this.selector = selector != null ? selector : new HubSelectorItem().getHubSelector();
+        this.selector = selector;
         keeleHub.getServer().getPluginManager().registerEvents(this, keeleHub);
     }
 
@@ -43,8 +38,6 @@ public class JoinAndLeaveEvents implements Listener {
         }
 
         player.getInventory().setItem(4, selector);
-        new HubSelectorGUI(selector).addItemsToGUI();
-
 
     }
 

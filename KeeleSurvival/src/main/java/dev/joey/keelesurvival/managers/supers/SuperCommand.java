@@ -1,9 +1,7 @@
 package dev.joey.keelesurvival.managers.supers;
 
 import dev.joey.keelecore.admin.permissions.PlayerRank;
-import dev.joey.keelecore.admin.permissions.RankGuard;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.managers.PermissionManager;
 import dev.joey.keelecore.util.UtilClass;
 import dev.joey.keelesurvival.server.economy.Storage;
 import org.bukkit.Bukkit;

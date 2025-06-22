@@ -1,16 +1,14 @@
 package dev.joey.keelecore.admin.commands;
 
 import dev.joey.keelecore.admin.permissions.PlayerRank;
-import dev.joey.keelecore.admin.permissions.RankGuard;
 import dev.joey.keelecore.admin.permissions.RequireRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.managers.PermissionManager;
+import dev.joey.keelecore.managers.PlayerPermManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,7 +28,7 @@ public class VanishCommand extends SuperCommand {
 
         if (commandSenderCheck(sender)) return true;
         Player player = (Player) sender;
-        KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
+        KeelePlayer keelePlayer = PlayerPermManager.getCached(player.getUniqueId());
         if (UtilClass.noAccessMessage(this, keelePlayer)) {
             return true;
         }
@@ -40,14 +38,14 @@ public class VanishCommand extends SuperCommand {
 
         playerNullCheck(player, player);
         if (keelePlayer.isVanished()) { //UNVANISH
-            PermissionManager.setVanished(player, false);
+            PlayerPermManager.setVanished(player, false);
             keelePlayer.setVanished(false);
             player.getInventory().setHelmet(null);
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             UtilClass.sendPlayerMessage(player, "You are now visible", UtilClass.success);
 
         } else { //VANISH
-            PermissionManager.setVanished(player, true);
+            PlayerPermManager.setVanished(player, true);
             keelePlayer.setVanished(true);
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000000, 1, false, false, false));
             applyHead(player);

@@ -1,28 +1,27 @@
 package dev.joey.keelecore.util;
 
-import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.RankGuard;
 import dev.joey.keelecore.admin.permissions.RequireRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
-import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.awt.*;
 import java.io.File;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class UtilClass {
-
-
-    public static KeeleCore keeleCore;
 
     static Logger log = Logger.getLogger("Minecraft");
     public static int success = new Color(0, 255, 8).getRGB();
@@ -140,5 +139,51 @@ public class UtilClass {
         return directory.delete();
     }
 
-    public static boolean isPaper = Bukkit.getServer().getName().equalsIgnoreCase("Paper");
+    public static final boolean isPaper;
+    static {
+        boolean paper;
+        try {
+            Class.forName("com.destroystokyo.paper.event.player.PlayerJumpEvent");
+            paper = true;
+        } catch (ClassNotFoundException e) {
+            paper = false;
+        }
+        isPaper = paper;
+    }
+
+    public static ItemStack createItem(Material material, Component name, List<Component> lore) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+
+        if (UtilClass.isPaper) {
+            meta.displayName(name);
+            if (lore != null) {
+                meta.lore(lore);
+            }
+        } else {
+            meta.setDisplayName(LegacyComponentSerializer.legacySection().serialize(name));
+            if (lore != null) {
+                List<String> legacyLore = lore.stream()
+                        .map(c -> LegacyComponentSerializer.legacySection().serialize(c))
+                        .toList();
+                meta.setLore(legacyLore);
+            }
+        }
+
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static ItemStack createItem(Material material, String name, TextColor color, Component... lores) {
+        Component displayName = Component.text(name)
+                .color(color)
+                .decoration(TextDecoration.ITALIC, false);
+
+        return createItem(material, displayName, lores);
+    }
+
+    public static ItemStack createItem(Material material, Component name, Component... lores) {
+        List<Component> loreList = Arrays.asList(lores);
+        return createItem(material, name, loreList);
+    }
 }

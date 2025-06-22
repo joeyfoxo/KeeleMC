@@ -2,6 +2,7 @@ package dev.joey.keelecore.admin.commands;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.format.TextColor;
@@ -15,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.util.List;
 
-import static dev.joey.keelecore.util.UtilClass.keeleCore;
 
 public class DiscordCommand extends SuperCommand {
     @Override
@@ -25,7 +25,7 @@ public class DiscordCommand extends SuperCommand {
 
         Player player = (Player) sender;
 
-        UtilClass.sendPlayerMessage(player, "Join our discord at: " + keeleCore.getConfig().get("discord"), new Color(88, 101, 242).getRGB());
+        UtilClass.sendPlayerMessage(player, "Join our discord at: " + KeeleCore.getInstance().getConfig().get("discord"), new Color(88, 101, 242).getRGB());
 
         return false;
     }

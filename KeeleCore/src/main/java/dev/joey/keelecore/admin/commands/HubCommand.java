@@ -2,18 +2,17 @@ package dev.joey.keelecore.admin.commands;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import dev.joey.keelecore.KeeleCore;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import static dev.joey.keelecore.util.UtilClass.keeleCore;
-
 public class HubCommand implements CommandExecutor {
 
     public HubCommand() {
-        keeleCore.getServer().getMessenger().registerOutgoingPluginChannel(keeleCore, "BungeeCord");
+        KeeleCore.getInstance().getServer().getMessenger().registerOutgoingPluginChannel(KeeleCore.getInstance(), "BungeeCord");
     }
 
     @Override
@@ -24,7 +23,7 @@ public class HubCommand implements CommandExecutor {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF("Connect");
         output.writeUTF("hub");
-        player.sendPluginMessage(keeleCore, "BungeeCord", output.toByteArray());
+        player.sendPluginMessage(KeeleCore.getInstance(), "BungeeCord", output.toByteArray());
 
         return false;
     }

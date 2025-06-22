@@ -1,8 +1,9 @@
 package dev.joey.keelecore.admin.permissions.formatting;
 
+import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.managers.PermissionManager;
+import dev.joey.keelecore.managers.PlayerPermManager;
 import dev.joey.keelecore.util.UtilClass;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
@@ -25,9 +26,9 @@ public class ChatFormatting implements Listener {
     private final String rawFormat;
 
     public ChatFormatting() {
-        UtilClass.keeleCore.saveDefaultConfig();
-        this.rawFormat = UtilClass.keeleCore.getConfig().getString("format", "{prefix}{name}{suffix}: {message}");
-        UtilClass.keeleCore.getServer().getPluginManager().registerEvents(this, UtilClass.keeleCore);
+        KeeleCore.getInstance().saveDefaultConfig();
+        this.rawFormat = KeeleCore.getInstance().getConfig().getString("format", "{prefix}{name}{suffix}: {message}");
+        KeeleCore.getInstance().getServer().getPluginManager().registerEvents(this, KeeleCore.getInstance());
     }
 
     @EventHandler (priority = EventPriority.LOWEST)
@@ -37,8 +38,13 @@ public class ChatFormatting implements Listener {
 
     @EventHandler
     public void onSpigotChatHigh(AsyncPlayerChatEvent event) {
+
+        if (UtilClass.isPaper) {
+            event.setCancelled(true);
+            return;
+        }
         UUID uuid = event.getPlayer().getUniqueId();
-        KeelePlayer kp = PermissionManager.getCached(uuid);
+        KeelePlayer kp = PlayerPermManager.getCached(uuid);
 
         if (kp == null) {
             event.getPlayer().sendMessage("§cFailed to load your player rank.");
@@ -79,7 +85,7 @@ public class ChatFormatting implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChatHigh(AsyncChatEvent e) {
         UUID uuid = e.getPlayer().getUniqueId();
-        KeelePlayer kp = PermissionManager.getCached(uuid);
+        KeelePlayer kp = PlayerPermManager.getCached(uuid);
 
         if (kp == null) {
             e.getPlayer().sendMessage(Component.text("§cFailed to load your player rank."));
@@ -109,9 +115,6 @@ public class ChatFormatting implements Listener {
         for (Player online : Bukkit.getOnlinePlayers()) {
             online.sendMessage(finalMessage);
         }
-
-        // Optionally log to console
-        Bukkit.getConsoleSender().sendMessage(finalMessage);
     }
 
     private Component handleGroupHoverEvent(PlayerRank rank) {
@@ -119,7 +122,7 @@ public class ChatFormatting implements Listener {
         TextComponent.Builder builder = Component.text();
 
         Component hoverText = switch (rank) {
-            case OWNER -> deserialize("&c&lOWNER&r\n\nOwners own the server and handle all the \nadministrative tasks");
+            case OWNER -> deserialize("&c&lOWNER&r\n\nOwners own the server and oversee all \nadministrative tasks");
             case DEV -> deserialize("&4&lDDEV&r\n\nDevelopers work behind the scenes to maintain the\nserver and give the best experience");
             case ADMIN -> deserialize("&4&lADMIN&r\n\nAdmins are in charge of keeping the \nserver running smoothly");
             case MOD -> deserialize("&b&lMOD&r\n\nModerators enforce rules and provide \nhelp to players");

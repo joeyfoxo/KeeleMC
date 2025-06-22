@@ -3,7 +3,7 @@ package dev.joey.keelecore.admin.commands;
 import dev.joey.keelecore.admin.permissions.RequireRank;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.managers.PermissionManager;
+import dev.joey.keelecore.managers.PlayerPermManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
@@ -20,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @RequireRank(PlayerRank.MOD)
 public class BanlistCommand extends SuperCommand {
@@ -31,7 +30,7 @@ public class BanlistCommand extends SuperCommand {
 
         if (commandSenderCheck(sender)) return true;
         Player player = (Player) sender;
-        KeelePlayer kPlayer = PermissionManager.getCached(player.getUniqueId());
+        KeelePlayer kPlayer = PlayerPermManager.getCached(player.getUniqueId());
         if (UtilClass.noAccessMessage(this, kPlayer)) return true;
 
         List<BanEntry> entries = Bukkit.getBanList(BanList.Type.NAME).getBanEntries().stream().toList();
@@ -48,7 +47,7 @@ public class BanlistCommand extends SuperCommand {
 
             // Try to get the staff rank
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(entry.getSource());
-            KeelePlayer staff = PermissionManager.getCached(offlinePlayer.getUniqueId());
+            KeelePlayer staff = PlayerPermManager.getCached(offlinePlayer.getUniqueId());
 
             Component msg = Component.text(" • ")
                     .append(Component.text(entry.getTarget() + " - " + reason + " "))

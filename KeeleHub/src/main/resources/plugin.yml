@@ -8,3 +8,7 @@ website: https://joeyfox.dev
 
 depend: [ KeeleCore ]
 softdepend: [ KeeleCore ]
+
+commands:
+  forcefield:
+    description: Forcefield command

@@ -20,7 +20,13 @@ import java.util.function.Consumer;
 public class DBManager {
     private final HikariDataSource dataSource;
 
+    private static DBManager manager;
+
     public DBManager(JavaPlugin plugin) {
+
+        if (manager == null) {
+            manager = this;
+        }
         FileConfiguration config = plugin.getConfig();
 
         HikariConfig hikariConfig = new HikariConfig();
@@ -138,22 +144,29 @@ public class DBManager {
     }
 
     // -- ASYNC EXISTS
-    public void playerExistsAsync(UUID uuid, Consumer<Boolean> callback) {
-        System.out.println("[DB] Checking existence of player with UUID: " + uuid);
-        Bukkit.getScheduler().runTaskAsynchronously(KeeleCore.getInstance(), () -> {
-            boolean exists = false;
+
+    public CompletableFuture<Boolean> playerExistsAsync(UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            System.out.println("[DB] Checking existence of player with UUID: " + uuid);
+
             try (Connection conn = getConnection();
                  PreparedStatement stmt = conn.prepareStatement("SELECT 1 FROM players WHERE uuid = ? LIMIT 1")) {
                 stmt.setString(1, uuid.toString());
                 ResultSet rs = stmt.executeQuery();
-                exists = rs.next();
+                boolean exists = rs.next();
+                System.out.println("[DB] Player exists: " + exists);
+                return exists;
             } catch (SQLException e) {
                 e.printStackTrace();
+                return false;
             }
-
-            System.out.println("[DB] Player exists: " + exists);
-            boolean finalExists = exists;
-            Bukkit.getScheduler().runTask(KeeleCore.getInstance(), () -> callback.accept(finalExists));
         });
+    }
+
+    public static DBManager getInstance() {
+        if (manager == null) {
+            throw new IllegalStateException("DBManager has not been initialized. Call the constructor first.");
+        }
+        return manager;
     }
 }

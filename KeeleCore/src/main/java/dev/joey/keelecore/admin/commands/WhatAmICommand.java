@@ -1,11 +1,9 @@
 package dev.joey.keelecore.admin.commands;
 
-import dev.joey.keelecore.KeeleCore;
 import dev.joey.keelecore.admin.permissions.PlayerRank;
 import dev.joey.keelecore.admin.permissions.RequireRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
-import dev.joey.keelecore.admin.permissions.RankGuard;
-import dev.joey.keelecore.managers.PermissionManager;
+import dev.joey.keelecore.managers.PlayerPermManager;
 import dev.joey.keelecore.managers.supers.SuperCommand;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
@@ -29,7 +27,7 @@ public class WhatAmICommand extends SuperCommand {
         if (commandSenderCheck(sender)) return true;
         Player player = (Player) sender;
 
-        KeelePlayer keelePlayer = PermissionManager.getCached(player.getUniqueId());
+        KeelePlayer keelePlayer = PlayerPermManager.getCached(player.getUniqueId());
         if (UtilClass.noAccessMessage(this, keelePlayer)) {
             return true;
         }

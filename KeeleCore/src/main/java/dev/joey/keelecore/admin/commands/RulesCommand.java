@@ -1,5 +1,6 @@
 package dev.joey.keelecore.admin.commands;
 
+import dev.joey.keelecore.KeeleCore;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -9,8 +10,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-
-import static dev.joey.keelecore.util.UtilClass.keeleCore;
 
 public class RulesCommand implements CommandExecutor {
     @Override
@@ -28,6 +27,6 @@ public class RulesCommand implements CommandExecutor {
     }
 
     private List<String> getRules() {
-        return keeleCore.getConfig().getStringList("rules");
+        return KeeleCore.getInstance().getConfig().getStringList("rules");
     }
 }
