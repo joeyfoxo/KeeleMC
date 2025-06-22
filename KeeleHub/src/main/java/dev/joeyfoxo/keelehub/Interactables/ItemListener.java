@@ -33,8 +33,6 @@ public class ItemListener extends GUIListener implements Listener {
         ItemStack clicked = event.getItem();
 
         String type = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
-        System.out.println("Item type: " + type);
-        System.out.println("Item: " + clicked);
 
         switch (type) {
             case "hubselector" -> {
