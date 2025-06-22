@@ -27,6 +27,8 @@ public class SelectorItem {
                         .color(TextColor.color(100, 100, 100)).build());
 
         ItemTagHandler.setTag(selector, "inventory_item", PersistentDataType.STRING, "hubselector");
+
+        this.selector = selector;
     }
 
     public ItemStack getSelector() {
