@@ -54,6 +54,12 @@ public class ItemListener extends GUIListener implements Listener {
             return;
         }
 
+        if (event.getInventory() instanceof HubSelector) {
+            System.out.println("[DEBUG] Clicked in HubSelector inventory.");
+            event.setCancelled(true);
+            return;
+        }
+
         Player player = (Player) event.getWhoClicked();
         Inventory inventory = event.getInventory();
 
