@@ -31,12 +31,13 @@ public class ItemListener extends GUIListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
 
         ItemStack clicked = event.getItem();
+        Player player = event.getPlayer();
 
         String type = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
 
         switch (type) {
             case "hubselector" -> {
-                HubSelector hubSelector = new HubSelector(ChatColor.GOLD, "Select Gamemode");
+                GUI hubSelector = GUIRegistry.getGUI("hubselector", player);
                 hubSelector.open(event.getPlayer());
             }
             default -> event.getPlayer().sendMessage("§cUnknown item type.");
@@ -48,16 +49,17 @@ public class ItemListener extends GUIListener implements Listener {
     public void onPlayerClick(InventoryClickEvent event) {
 
         ItemStack clicked = event.getCurrentItem();
-        if (clicked == null || clicked.getType().isAir()) return;
+        if (clicked == null || clicked.getType().isAir()) {
+            return;
+        }
+
         Player player = (Player) event.getWhoClicked();
-        Inventory inventory = event.getInventory();
 
-        String inventoryItem = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
         String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
-        GUI gui = GUIRegistry.getGUI(inventoryItem);
-
-        if (gui.getInventory().equals(inventory)) {
+        if (GUIRegistry.getGUI("hubselector", player) != null) {
             event.setCancelled(true);
+        } else {
+            return; // Not in the hub selector GUI, so ignore the click
         }
 
         ByteArrayDataOutput output;
@@ -69,9 +71,21 @@ public class ItemListener extends GUIListener implements Listener {
                     output.writeUTF("survival");
                     player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
                 }
-            default -> {
-                player.sendMessage("§cUnknown gamemode item.");
+            case "modded" -> {
+                output = ByteStreams.newDataOutput();
+                output.writeUTF("Connect");
+                output.writeUTF("modded");
+                player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
             }
+
+            case "test" -> {
+                output = ByteStreams.newDataOutput();
+                output.writeUTF("Connect");
+                output.writeUTF("test");
+                player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
+            }
+
+            default -> player.sendMessage("§cUnknown gamemode item.");
         }
 
     }
