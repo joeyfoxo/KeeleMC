@@ -50,39 +50,23 @@ public class ItemListener extends GUIListener implements Listener {
 
         ItemStack clicked = event.getCurrentItem();
         if (clicked == null || clicked.getType().isAir()) {
-            System.out.println("[DEBUG] Clicked item is null or air.");
-            return;
-        }
-
-        if (event.getInventory() instanceof HubSelector) {
-            System.out.println("[DEBUG] Clicked in HubSelector inventory.");
-            event.setCancelled(true);
             return;
         }
 
         Player player = (Player) event.getWhoClicked();
         Inventory inventory = event.getInventory();
 
-        String inventoryItem = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
         String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
 
         for (GUI gui : GUIRegistry.getAllGUIsAsSet(player)) {
-
-            System.out.println("[DEBUG] Checking GUI: " + gui.usageTag());
-            System.out.println("[DEBUG] GUI Inventory: " + gui.getInventory());
-            System.out.println("[DEBUG] Clicked Inventory: " + inventory);
             if (gui.getInventory() != inventory) {
                 continue;
             }
 
-            if (gui instanceof HubSelector) {
-                System.out.println("[DEBUG] Found matching HubSelector GUI.");
+            if (GUIRegistry.getAllGUITags().contains(gui.usageTag())) {
                 event.setCancelled(true);
-                return;
-            } else {
-                System.out.println("[DEBUG] Found non-HubSelector GUI: " + gui.usageTag());
+                break;
             }
-
         }
 
         ByteArrayDataOutput output;

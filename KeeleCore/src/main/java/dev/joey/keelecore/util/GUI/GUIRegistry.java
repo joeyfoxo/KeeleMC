@@ -29,4 +29,8 @@ public class GUIRegistry {
         }
         return guis;
     }
+
+    public static Set<String> getAllGUITags() {
+        return new HashSet<>(registry.keySet());
+    }
 }
