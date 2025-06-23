@@ -124,8 +124,8 @@ public class HubSelector extends GUI {
         );
 
         ItemTagHandler.setTag(survival, "gamemode", PersistentDataType.STRING, "survival");
-        ItemTagHandler.setTag(survival, "gamemode", PersistentDataType.STRING, "modded");
-        ItemTagHandler.setTag(survival, "gamemode", PersistentDataType.STRING, "test");
+        ItemTagHandler.setTag(modded, "gamemode", PersistentDataType.STRING, "modded");
+        ItemTagHandler.setTag(testing, "gamemode", PersistentDataType.STRING, "test");
 
         gui.setItem(2, survival);
         gui.setItem(4, modded);
