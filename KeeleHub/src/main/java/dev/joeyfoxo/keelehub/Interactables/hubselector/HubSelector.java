@@ -17,7 +17,6 @@ public class HubSelector extends GUI {
 
     public HubSelector(ChatColor color, String title) {
         super(color, title);
-        GUIRegistry.register(this);
     }
 
     @Override

@@ -31,12 +31,13 @@ public class ItemListener extends GUIListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
 
         ItemStack clicked = event.getItem();
+        Player player = event.getPlayer();
 
         String type = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
 
         switch (type) {
             case "hubselector" -> {
-                HubSelector hubSelector = new HubSelector(ChatColor.GOLD, "Select Gamemode");
+                GUI hubSelector = GUIRegistry.getGUI("hub", player);
                 hubSelector.open(event.getPlayer());
             }
             default -> event.getPlayer().sendMessage("§cUnknown item type.");
@@ -59,29 +60,20 @@ public class ItemListener extends GUIListener implements Listener {
         String inventoryItem = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
         String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
 
-        System.out.println("[DEBUG] Clicked by: " + player.getName());
-        System.out.println("[DEBUG] inventory_item tag: " + inventoryItem);
-        System.out.println("[DEBUG] gamemode tag: " + gamemodeItem);
+        for (GUI gui : GUIRegistry.getAllGUIsAsSet(player)) {
 
+            if (!gui.getInventory().equals(inventory)) {
+                continue;
+            }
 
-        GUI gui = GUIRegistry.getGUI(inventoryItem);
-        System.out.println("[DEBUG] GUI retrieved: " + gui);
+            if (gui instanceof HubSelector) {
+                System.out.println("[DEBUG] Found matching HubSelector GUI.");
+                event.setCancelled(true);
+                return;
+            } else {
+                System.out.println("[DEBUG] Found non-HubSelector GUI: " + gui.usageTag());
+            }
 
-
-        if (gui == null) {
-            System.out.println("[DEBUG] GUI returned null for inventoryItem: " + inventoryItem);
-            return;
-        }
-
-        System.out.println("[DEBUG] gui.getInventory(): " + gui.getInventory());
-        System.out.println("[DEBUG] event.getInventory(): " + inventory);
-        System.out.println("[DEBUG] gui.getInventory().equals(event.getInventory()): " + gui.getInventory().equals(inventory));
-
-        if (gui.getInventory().equals(inventory)) {
-            System.out.println("[DEBUG] Cancelling event because inventories match.");
-            event.setCancelled(true);
-        } else {
-            System.out.println("[DEBUG] Inventories do not match; event not cancelled.");
         }
 
         ByteArrayDataOutput output;
