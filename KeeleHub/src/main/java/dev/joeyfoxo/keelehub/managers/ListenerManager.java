@@ -6,7 +6,6 @@ import dev.joeyfoxo.keelehub.Interactables.ItemListener;
 import dev.joeyfoxo.keelehub.KeeleHub;
 import dev.joeyfoxo.keelehub.commands.ForceFieldCommand;
 import dev.joeyfoxo.keelehub.player.DoubleJump;
-import dev.joeyfoxo.keelehub.player.HungerCheck;
 import dev.joeyfoxo.keelehub.player.Interactions;
 import dev.joeyfoxo.keelehub.player.JoinAndLeaveEvents;
 import org.bukkit.entity.Entity;
@@ -22,7 +21,6 @@ public class ListenerManager {
         new ItemListener();
         new JoinAndLeaveEvents(itemManager.getHubSelectorItem());
         new DoubleJump();
-        new HungerCheck();
         new Interactions();
 
         //Just a tickover for the server to run every half second
@@ -36,6 +34,14 @@ public class ListenerManager {
                         PlayerPermManager.remove(keelePlayer.getUuid());
                         continue;
                     }
+
+                    if (keelePlayer.getPlayer() == null || !keelePlayer.getPlayer().isValid()) {
+                        continue;
+                    }
+
+                    Player player = keelePlayer.getPlayer();
+
+                    player.setFoodLevel(20);
 
 
                     //FORCEFIELD CHECK

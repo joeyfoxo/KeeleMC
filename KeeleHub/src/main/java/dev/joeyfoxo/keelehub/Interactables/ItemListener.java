@@ -54,12 +54,11 @@ public class ItemListener extends GUIListener implements Listener {
         }
 
         Player player = (Player) event.getWhoClicked();
-        Inventory inventory = event.getInventory();
 
         String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
 
-        for (GUI gui : GUIRegistry.getAllGUIsAsSet(player)) {
 
+        for (GUI gui : GUIRegistry.getAllGUIsAsSet(player)) {
             if (GUIRegistry.getAllGUITags().contains(gui.usageTag())) {
                 event.setCancelled(true);
                 break;
@@ -75,9 +74,7 @@ public class ItemListener extends GUIListener implements Listener {
                     output.writeUTF("survival");
                     player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
                 }
-            default -> {
-                player.sendMessage("§cUnknown gamemode item.");
-            }
+            default -> player.sendMessage("§cUnknown gamemode item.");
         }
 
     }
