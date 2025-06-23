@@ -48,20 +48,36 @@ public class ItemListener extends GUIListener implements Listener {
     public void onPlayerClick(InventoryClickEvent event) {
 
         ItemStack clicked = event.getCurrentItem();
-        if (clicked == null || clicked.getType().isAir()) return;
+        if (clicked == null || clicked.getType().isAir()) {
+            System.out.println("[DEBUG] Clicked item is null or air.");
+            return;
+        }
+
         Player player = (Player) event.getWhoClicked();
         Inventory inventory = event.getInventory();
 
         String inventoryItem = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
         String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
-        GUI gui = GUIRegistry.getGUI(inventoryItem);
 
-        System.out.println(gui.getInventory());
-        System.out.println(inventory);
-        System.out.println(gui.getInventory().equals(inventory));
+        System.out.println("[DEBUG] Clicked by: " + player.getName());
+        System.out.println("[DEBUG] inventory_item tag: " + inventoryItem);
+        System.out.println("[DEBUG] gamemode tag: " + gamemodeItem);
+
+        GUI gui = GUIRegistry.getGUI(inventoryItem);
+        if (gui == null) {
+            System.out.println("[DEBUG] GUI returned null for inventoryItem: " + inventoryItem);
+            return;
+        }
+
+        System.out.println("[DEBUG] gui.getInventory(): " + gui.getInventory());
+        System.out.println("[DEBUG] event.getInventory(): " + inventory);
+        System.out.println("[DEBUG] gui.getInventory().equals(event.getInventory()): " + gui.getInventory().equals(inventory));
 
         if (gui.getInventory().equals(inventory)) {
+            System.out.println("[DEBUG] Cancelling event because inventories match.");
             event.setCancelled(true);
+        } else {
+            System.out.println("[DEBUG] Inventories do not match; event not cancelled.");
         }
 
         ByteArrayDataOutput output;
