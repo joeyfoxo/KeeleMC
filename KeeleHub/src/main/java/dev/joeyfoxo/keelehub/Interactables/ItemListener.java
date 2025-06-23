@@ -59,9 +59,6 @@ public class ItemListener extends GUIListener implements Listener {
         String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
 
         for (GUI gui : GUIRegistry.getAllGUIsAsSet(player)) {
-            if (gui.getInventory() != inventory) {
-                continue;
-            }
 
             if (GUIRegistry.getAllGUITags().contains(gui.usageTag())) {
                 event.setCancelled(true);
