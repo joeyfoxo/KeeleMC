@@ -63,8 +63,8 @@ public class ItemListener extends GUIListener implements Listener {
         System.out.println("[DEBUG] inventory_item tag: " + inventoryItem);
         System.out.println("[DEBUG] gamemode tag: " + gamemodeItem);
 
-        GUI gui = GUIRegistry.getGUI(inventoryItem);
 
+        GUI gui = GUIRegistry.getGUI(inventoryItem);
         System.out.println("[DEBUG] GUI retrieved: " + gui);
 
 
