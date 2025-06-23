@@ -62,7 +62,10 @@ public class ItemListener extends GUIListener implements Listener {
 
         for (GUI gui : GUIRegistry.getAllGUIsAsSet(player)) {
 
-            if (!gui.getInventory().equals(inventory)) {
+            System.out.println("[DEBUG] Checking GUI: " + gui.usageTag());
+            System.out.println("[DEBUG] GUI Inventory: " + gui.getInventory());
+            System.out.println("[DEBUG] Clicked Inventory: " + inventory);
+            if (gui.getInventory() != inventory) {
                 continue;
             }
 
