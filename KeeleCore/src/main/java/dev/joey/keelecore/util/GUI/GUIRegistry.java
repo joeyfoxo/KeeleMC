@@ -29,13 +29,4 @@ public class GUIRegistry {
         }
         return guis;
     }
-
-    public static boolean hasMatchingInventory(Player player, GUI otherGUI) {
-        for (GUI gui : getAllGUIs(player).values()) {
-            if (gui.getInventory().equals(otherGUI.getInventory())) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
