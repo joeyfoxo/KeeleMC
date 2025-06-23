@@ -56,13 +56,10 @@ public class ItemListener extends GUIListener implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
-
-
-        for (GUI gui : GUIRegistry.getAllGUIsAsSet(player)) {
-            if (GUIRegistry.getAllGUITags().contains(gui.usageTag())) {
-                event.setCancelled(true);
-                break;
-            }
+        if (GUIRegistry.getGUI("hubselector", player) != null) {
+            event.setCancelled(true);
+        } else {
+            return; // Not in the hub selector GUI, so ignore the click
         }
 
         ByteArrayDataOutput output;
