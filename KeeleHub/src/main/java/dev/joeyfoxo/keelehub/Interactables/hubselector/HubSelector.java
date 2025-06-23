@@ -57,8 +57,79 @@ public class HubSelector extends GUI {
                         .build()
         );
 
-        ItemTagHandler.setTag(survival, "gamemode", PersistentDataType.STRING, "survival");
+        ItemStack modded = UtilClass.createItem(Material.BOOK,
+                "Integrated Minecraft",
+                TextColor.color(255, 194, 0), // Gold-like color
+                Component.text()
+                        .content("Version Forge 1.20.1")
+                        .color(TextColor.color(84, 84, 84))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text().content("").build(),
+                Component.text()
+                        .content("Modded integrated Minecraft")
+                        .color(TextColor.color(134, 134, 134))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text()
+                        .content("is a modpack focused")
+                        .color(TextColor.color(134, 134, 134))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text()
+                        .content("on the best exploration experience.")
+                        .color(TextColor.color(134, 134, 134))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text()
+                        .content("Using quests, recipes, lore, loot,")
+                        .color(TextColor.color(134, 134, 134))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text()
+                        .content("and of course structures, this pack")
+                        .color(TextColor.color(134, 134, 134))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text()
+                        .content("feels like a cohesive game, not")
+                        .color(TextColor.color(134, 134, 134))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text()
+                        .content("just mods slapped together.")
+                        .color(TextColor.color(134, 134, 134))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text()
+                        .content("Explore to unlock powerful items")
+                        .color(TextColor.color(134, 134, 134))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text()
+                        .content("through secret recipes and story.")
+                        .color(TextColor.color(134, 134, 134))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build()
+        );
 
-        gui.setItem(0, survival);
+        ItemStack testing = UtilClass.createItem(Material.BOOK,
+                "Test Hub",
+                TextColor.color(216, 79, 255), // Gold-like color
+                Component.text()
+                        .content("Version 1.20.1-1.21.6")
+                        .color(TextColor.color(84, 84, 84))
+                        .decoration(TextDecoration.ITALIC, false)
+                        .build(),
+                Component.text().content("").build()
+        );
+
+        ItemTagHandler.setTag(survival, "gamemode", PersistentDataType.STRING, "survival");
+        ItemTagHandler.setTag(survival, "gamemode", PersistentDataType.STRING, "modded");
+        ItemTagHandler.setTag(survival, "gamemode", PersistentDataType.STRING, "test");
+
+        gui.setItem(3, survival);
+        gui.setItem(5, modded);
+        gui.setItem(5, testing);
     }
 }

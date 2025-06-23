@@ -71,6 +71,20 @@ public class ItemListener extends GUIListener implements Listener {
                     output.writeUTF("survival");
                     player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
                 }
+            case "modded" -> {
+                output = ByteStreams.newDataOutput();
+                output.writeUTF("Connect");
+                output.writeUTF("modded");
+                player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
+            }
+
+            case "test" -> {
+                output = ByteStreams.newDataOutput();
+                output.writeUTF("Connect");
+                output.writeUTF("test");
+                player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
+            }
+
             default -> player.sendMessage("§cUnknown gamemode item.");
         }
 
