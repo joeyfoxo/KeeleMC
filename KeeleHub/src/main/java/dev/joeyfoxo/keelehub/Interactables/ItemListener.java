@@ -35,11 +35,9 @@ public class ItemListener extends GUIListener implements Listener {
 
         String type = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
 
-        System.out.println(GUIRegistry.getAllGUIsAsSet(player));
-
         switch (type) {
             case "hubselector" -> {
-                GUI hubSelector = GUIRegistry.getGUI("hub", player);
+                GUI hubSelector = GUIRegistry.getGUI("hubselector", player);
                 hubSelector.open(event.getPlayer());
             }
             default -> event.getPlayer().sendMessage("§cUnknown item type.");
