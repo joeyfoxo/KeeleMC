@@ -113,9 +113,9 @@ public class HubSelector extends GUI {
                         .build()
         );
 
-        ItemStack testing = UtilClass.createItem(Material.BOOK,
+        ItemStack testing = UtilClass.createItem(Material.REDSTONE,
                 "Test Hub",
-                TextColor.color(216, 79, 255), // Gold-like color
+                TextColor.color(255, 65, 148), // Gold-like color
                 Component.text()
                         .content("Version 1.20.1-1.21.6")
                         .color(TextColor.color(84, 84, 84))
