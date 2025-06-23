@@ -120,8 +120,7 @@ public class HubSelector extends GUI {
                         .content("Version 1.20.1-1.21.6")
                         .color(TextColor.color(84, 84, 84))
                         .decoration(TextDecoration.ITALIC, false)
-                        .build(),
-                Component.text().content("").build()
+                        .build()
         );
 
         ItemTagHandler.setTag(survival, "gamemode", PersistentDataType.STRING, "survival");
