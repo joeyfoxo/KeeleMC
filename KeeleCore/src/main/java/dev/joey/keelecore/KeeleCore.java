@@ -24,9 +24,11 @@ public final class KeeleCore extends JavaPlugin {
         if (instance == null) {
             instance = this;
         }
+        saveDefaultConfig();
+        saveConfig();
+
         new DBManager(this);
 
-        saveDefaultConfig();
 
         new CommandManager();
         new ListenerManager();
