@@ -54,7 +54,7 @@ public enum PlayerRank {
     )),
     STUDENT(1, "&a&lSTUDENT &r", "", List.of()),
     GUEST(0, "&9&lGUEST &r", "", List.of()),
-    PLAYER(0, "&8&lGUEST &r", "", List.of());
+    PLAYER(0, "&8&lPLAYER &r", "", List.of());
 
     private final int level;
     private final String prefix;
