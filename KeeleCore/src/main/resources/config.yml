@@ -19,7 +19,7 @@ rules:
   - "&c14) &aRaiding chests which are unlocked inside a claim is allowed"
 
 database:
-  host: "localhost"
+  host: "0.0.0.0"
   port: 3306
   name: "KeeleMC"
   user: "joey"
