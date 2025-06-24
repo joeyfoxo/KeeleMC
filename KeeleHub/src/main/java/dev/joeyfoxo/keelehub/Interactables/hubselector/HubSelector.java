@@ -128,7 +128,7 @@ public class HubSelector extends GUI {
         gui.setItem(2, survival);
         gui.setItem(4, modded);
         KeelePlayer keelePlayer = PlayerPermManager.getCached(player.getUniqueId());
-        if (keelePlayer.getRank().hasPermissionLevel(PlayerRank.MOD)) {
+        if (keelePlayer.getRank().isStaff()) {
             gui.setItem(6, testing);
         }
     }
