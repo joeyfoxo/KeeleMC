@@ -20,7 +20,7 @@ public abstract class GUI {
     public abstract String usageTag();
 
     public void open(Player player) {
-        setupItems(inventory);
+        setupItems(inventory, player);
         player.openInventory(inventory);
     }
 
@@ -29,7 +29,7 @@ public abstract class GUI {
     }
 
     // To be implemented by subclasses to define their specific items
-    protected abstract void setupItems(Inventory gui);
+    protected abstract void setupItems(Inventory gui, Player player);
 
     public Inventory getInventory() {
         return inventory;
