@@ -128,7 +128,8 @@ public class ChatFormatting implements Listener {
             case MOD -> deserialize("&b&lMOD&r\n\nModerators enforce rules and provide \nhelp to players");
             case HELPER -> deserialize("&d&lHELPER&r\n\nHelpers are here to assist players \nwith any questions they may have");
             case STUDENT -> deserialize("&a&lSTUDENT&r\n\nStudents are members of Keele University");
-            case GUEST, PLAYER -> deserialize("&8&lGUEST&r\n\nGuests are either alumni of Keele \nor external invitees");
+            case GUEST-> deserialize("&9&lGUEST&r\n\nGuests are either alumni of Keele \nor external invitees");
+            case PLAYER -> deserialize("&8&lPLAYER&r\n\nPlayers are the backbone of the server, \nengaging in activities and enjoying the game");
         };
 
         if (hoverText != null) {
