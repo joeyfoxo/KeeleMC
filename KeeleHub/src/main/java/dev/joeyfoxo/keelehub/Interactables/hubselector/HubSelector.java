@@ -1,7 +1,9 @@
 package dev.joeyfoxo.keelehub.Interactables.hubselector;
 
+import dev.joey.keelecore.admin.permissions.PlayerRank;
+import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
+import dev.joey.keelecore.managers.PlayerPermManager;
 import dev.joey.keelecore.util.GUI.GUI;
-import dev.joey.keelecore.util.GUI.GUIRegistry;
 import dev.joey.keelecore.util.ItemTagHandler;
 import dev.joey.keelecore.util.UtilClass;
 import net.kyori.adventure.text.Component;
@@ -9,6 +11,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -25,7 +28,7 @@ public class HubSelector extends GUI {
     }
 
     @Override
-    protected void setupItems(Inventory gui) {
+    protected void setupItems(Inventory gui, Player player) {
         ItemStack survival = UtilClass.createItem(Material.GRASS_BLOCK,
                 "Survival",
                 TextColor.color(62, 237, 61),
@@ -92,12 +95,7 @@ public class HubSelector extends GUI {
                         .decoration(TextDecoration.ITALIC, false)
                         .build(),
                 Component.text()
-                        .content("feels like a cohesive game, not")
-                        .color(TextColor.color(134, 134, 134))
-                        .decoration(TextDecoration.ITALIC, false)
-                        .build(),
-                Component.text()
-                        .content("just mods slapped together.")
+                        .content("feels like a cohesive game")
                         .color(TextColor.color(134, 134, 134))
                         .decoration(TextDecoration.ITALIC, false)
                         .build(),
@@ -129,6 +127,14 @@ public class HubSelector extends GUI {
 
         gui.setItem(2, survival);
         gui.setItem(4, modded);
-        gui.setItem(6, testing);
+        KeelePlayer keelePlayer = PlayerPermManager.getCached(player.getUniqueId());
+        if (keelePlayer.getRank().isStaff()) {
+            gui.setItem(6, testing);
+        }
+    }
+
+    @Override
+    public void open(Player player) {
+        super.open(player);
     }
 }
