@@ -195,34 +195,36 @@ public class GlobalItemSearcher {
     }
 
     public static CompletableFuture<List<ItemStack>> scanUnloadedChunksForItem(ItemStack target) {
-        String namespaceID = target.getType().getKey().toString();
-
-        // Phase 1: Collect region folder paths on main thread
-        List<File> regionDirs = Bukkit.getWorlds().stream()
-                .map(World::getWorldFolder)
-                .map(worldFolder -> new File(worldFolder, "region"))
-                .filter(File::exists)
-                .toList(); // can use ArrayList if Java 8
-
-        System.out.println(regionDirs + " region folders found for unloaded chunk scan.");
         return CompletableFuture.supplyAsync(() -> {
             List<ItemStack> matches = new CopyOnWriteArrayList<>();
+            String namespaceID = target.getType().getKey().toString();
 
-            for (File regionFolder : regionDirs) {
-                debug("[NBTScanner] Checking region folder: " + regionFolder.getAbsolutePath());
+            File worldContainer = Bukkit.getWorldContainer(); // safe because it's a final static File
+            debug("[NBTScanner] Scanning world container: " + worldContainer.getAbsolutePath());
 
-                if (!regionFolder.exists()) {
-                    debug("[NBTScanner] ✘ Region folder does not exist: " + regionFolder.getAbsolutePath());
+            File[] worldDirs = worldContainer.listFiles(File::isDirectory);
+            if (worldDirs == null) {
+                debug("[NBTScanner] ✘ No world folders found in: " + worldContainer.getAbsolutePath());
+                return matches;
+            }
+
+            for (File worldDir : worldDirs) {
+                File regionDir = new File(worldDir, "region");
+                debug("[NBTScanner] Checking world: " + worldDir.getName());
+                debug("[NBTScanner] Checking region folder: " + regionDir.getAbsolutePath());
+
+                if (!regionDir.exists()) {
+                    debug("[NBTScanner] ✘ No region folder found in: " + regionDir.getAbsolutePath());
                     continue;
                 }
 
-                File[] regionFiles = regionFolder.listFiles((dir, name) -> name.endsWith(".mca"));
+                File[] regionFiles = regionDir.listFiles((dir, name) -> name.endsWith(".mca"));
                 if (regionFiles == null || regionFiles.length == 0) {
-                    debug("[NBTScanner] ⚠ No .mca files found in: " + regionFolder.getAbsolutePath());
+                    debug("[NBTScanner] ⚠ No .mca files found in: " + regionDir.getAbsolutePath());
                     continue;
                 }
 
-                debug("[NBTScanner] ✓ Found " + regionFiles.length + " .mca files in: " + regionFolder.getAbsolutePath());
+                debug("[NBTScanner] ✓ Found " + regionFiles.length + " .mca files in: " + regionDir.getAbsolutePath());
 
                 for (File file : regionFiles) {
                     McaFileBase<?> mcaFile;
