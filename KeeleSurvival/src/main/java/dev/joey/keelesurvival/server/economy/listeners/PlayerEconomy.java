@@ -19,7 +19,7 @@ public class PlayerEconomy implements Listener {
     public void onJoin(PlayerJoinEvent event) {
 
         Player player = event.getPlayer();
-        if (!player.hasPlayedBefore() || !getEconomy().hasAccount(player)) {
+        if (!player.hasPlayedBefore()) {
             getEconomy().createPlayerAccount(player);
             getEconomy().depositPlayer(player, 1000);
         }

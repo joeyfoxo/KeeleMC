@@ -38,6 +38,9 @@ public class DBManager {
         hikariConfig.setMaximumPoolSize(10);
         hikariConfig.setPoolName("KeeleMCPool");
 
+        System.out.println("[DB] Initializing database connection pool with URL: " + hikariConfig.getJdbcUrl());
+        System.out.println("[DB] Using user: " + hikariConfig.getUsername());
+
         dataSource = new HikariDataSource(hikariConfig);
 
     }

@@ -89,5 +89,13 @@ public class CommandManager {
         BanlistCommand banlistCommand = new BanlistCommand();
         KeeleCore.getInstance().getCommand("banlist").setExecutor(banlistCommand);
         KeeleCore.getInstance().getCommand("banlist").setTabCompleter(banlistCommand);
+
+        DebugCommand debugCommand = new DebugCommand();
+        KeeleCore.getInstance().getCommand("debug").setExecutor(debugCommand);
+        KeeleCore.getInstance().getCommand("debug").setTabCompleter(debugCommand);
+
+        FindItemCommand findItemCommand = new FindItemCommand();
+        KeeleCore.getInstance().getCommand("finditem").setExecutor(findItemCommand);
+        KeeleCore.getInstance().getCommand("finditem").setTabCompleter(findItemCommand);
     }
 }

@@ -144,4 +144,8 @@ public class PreviousKill implements Listener {
 
     }
 
+    private void findPreviousEgg(ItemStack item) {
+
+    }
+
 }

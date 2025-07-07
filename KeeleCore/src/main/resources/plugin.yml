@@ -97,3 +97,11 @@ commands:
 
   whatami:
     description: Shows what you are
+
+  debug:
+    description: Debug commands
+
+  findItem:
+    description: Finds an item in the world
+    aliases:
+      - fi

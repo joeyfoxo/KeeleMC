@@ -16,21 +16,9 @@ import static dev.joey.keelesurvival.util.Util.keeleSurvival;
 
 public class SleepController implements Listener {
 
-    LinkedList<UUID> playersSleeping = new LinkedList<>();
 
     public SleepController() {
         keeleSurvival.getServer().getPluginManager().registerEvents(this, keeleSurvival);
-    }
-
-    @EventHandler
-    public void onSleep(PlayerBedEnterEvent event) {
-        playersSleeping.add(event.getPlayer().getUniqueId());
-
-        Bukkit.getScheduler().runTaskLater(keeleSurvival, () -> {
-            if (playersSleeping.size() >= Bukkit.getServer().getOnlinePlayers().size() / 2) {
-                skipNight(event.getBed().getWorld());
-            }
-        }, 100);
     }
 
     @EventHandler
@@ -41,10 +29,5 @@ public class SleepController implements Listener {
             phantom.setTarget(null);
         }
 
-    }
-
-    private void skipNight(World world) {
-        world.setTime(0);
-        playersSleeping.clear();
     }
 }

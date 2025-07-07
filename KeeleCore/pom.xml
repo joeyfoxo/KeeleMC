@@ -75,6 +75,11 @@
             <url>https://jitpack.io</url>
         </repository>
 
+        <repository>
+            <id>tr7zw-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+
     </repositories>
 
     <dependencies>
@@ -83,6 +88,12 @@
             <artifactId>paper-api</artifactId>
             <version>1.21.6-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.Querz</groupId>
+            <artifactId>NBT</artifactId>
+            <version>6.1</version>
         </dependency>
 
         <dependency>

@@ -7,11 +7,14 @@ import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class PlayerPermManager {
 
@@ -149,5 +152,9 @@ public class PlayerPermManager {
 
     public static Map<UUID, KeelePlayer> getPlayers() {
         return playerCache;
+    }
+
+    public static Collection<KeelePlayer> getPlayerCollection() {
+        return playerCache.values();
     }
 }
