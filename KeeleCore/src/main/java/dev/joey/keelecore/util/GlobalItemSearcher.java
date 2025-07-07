@@ -174,7 +174,6 @@ public class GlobalItemSearcher {
                 for (File file : regionFiles) {
                     debug("[NBTScanner] Reading region file: " + file.getName());
                     try {
-                        System.out.println("[NBTScanner] Reading region file: " + file.getName());
                         MCAFile mca = MCAUtil.read(file);
 
                         for (int cx = 0; cx < 32; cx++) {
