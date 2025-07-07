@@ -201,7 +201,7 @@ public class GlobalItemSearcher {
                                     try {
                                         items = tileEntity.getListTag("Items").asCompoundTagList();
                                     } catch (Exception ex) {
-                                        debug("[NBTScanner] Could not parse Items for " + blockEntityID + ": " + ex.getMessage());
+                                        debug("[NBTScanner Could not parse Items for " + blockEntityID + ": " + ex.getMessage());
                                         continue;
                                     }
 
