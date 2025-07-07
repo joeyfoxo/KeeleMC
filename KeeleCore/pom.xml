@@ -80,6 +80,13 @@
             <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
 
+        <repository>
+            <id>local-maven</id>
+            <url>file://${user.home}/.m2/repository</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+
     </repositories>
 
     <dependencies>
