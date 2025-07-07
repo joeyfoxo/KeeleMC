@@ -113,25 +113,19 @@ public class GlobalItemSearcher {
                 if (files == null) continue;
 
                 for (File file : files) {
-                    debug("Reading offline player file: " + file.getName());
 
+                    debug("Reading offline player file: " + file.getName());
                     try {
                         NamedTag tag = NBTUtil.read(file);
                         CompoundTag root = (CompoundTag) tag.getTag();
 
-                        System.out.println("[NBTScanner] Tag:" + tag.getTag());
-                        System.out.println("[NBTScanner] Tag Name: " + tag.getName());
-
-                        System.out.println("[NBTScanner] Root Set: " + root.keySet().toString());
-
-                        if (root == null || !root.containsKey("Level")) {
-                            Bukkit.getLogger().warning("[NBTScanner] MCA file " + file.getName() + " missing 'Level' tag, skipping.");
-                            continue;  // skip to next file
+                        // Modern format: no "Level" tag, check root directly
+                        if (root == null || !root.containsKey("Inventory")) {
+                            Bukkit.getLogger().warning("[NBTScanner] Player file " + file.getName() + " missing 'Inventory' tag, skipping.");
+                            continue;
                         }
 
                         ListTag<CompoundTag> inventory = root.getListTag("Inventory").asCompoundTagList();
-
-                        System.out.println("[NBTScanner] Inventory Content:" + inventory.asStringTagList().toString());
 
                         for (CompoundTag item : inventory) {
                             String id = item.getString("id");
@@ -141,8 +135,7 @@ public class GlobalItemSearcher {
                             }
                         }
                     } catch (Exception e) {
-                        Bukkit.getLogger().warning("[NBTScanner] Failed to read player file: " + file.getName());
-                        debug("Error: " + e.getMessage());
+                        Bukkit.getLogger().warning("[NBTScanner] Failed to read player file " + file.getName() + ": " + e.getMessage());
                     }
                 }
             }
@@ -158,7 +151,7 @@ public class GlobalItemSearcher {
             for (World world : Bukkit.getWorlds()) {
                 File regionFolder = new File(world.getWorldFolder(), "region");
                 if (!regionFolder.exists()) {
-                    debug("No region folder for world: " + world.getName());
+                    debug("[NBTScanner] No region folder for world: " + world.getName());
                     continue;
                 }
 
@@ -166,7 +159,7 @@ public class GlobalItemSearcher {
                 if (regionFiles == null) continue;
 
                 for (File file : regionFiles) {
-                    debug("Reading region file: " + file.getName());
+                    debug("[NBTScanner] Reading region file: " + file.getName());
                     try {
                         MCAFile mca = MCAUtil.read(file);
 
@@ -175,21 +168,37 @@ public class GlobalItemSearcher {
                                 net.querz.mca.Chunk chunk = mca.getChunk(cx, cz);
                                 if (chunk == null) continue;
 
-                                debug("Scanning chunk [" + cx + "," + cz + "] in " + file.getName());
-                                ListTag<CompoundTag> tileEntities = chunk.getTileEntities();
-                                System.out.println("[NBTScanner] Tile Entities in chunk [" + cx + "," + cz + "]: " + tileEntities.asStringTagList().toString());
+                                debug("[NBTScanner] Scanning chunk [" + cx + "," + cz + "] in " + file.getName());
+
+                                ListTag<CompoundTag> tileEntities;
+                                try {
+                                    tileEntities = chunk.getTileEntities();
+                                } catch (Exception teEx) {
+                                    debug("[NBTScanner] Failed to get tile entities from chunk [" + cx + "," + cz + "]: " + teEx.getMessage());
+                                    continue;
+                                }
+
+                                if (tileEntities == null) continue;
 
                                 for (CompoundTag tileEntity : tileEntities) {
+                                    String blockEntityID = tileEntity.getString("id");
                                     if (!tileEntity.containsKey("Items")) continue;
 
-                                    ListTag<CompoundTag> items = tileEntity.getListTag("Items").asCompoundTagList();
+                                    ListTag<CompoundTag> items;
+                                    try {
+                                        items = tileEntity.getListTag("Items").asCompoundTagList();
+                                    } catch (Exception ie) {
+                                        debug("[NBTScanner] Failed to read Items tag in " + blockEntityID + ": " + ie.getMessage());
+                                        continue;
+                                    }
+
                                     for (CompoundTag item : items) {
                                         String id = item.getString("id");
                                         if (id.equalsIgnoreCase(namespaceID)) {
                                             int x = tileEntity.getInt("x");
                                             int y = tileEntity.getInt("y");
                                             int z = tileEntity.getInt("z");
-                                            Bukkit.getLogger().info("[NBTScanner] Found " + id + " in chest at " + x + "," + y + "," + z + " in file " + file.getName());
+                                            Bukkit.getLogger().info("[NBTScanner] Found " + id + " in " + blockEntityID + " at " + x + "," + y + "," + z + " in " + file.getName());
                                             matches.add(target.clone());
                                         }
                                     }
@@ -198,7 +207,10 @@ public class GlobalItemSearcher {
                         }
                     } catch (Exception e) {
                         Bukkit.getLogger().warning("[NBTScanner] Error reading region file: " + file.getName());
-                        debug("Error: " + e.getMessage());
+                        debug("[NBTScanner] Exception: " + e.getClass().getSimpleName() + ": " + e.getMessage());
+                        for (StackTraceElement el : e.getStackTrace()) {
+                            debug("  at " + el.toString());
+                        }
                     }
                 }
             }
