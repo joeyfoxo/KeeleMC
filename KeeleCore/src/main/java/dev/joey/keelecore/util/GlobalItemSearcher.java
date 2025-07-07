@@ -259,7 +259,9 @@ public class GlobalItemSearcher {
 
                     regionFile.forEach(chunk -> {
                         ListTag<CompoundTag> tileEntities = chunk.getTileEntities();
-                        if (tileEntities == null) return;
+
+                        System.out.println(tileEntities.stream().toList());
+                        System.out.println(chunk.getHandle().keySet());
 
                         for (CompoundTag tileEntity : tileEntities) {
                             if (!tileEntity.containsKey("Items")) continue;
@@ -290,7 +292,6 @@ public class GlobalItemSearcher {
                     });
                 }
             }
-
             return matches;
         });
     }
