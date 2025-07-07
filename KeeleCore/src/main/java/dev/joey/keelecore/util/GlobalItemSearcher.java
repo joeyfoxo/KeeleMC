@@ -2,12 +2,13 @@ package dev.joey.keelecore.util;
 
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PlayerPermManager;
-import net.querz.mca.MCAFile;
-import net.querz.mca.MCAUtil;
-import net.querz.nbt.io.NBTUtil;
-import net.querz.nbt.io.NamedTag;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.ListTag;
+import io.github.ensgijs.nbt.io.NamedTag;
+import io.github.ensgijs.nbt.io.TextNbtHelpers;
+import io.github.ensgijs.nbt.mca.McaFileBase;
+import io.github.ensgijs.nbt.mca.McaRegionFile;
+import io.github.ensgijs.nbt.mca.io.McaFileHelpers;
+import io.github.ensgijs.nbt.tag.CompoundTag;
+import io.github.ensgijs.nbt.tag.ListTag;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -103,7 +104,6 @@ public class GlobalItemSearcher {
     }
 
     public static CompletableFuture<List<ItemStack>> scanOfflinePlayersForItem(ItemStack target) {
-
         Bukkit.getServer().savePlayers();
 
         return CompletableFuture.supplyAsync(() -> {
@@ -113,7 +113,7 @@ public class GlobalItemSearcher {
             for (World world : Bukkit.getWorlds()) {
                 File playerDataFolder = new File(world.getWorldFolder(), "playerdata");
                 if (!playerDataFolder.exists()) {
-                    debug("No playerdata folder in world: " + world.getName());
+                    debug("[NBTScanner] No playerdata folder in world: " + world.getName());
                     continue;
                 }
 
@@ -121,32 +121,34 @@ public class GlobalItemSearcher {
                 if (files == null) continue;
 
                 for (File file : files) {
-
-                    String uuidString = file.getName().replace(".dat", "");
+                    String uuidString = file.getName().substring(0, file.getName().length() - 4);
                     if (playersChecked.contains(UUID.fromString(uuidString))) {
+                        debug("[NBTScanner] Skipping already-checked player: " + uuidString);
                         continue;
                     }
 
-                    debug("Reading offline player file: " + file.getName());
+                    debug("[NBTScanner] Reading offline player file: " + file.getName());
                     try {
-                        NamedTag tag = NBTUtil.read(file);
+                        NamedTag tag = TextNbtHelpers.readTextNbtFile(file);
                         CompoundTag root = (CompoundTag) tag.getTag();
 
-                        // Modern format: no "Level" tag, check root directly
                         if (root == null || !root.containsKey("Inventory")) {
                             Bukkit.getLogger().warning("[NBTScanner] Player file " + file.getName() + " missing 'Inventory' tag, skipping.");
                             continue;
                         }
 
                         ListTag<CompoundTag> inventory = root.getListTag("Inventory").asCompoundTagList();
-
                         for (CompoundTag item : inventory) {
                             String id = item.getString("id");
                             if (id.equalsIgnoreCase(namespaceID)) {
-                                Bukkit.getLogger().info("[NBTScanner] Found " + id + " in player " + file.getName().replace(".dat", ""));
+                                Bukkit.getLogger().info("[NBTScanner] Found " + id + " in player " + uuidString);
                                 matches.add(target.clone());
+                                break;
                             }
                         }
+
+                        playersChecked.add(UUID.fromString(uuidString));
+
                     } catch (Exception e) {
                         Bukkit.getLogger().warning("[NBTScanner] Failed to read player file " + file.getName() + ": " + e.getMessage());
                     }
@@ -162,12 +164,10 @@ public class GlobalItemSearcher {
             String namespaceID = target.getType().getKey().toString();
 
             for (World world : Bukkit.getWorlds()) {
-
-                // Get region folder based on dimension
                 File regionFolder = switch (world.getEnvironment()) {
-                    case NETHER -> new File(world.getWorldFolder(), "DIM-1/region");
-                    case THE_END -> new File(world.getWorldFolder(), "DIM1/region");
-                    default -> new File(world.getWorldFolder(), "region");
+                    case NETHER   -> new File(world.getWorldFolder(), "DIM-1/region");
+                    case THE_END  -> new File(world.getWorldFolder(), "DIM1/region");
+                    default       -> new File(world.getWorldFolder(), "region");
                 };
 
                 if (!regionFolder.exists()) {
@@ -179,49 +179,50 @@ public class GlobalItemSearcher {
                 if (regionFiles == null) continue;
 
                 for (File file : regionFiles) {
+                    McaFileBase<?> mcaFile;
                     try {
-                        MCAFile mca = MCAUtil.read(file);
+                        mcaFile = McaFileHelpers.autoMCAFile(file);
+                    } catch (Exception e) {
+                        Bukkit.getLogger().warning("[NBTScanner] Error loading MCA file: " + file.getName() + ": " + e.getMessage());
+                        continue;
+                    }
 
-                        for (int cx = 0; cx < 32; cx++) {
-                            for (int cz = 0; cz < 32; cz++) {
-                                net.querz.mca.Chunk chunk = mca.getChunk(cx, cz);
-                                if (chunk == null) continue;
+                    if (!(mcaFile instanceof McaRegionFile regionFile)) {
+                        debug("[NBTScanner] Skipped non-region MCA file: " + file.getName());
+                        continue;
+                    }
 
-                                ListTag<CompoundTag> tileEntities = chunk.getTileEntities();
-                                if (tileEntities == null) continue;
+                    regionFile.forEach(chunk -> {
+                        ListTag<CompoundTag> tileEntities = chunk.getTileEntities();
+                        if (tileEntities == null) return;
 
-                                for (CompoundTag tileEntity : tileEntities) {
-                                    String blockEntityID = tileEntity.getString("id");
+                        for (CompoundTag tileEntity : tileEntities) {
+                            if (!tileEntity.containsKey("Items")) continue;
 
-                                    // Filter only known inventories (skip command blocks, signs, etc.)
-                                    if (!tileEntity.containsKey("Items")) continue;
+                            String blockEntityID = tileEntity.getString("id");
+                            ListTag<CompoundTag> items;
+                            try {
+                                items = tileEntity.getListTag("Items").asCompoundTagList();
+                            } catch (Exception ex) {
+                                debug("[NBTScanner] Could not parse Items for " + blockEntityID + " in " + file.getName() + ": " + ex.getMessage());
+                                continue;
+                            }
 
-                                    // Read inventory
-                                    ListTag<CompoundTag> items;
-                                    try {
-                                        items = tileEntity.getListTag("Items").asCompoundTagList();
-                                    } catch (Exception ex) {
-                                        debug("[NBTScanner Could not parse Items for " + blockEntityID + ": " + ex.getMessage());
-                                        continue;
-                                    }
+                            int x = tileEntity.getInt("x");
+                            int y = tileEntity.getInt("y");
+                            int z = tileEntity.getInt("z");
 
-                                    for (CompoundTag item : items) {
-                                        String id = item.getString("id");
-                                        if (id.equalsIgnoreCase(namespaceID)) {
-                                            int x = tileEntity.getInt("x");
-                                            int y = tileEntity.getInt("y");
-                                            int z = tileEntity.getInt("z");
-
-                                            Bukkit.getLogger().info("[NBTScanner] Found " + id + " in " + blockEntityID + " at " + x + "," + y + "," + z + " in " + file.getName());
-                                            matches.add(target.clone());
-                                        }
-                                    }
+                            for (CompoundTag item : items) {
+                                String id = item.getString("id");
+                                if (id.equalsIgnoreCase(namespaceID)) {
+                                    Bukkit.getLogger().info("[NBTScanner] Found " + id + " in " + blockEntityID
+                                            + " at " + x + "," + y + "," + z
+                                            + " in " + file.getName());
+                                    matches.add(target.clone());
                                 }
                             }
                         }
-                    } catch (Exception e) {
-                        Bukkit.getLogger().warning("[NBTScanner] Error reading region file " + file.getName() + ": " + e.getMessage());
-                    }
+                    });
                 }
             }
 
