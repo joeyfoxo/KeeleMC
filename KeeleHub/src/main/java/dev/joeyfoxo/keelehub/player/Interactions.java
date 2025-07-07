@@ -6,6 +6,10 @@ import dev.joey.keelecore.admin.permissions.RankGuard;
 import dev.joey.keelecore.admin.permissions.RequireRank;
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PlayerPermManager;
+import dev.joey.keelecore.util.GUI.GUI;
+import dev.joey.keelecore.util.GUI.GUIRegistry;
+import dev.joey.keelecore.util.ItemTagHandler;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
@@ -13,6 +17,8 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import static dev.joeyfoxo.keelehub.KeeleHub.keeleHub;
 
@@ -96,17 +102,44 @@ public class Interactions implements Listener {
             return;
         }
 
+        ItemStack clicked = event.getItem();
+
+        // Check if the clicked item is a special GUI inventory item by tag
+        if (ItemTagHandler.hasTag(clicked, "inventory_item", PersistentDataType.STRING)) {
+            String type = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
+            event.setCancelled(true); // Prevent normal use of GUI items
+
+            switch (type) {
+                case "hubselector" -> {
+                    GUI hubSelector = GUIRegistry.getGUI("hubselector", player.getPlayer());
+                    if (hubSelector != null) {
+                        hubSelector.open(event.getPlayer());
+                    } else {
+                        event.getPlayer().sendMessage("§cHub Selector GUI not found.");
+                    }
+                }
+                default -> event.getPlayer().sendMessage("§cUnknown item type.");
+            }
+            return; // Prevent further interaction processing after GUI open
+        }
+
+        // Cancel interaction with specific blocks on right click
         if (event.getClickedBlock() != null && event.getAction().isRightClick()) {
-            if (MaterialTags.DOORS.isTagged(event.getClickedBlock().getType()) ||
-                    MaterialTags.FENCE_GATES.isTagged(event.getClickedBlock().getType()) ||
-                    MaterialTags.BEDS.isTagged(event.getClickedBlock().getType()) ||
-                    event.getClickedBlock().getType().toString().contains("FRAME") ||
-                    event.getClickedBlock().getType().toString().contains("BUTTON") ||
-                    event.getClickedBlock().getType().toString().contains("CHEST")) {
+            var clickedType = event.getClickedBlock().getType();
+
+            if (MaterialTags.DOORS.isTagged(clickedType)
+                    || MaterialTags.FENCE_GATES.isTagged(clickedType)
+                    || MaterialTags.BEDS.isTagged(clickedType)
+                    || clickedType.toString().contains("FRAME")
+                    || clickedType.toString().contains("BUTTON")
+                    || clickedType.toString().contains("CHEST")) {
                 event.setCancelled(true);
+                return;
             }
 
-            if (event.getItem() != null && event.getItem().getType().toString().contains("LAVA")) {
+            // Cancel if player is holding a lava-related item
+            ItemStack item = event.getItem();
+            if (item != null && item.getType().toString().contains("LAVA")) {
                 event.setCancelled(true);
             }
         }

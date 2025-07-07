@@ -2,19 +2,13 @@ package dev.joeyfoxo.keelehub.Interactables;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import dev.joey.keelecore.util.GUI.GUI;
 import dev.joey.keelecore.util.GUI.GUIListener;
 import dev.joey.keelecore.util.GUI.GUIRegistry;
 import dev.joey.keelecore.util.ItemTagHandler;
-import dev.joeyfoxo.keelehub.Interactables.hubselector.HubSelector;
-import dev.joeyfoxo.keelehub.KeeleHub;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -27,29 +21,8 @@ public class ItemListener extends GUIListener implements Listener {
         keeleHub.getServer().getMessenger().registerOutgoingPluginChannel(keeleHub, "BungeeCord");
     }
 
-    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
-
-        ItemStack clicked = event.getItem();
-        Player player = event.getPlayer();
-
-        if (ItemTagHandler.hasTag(clicked, "inventory_item", PersistentDataType.STRING)) {
-            String type = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
-            event.setCancelled(true); // Prevent item use if it's a GUI item
-            switch (type) {
-                case "hubselector" -> {
-                    GUI hubSelector = GUIRegistry.getGUI("hubselector", player);
-                    hubSelector.open(event.getPlayer());
-                }
-                default -> event.getPlayer().sendMessage("§cUnknown item type.");
-            }
-        }
-    }
-
-
-    @EventHandler
+@EventHandler
     public void onPlayerClick(InventoryClickEvent event) {
-
         ItemStack clicked = event.getCurrentItem();
         if (clicked == null || clicked.getType().isAir()) {
             return;
@@ -58,38 +31,27 @@ public class ItemListener extends GUIListener implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
+        if (gamemodeItem == null) {
+            player.sendMessage("§cUnknown gamemode item.");
+            return;
+        }
+
+        // Cancel event only if the "hubselector" GUI is open
         if (GUIRegistry.getGUI("hubselector", player) != null) {
             event.setCancelled(true);
-        } else {
-            return; // Not in the hub selector GUI, so ignore the click
-        }
 
-        ByteArrayDataOutput output;
-
-        switch (gamemodeItem) {
-            case "survival" -> {
-                    output = ByteStreams.newDataOutput();
-                    output.writeUTF("Connect");
-                    output.writeUTF("survival");
-                    player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
-                }
-            case "modded" -> {
-                output = ByteStreams.newDataOutput();
-                output.writeUTF("Connect");
-                output.writeUTF("modded");
-                player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
+            switch (gamemodeItem) {
+                case "survival", "modded", "test" -> sendConnectMessage(player, gamemodeItem);
+                default -> player.sendMessage("§cUnknown gamemode item.");
             }
-
-            case "test" -> {
-                output = ByteStreams.newDataOutput();
-                output.writeUTF("Connect");
-                output.writeUTF("test");
-                player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
-            }
-
-            default -> player.sendMessage("§cUnknown gamemode item.");
         }
+    }
 
+    private void sendConnectMessage(Player player, String serverName) {
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF("Connect");
+        output.writeUTF(serverName);
+        player.sendPluginMessage(keeleHub, "BungeeCord", output.toByteArray());
     }
 
 }
