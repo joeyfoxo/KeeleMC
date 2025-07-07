@@ -1,3 +1,4 @@
 /.gitignore
 /KeeleSurvival/target/
 target/
+/KeeleCore/target/
