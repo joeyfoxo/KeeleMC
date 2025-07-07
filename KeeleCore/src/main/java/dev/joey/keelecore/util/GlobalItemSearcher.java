@@ -188,7 +188,7 @@ public class GlobalItemSearcher {
                     }
 
                     if (!(mcaFile instanceof McaRegionFile regionFile)) {
-                        debug("[NBTScanner] Skipped non-region MCAS file: " + file.getName());
+                        debug("[NBTScanner] Skipped non-region MCA file: " + file.getName());
                         continue;
                     }
 
