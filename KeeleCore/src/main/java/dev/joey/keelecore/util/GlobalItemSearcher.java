@@ -16,13 +16,17 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GlobalItemSearcher {
 
     private static final boolean DEBUG = true; // Toggle this for debug logs
+
+    private static HashSet<UUID> playersChecked = new HashSet<>(); // Track players already checked in async scans
 
     /**
      * Runs a comprehensive scan for the specified item across online players, loaded chunks,
@@ -64,6 +68,7 @@ public class GlobalItemSearcher {
 
         debug("[NBTScanner] Scanning online players...");
         for (KeelePlayer player : PlayerPermManager.getPlayerCollection()) {
+            playersChecked.add(player.getUuid());
             ItemStack[] inventory = player.getPlayer().getInventory().getContents();
             debug("Scanning inventory of " + player.getName() + " (" + inventory.length + " items)");
 
@@ -98,6 +103,9 @@ public class GlobalItemSearcher {
     }
 
     public static CompletableFuture<List<ItemStack>> scanOfflinePlayersForItem(ItemStack target) {
+
+        Bukkit.getServer().savePlayers();
+
         return CompletableFuture.supplyAsync(() -> {
             List<ItemStack> matches = new CopyOnWriteArrayList<>();
             String namespaceID = target.getType().getKey().toString();
@@ -113,6 +121,11 @@ public class GlobalItemSearcher {
                 if (files == null) continue;
 
                 for (File file : files) {
+
+                    String uuidString = file.getName().replace(".dat", "");
+                    if (playersChecked.contains(UUID.fromString(uuidString))) {
+                        continue;
+                    }
 
                     debug("Reading offline player file: " + file.getName());
                     try {
