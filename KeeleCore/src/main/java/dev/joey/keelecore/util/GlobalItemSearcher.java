@@ -5,6 +5,7 @@ import dev.joey.keelecore.managers.PlayerPermManager;
 import io.github.ensgijs.nbt.io.NamedTag;
 import io.github.ensgijs.nbt.io.TextNbtHelpers;
 import io.github.ensgijs.nbt.mca.McaFileBase;
+import io.github.ensgijs.nbt.mca.McaPoiFile;
 import io.github.ensgijs.nbt.mca.McaRegionFile;
 import io.github.ensgijs.nbt.mca.io.McaFileHelpers;
 import io.github.ensgijs.nbt.tag.CompoundTag;
@@ -13,10 +14,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Container;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -84,8 +89,8 @@ public class GlobalItemSearcher {
         debug("[NBTScanner] Scanning loaded chunks...");
         for (World world : Bukkit.getWorlds()) {
             for (Chunk chunk : world.getLoadedChunks()) {
-                for (org.bukkit.block.BlockState tileEntity : chunk.getTileEntities()) {
-                    if (!(tileEntity instanceof org.bukkit.block.Container container)) continue;
+                for (BlockState tileEntity : chunk.getTileEntities()) {
+                    if (!(tileEntity instanceof Container container)) continue;
 
                     ItemStack[] contents = container.getInventory().getStorageContents();
                     for (ItemStack item : contents) {
@@ -122,20 +127,36 @@ public class GlobalItemSearcher {
 
                 for (File file : files) {
                     String uuidString = file.getName().substring(0, file.getName().length() - 4);
-                    if (playersChecked.contains(UUID.fromString(uuidString))) {
+                    UUID uuid = UUID.fromString(uuidString);
+
+                    if (playersChecked.contains(uuid)) {
                         debug("[NBTScanner] Skipping already-checked player: " + uuidString);
                         continue;
                     }
 
                     debug("[NBTScanner] Reading offline player file: " + file.getName());
+
+                    if (file.length() == 0) {
+                        Bukkit.getLogger().warning("[NBTScanner] Player file " + file.getName() + " is empty (0 bytes), skipping.");
+                        continue;
+                    }
+
                     try {
-                        NamedTag tag = TextNbtHelpers.readTextNbtFile(file);
+                        NamedTag tag = TextNbtHelpers.readTextNbtFile(file); // You may be using Querz's NBT
                         CompoundTag root = (CompoundTag) tag.getTag();
 
-                        if (root == null || !root.containsKey("Inventory")) {
+                        if (root == null) {
+                            Bukkit.getLogger().warning("[NBTScanner] Player file " + file.getName() + " has null root tag.");
+                            continue;
+                        }
+
+                        if (!root.containsKey("Inventory")) {
                             Bukkit.getLogger().warning("[NBTScanner] Player file " + file.getName() + " missing 'Inventory' tag, skipping.");
                             continue;
                         }
+
+                        System.out.println(root.values() + " Root values in " + file.getName());
+                        System.out.println(root.keySet() + " Root keys in " + file.getName());
 
                         ListTag<CompoundTag> inventory = root.getListTag("Inventory").asCompoundTagList();
                         for (CompoundTag item : inventory) {
@@ -147,13 +168,25 @@ public class GlobalItemSearcher {
                             }
                         }
 
-                        playersChecked.add(UUID.fromString(uuidString));
+                        playersChecked.add(uuid);
 
                     } catch (Exception e) {
                         Bukkit.getLogger().warning("[NBTScanner] Failed to read player file " + file.getName() + ": " + e.getMessage());
+
+                        // Extra debug: try read raw contents and dump beginning of file
+                        try {
+                            List<String> lines = Files.readAllLines(file.toPath());
+                            Bukkit.getLogger().warning("[NBTScanner] Raw content preview of " + file.getName() + ":");
+                            for (int i = 0; i < Math.min(lines.size(), 5); i++) {
+                                Bukkit.getLogger().warning("  " + lines.get(i));
+                            }
+                        } catch (IOException ioEx) {
+                            Bukkit.getLogger().warning("[NBTScanner] Also failed to read raw file contents: " + ioEx.getMessage());
+                        }
                     }
                 }
             }
+
             return matches;
         });
     }
