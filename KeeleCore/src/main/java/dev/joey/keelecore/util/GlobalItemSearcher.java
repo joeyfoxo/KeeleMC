@@ -172,11 +172,10 @@ public class GlobalItemSearcher {
                 if (regionFiles == null) continue;
 
                 for (File file : regionFiles) {
-                    debug("[NBTScanner] Reading region file: " + file.getName());
                     try {
                         MCAFile mca = MCAUtil.read(file);
 
-                        System.out.println(mca);
+                        debug(mca.toString());
 
                         for (int cx = 0; cx < 32; cx++) {
                             for (int cz = 0; cz < 32; cz++) {
@@ -221,7 +220,7 @@ public class GlobalItemSearcher {
                             }
                         }
                     } catch (Exception e) {
-                        Bukkit.getLogger().warning("[NBTScanner] Error reading region file: " + file.getName());
+
                     }
                 }
             }
