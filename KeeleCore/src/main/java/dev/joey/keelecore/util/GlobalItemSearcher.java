@@ -199,7 +199,7 @@ public class GlobalItemSearcher {
             List<ItemStack> matches = new CopyOnWriteArrayList<>();
             String namespaceID = target.getType().getKey().toString();
 
-            File worldContainer = Bukkit.getWorldContainer(); // safe because it's a final static File
+            File worldContainer = Bukkit.getWorldContainer(); // base worlds folder
             debug("[NBTScanner] Scanning world container: " + worldContainer.getAbsolutePath());
 
             File[] worldDirs = worldContainer.listFiles(File::isDirectory);
@@ -208,70 +208,80 @@ public class GlobalItemSearcher {
                 return matches;
             }
 
+            List<String> regionSubdirs = List.of(
+                    "region",          // Overworld region folder
+                    "DIM-1/region",    // Nether region folder
+                    "DIM-1/entities",  // Nether entity folder (optional, for future expansion)
+                    "DIM1/region"      // End region folder
+            );
+
             for (File worldDir : worldDirs) {
-                File regionDir = new File(worldDir, "region");
-                debug("[NBTScanner] Checking world: " + worldDir.getName());
-                debug("[NBTScanner] Checking region folder: " + regionDir.getAbsolutePath());
+                debug("[NBTScanner] Checking world folder: " + worldDir.getName());
 
-                if (!regionDir.exists()) {
-                    debug("[NBTScanner] ✘ No region folder found in: " + regionDir.getAbsolutePath());
-                    continue;
-                }
+                for (String subdir : regionSubdirs) {
+                    File regionDir = new File(worldDir, subdir);
+                    debug("[NBTScanner] Checking region folder: " + regionDir.getAbsolutePath());
 
-                File[] regionFiles = regionDir.listFiles((dir, name) -> name.endsWith(".mca"));
-                if (regionFiles == null || regionFiles.length == 0) {
-                    debug("[NBTScanner] ⚠ No .mca files found in: " + regionDir.getAbsolutePath());
-                    continue;
-                }
-
-                debug("[NBTScanner] ✓ Found " + regionFiles.length + " .mca files in: " + regionDir.getAbsolutePath());
-
-                for (File file : regionFiles) {
-                    McaFileBase<?> mcaFile;
-                    try {
-                        debug("[NBTScanner] Loading MCA file: " + file.getName());
-                        mcaFile = McaFileHelpers.autoMCAFile(file);
-                    } catch (Exception e) {
-                        Bukkit.getLogger().warning("[NBTScanner] Error loading MCA file: " + file.getName() + ": " + e.getMessage());
+                    if (!regionDir.exists()) {
+                        debug("[NBTScanner] ✘ No region folder found in: " + regionDir.getAbsolutePath());
                         continue;
                     }
 
-                    if (!(mcaFile instanceof McaRegionFile regionFile)) {
-                        debug("[NBTScanner] Skipped non-region MCA file: " + file.getName());
+                    File[] regionFiles = regionDir.listFiles((dir, name) -> name.endsWith(".mca"));
+                    if (regionFiles == null || regionFiles.length == 0) {
+                        debug("[NBTScanner] ⚠ No .mca files found in: " + regionDir.getAbsolutePath());
                         continue;
                     }
 
-                    regionFile.forEach(chunk -> {
-                        ListTag<CompoundTag> tileEntities = chunk.getTileEntities();
-                        if (tileEntities == null) return;
+                    debug("[NBTScanner] ✓ Found " + regionFiles.length + " .mca files in: " + regionDir.getAbsolutePath());
 
-                        for (CompoundTag tileEntity : tileEntities) {
-                            if (!tileEntity.containsKey("Items")) continue;
+                    for (File file : regionFiles) {
+                        McaFileBase<?> mcaFile;
+                        try {
+                            debug("[NBTScanner] Loading MCA file: " + file.getName());
+                            mcaFile = McaFileHelpers.autoMCAFile(file);
+                        } catch (Exception e) {
+                            Bukkit.getLogger().warning("[NBTScanner] Error loading MCA file: " + file.getName() + ": " + e.getMessage());
+                            continue;
+                        }
 
-                            String blockEntityID = tileEntity.getString("id");
-                            ListTag<CompoundTag> items;
-                            try {
-                                items = tileEntity.getListTag("Items").asCompoundTagList();
-                            } catch (Exception ex) {
-                                debug("[NBTScanner] Could not parse Items for " + blockEntityID + " in " + file.getName() + ": " + ex.getMessage());
-                                continue;
-                            }
+                        if (!(mcaFile instanceof McaRegionFile regionFile)) {
+                            debug("[NBTScanner] Skipped non-region MCA file: " + file.getName());
+                            continue;
+                        }
 
-                            int x = tileEntity.getInt("x");
-                            int y = tileEntity.getInt("y");
-                            int z = tileEntity.getInt("z");
+                        regionFile.forEach(chunk -> {
+                            ListTag<CompoundTag> tileEntities = chunk.getTileEntities();
+                            if (tileEntities == null) return;
 
-                            for (CompoundTag item : items) {
-                                String id = item.getString("id");
-                                if (id.equalsIgnoreCase(namespaceID)) {
-                                    Bukkit.getLogger().info("[NBTScanner] Found " + id + " in " + blockEntityID
-                                            + " at " + x + "," + y + "," + z
-                                            + " in " + file.getName());
-                                    matches.add(target.clone());
+                            for (CompoundTag tileEntity : tileEntities) {
+                                if (!tileEntity.containsKey("Items")) continue;
+
+                                String blockEntityID = tileEntity.getString("id");
+                                ListTag<CompoundTag> items;
+                                try {
+                                    items = tileEntity.getListTag("Items").asCompoundTagList();
+                                } catch (Exception ex) {
+                                    debug("[NBTScanner] Could not parse Items for " + blockEntityID + " in " + file.getName() + ": " + ex.getMessage());
+                                    continue;
+                                }
+
+                                int x = tileEntity.getInt("x");
+                                int y = tileEntity.getInt("y");
+                                int z = tileEntity.getInt("z");
+
+                                for (CompoundTag item : items) {
+                                    String id = item.getString("id");
+                                    if (id.equalsIgnoreCase(namespaceID)) {
+                                        Bukkit.getLogger().info("[NBTScanner] Found " + id + " in " + blockEntityID
+                                                + " at " + x + "," + y + "," + z
+                                                + " in " + file.getName());
+                                        matches.add(target.clone());
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
 
