@@ -204,7 +204,7 @@ public class GlobalItemSearcher {
 
             // Check typical folders: overworld, nether, the end
             regionDirs.add(new File(worldDir, "region")); // overworld
-            regionDirs.add(new File(worldDir, "DIM-1/region")); // nether
+            regionDirs.add(new File(worldDir, "DIM-1/entities")); // nether
             regionDirs.add(new File(worldDir, "DIM1/region")); // the end
 
             // Log what we're scanning
