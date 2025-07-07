@@ -195,20 +195,18 @@ public class GlobalItemSearcher {
     }
 
     public static CompletableFuture<List<ItemStack>> scanUnloadedChunksForItem(ItemStack target) {
+        String namespaceID = target.getType().getKey().toString();
+
+        // Phase 1: Collect region folder paths on main thread
+        List<File> regionDirs = Bukkit.getWorlds().stream()
+                .map(World::getWorldFolder)
+                .map(worldFolder -> new File(worldFolder, "region"))
+                .filter(File::exists)
+                .toList(); // can use ArrayList if Java 8
+
+        System.out.println(regionDirs + " region folders found for unloaded chunk scan.");
         return CompletableFuture.supplyAsync(() -> {
             List<ItemStack> matches = new CopyOnWriteArrayList<>();
-            String namespaceID = target.getType().getKey().toString();
-
-            File worldDir = new File(Bukkit.getWorldContainer(), "hub"); // root world folder
-            List<File> regionDirs = new ArrayList<>();
-
-            // Add all expected region directories
-            regionDirs.add(new File(worldDir, "region"));          // Overworld
-            regionDirs.add(new File(worldDir, "DIM-1/region"));    // Nether
-            regionDirs.add(new File(worldDir, "DIM1/region"));     // The End
-
-            debug("[NBTScanner] Scanning region folders for item: " + namespaceID);
-            debug("[NBTScanner] World base path: " + worldDir.getAbsolutePath());
 
             for (File regionFolder : regionDirs) {
                 debug("[NBTScanner] Checking region folder: " + regionFolder.getAbsolutePath());
