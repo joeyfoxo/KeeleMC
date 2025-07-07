@@ -176,6 +176,13 @@ public class GlobalItemSearcher {
                     try {
                         MCAFile mca = MCAUtil.read(file);
 
+                        System.out.println(mca);
+
+                        if (mca == null) {
+                            debug("[NBTScanner] Failed to read region file: " + file.getName());
+                            continue;
+                        }
+
                         for (int cx = 0; cx < 32; cx++) {
                             for (int cz = 0; cz < 32; cz++) {
                                 net.querz.mca.Chunk chunk = mca.getChunk(cx, cz);
