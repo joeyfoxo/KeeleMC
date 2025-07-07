@@ -35,9 +35,9 @@ publishing {
 	}
 	publications {
 		maven(MavenPublication) {
-			groupId = 'dev.joey'
-			artifactId = 'keelecore'
-			version = '1.0'
+			groupId = 'io.github.ensgijs'        // match project group
+			artifactId = 'ens-nbt'               // match archivesBaseName or desired name
+			version = '0.1-SNAPSHOT'             // match project version
 
 			from components.java
 		}
