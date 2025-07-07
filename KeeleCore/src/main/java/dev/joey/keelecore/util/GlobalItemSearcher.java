@@ -182,7 +182,7 @@ public class GlobalItemSearcher {
                                 net.querz.mca.Chunk chunk = mca.getChunk(cx, cz);
                                 if (chunk == null) continue;
 
-                                debug("[NBTScanner] Scanning chunk [" + cx + "," + cz + "] in " + file.getName());
+                                debug("[NBTScanner] Scanning chunk [" + cx + "," + cz + "] at " + file.getName());
 
                                 ListTag<CompoundTag> tileEntities;
                                 try {
