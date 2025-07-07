@@ -9,6 +9,7 @@ import dev.joey.keelecore.managers.PlayerPermManager;
 import dev.joey.keelecore.util.GUI.GUI;
 import dev.joey.keelecore.util.GUI.GUIRegistry;
 import dev.joey.keelecore.util.ItemTagHandler;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -96,38 +97,39 @@ public class Interactions implements Listener {
     @RequireRank(PlayerRank.ADMIN)
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        KeelePlayer player = PlayerPermManager.getCached(event.getPlayer().getUniqueId());
-        if (!RankGuard.hasRequiredRank(player, this, "onInteract", event)) {
-            System.out.println("[Interactions] Player " + player.getName() + " attempted an interaction without required rank.");
-            System.out.println("[Interactions] Required rank: " + PlayerRank.ADMIN.name() + ", Player's rank: " + player.getRank().name());
-            System.out.println("[Interactions] Event: " + event.getEventName() + ", Action: " + event.getAction());
-            event.setCancelled(true);
-        }
+        Player bukkitPlayer = event.getPlayer();
+        KeelePlayer player = PlayerPermManager.getCached(bukkitPlayer.getUniqueId());
+        boolean isAdmin = RankGuard.hasRequiredRank(player, this, "onInteract", event);
 
         ItemStack clicked = event.getItem();
 
-        // Check if the clicked item is a special GUI inventory item by tag
+        // GUI Item Click Handling
         if (ItemTagHandler.hasTag(clicked, "inventory_item", PersistentDataType.STRING)) {
             String type = ItemTagHandler.getTag(clicked, "inventory_item", PersistentDataType.STRING);
-            event.setCancelled(true); // Prevent normal use of GUI items
+            event.setCancelled(true); // Always cancel GUI item use
 
             switch (type) {
                 case "hubselector" -> {
                     GUI hubSelector = GUIRegistry.getGUI("hubselector", player.getPlayer());
                     if (hubSelector != null) {
-                        hubSelector.open(event.getPlayer());
-                        return;
+                        hubSelector.open(bukkitPlayer);
                     }
                 }
                 default -> {
-
+                    // Unknown or unused inventory item
                 }
             }
-            return; // Prevent further interaction processing after GUI open
+            return;
         }
 
-        // Cancel interaction with specific blocks on right click
-        if (event.getClickedBlock() != null && event.getAction().isRightClick()) {
+        if (clicked != null && clicked.getType() == Material.LAVA_BUCKET) {
+            event.setCancelled(true);
+        }
+
+        // If player is not admin, check for blocked interaction targets
+        if (!isAdmin && event.getClickedBlock() != null
+                && (event.getAction().isRightClick())
+                || event.getAction().isLeftClick()) {
             var clickedType = event.getClickedBlock().getType();
 
             if (MaterialTags.DOORS.isTagged(clickedType)
@@ -138,12 +140,6 @@ public class Interactions implements Listener {
                     || clickedType.toString().contains("CHEST")) {
                 event.setCancelled(true);
                 return;
-            }
-
-            // Cancel if player is holding a lava-related item
-            ItemStack item = event.getItem();
-            if (item != null && item.getType().toString().contains("LAVA")) {
-                event.setCancelled(true);
             }
         }
     }

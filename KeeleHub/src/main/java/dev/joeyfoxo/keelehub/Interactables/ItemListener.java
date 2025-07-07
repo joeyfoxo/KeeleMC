@@ -31,7 +31,6 @@ public class ItemListener implements Listener {
 
         String gamemodeItem = ItemTagHandler.getTag(clicked, "gamemode", PersistentDataType.STRING);
         if (gamemodeItem == null) {
-            player.sendMessage("§cUnknown gamemode item.");
             return;
         }
 
@@ -41,7 +40,9 @@ public class ItemListener implements Listener {
 
             switch (gamemodeItem) {
                 case "survival", "modded", "test" -> sendConnectMessage(player, gamemodeItem);
-                default -> player.sendMessage("§cUnknown gamemode item.");
+                default -> {
+
+                }
             }
         }
     }
