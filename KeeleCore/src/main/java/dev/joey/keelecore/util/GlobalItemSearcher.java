@@ -24,6 +24,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -198,28 +199,30 @@ public class GlobalItemSearcher {
             List<ItemStack> matches = new CopyOnWriteArrayList<>();
             String namespaceID = target.getType().getKey().toString();
 
-            debug("[NBTScanner] Scanning for item: " + namespaceID);
+            File worldDir = new File(Bukkit.getWorldContainer(), "hub"); // root world folder
+            List<File> regionDirs = new ArrayList<>();
 
-            for (World world : Bukkit.getWorlds()) {
-                System.out.println(world.getWorldFolder().toPath());
-                File regionFolder = switch (world.getEnvironment()) {
-                    case NETHER -> new File(world.getWorldFolder(), "DIM-1/region");
-                    case THE_END -> new File(world.getWorldFolder(), "DIM1/region");
-                    default -> new File(world.getWorldFolder(), "region");
-                };
+            // Check typical folders: overworld, nether, the end
+            regionDirs.add(new File(worldDir, "region")); // overworld
+            regionDirs.add(new File(worldDir, "DIM-1/region")); // nether
+            regionDirs.add(new File(worldDir, "DIM1/region")); // the end
 
+            // Log what we're scanning
+            debug("[NBTScanner] Scanning region folders for: " + namespaceID);
+
+            for (File regionFolder : regionDirs) {
                 if (!regionFolder.exists()) {
-                    debug("[NBTScanner] No region folder for world: " + world.getName());
+                    debug("[NBTScanner] Region folder does not exist: " + regionFolder.getAbsolutePath());
                     continue;
                 }
 
                 File[] regionFiles = regionFolder.listFiles((dir, name) -> name.endsWith(".mca"));
                 if (regionFiles == null || regionFiles.length == 0) {
-                    debug("[NBTScanner] No .mca files found in " + regionFolder.getAbsolutePath());
+                    debug("[NBTScanner] No .mca files in: " + regionFolder.getAbsolutePath());
                     continue;
                 }
 
-                debug("[NBTScanner] Found " + regionFiles.length + " .mca files in world: " + world.getName());
+                debug("[NBTScanner] Found " + regionFiles.length + " .mca files in: " + regionFolder.getAbsolutePath());
 
                 for (File file : regionFiles) {
                     McaFileBase<?> mcaFile;
@@ -235,26 +238,14 @@ public class GlobalItemSearcher {
                         continue;
                     }
 
-                    AtomicInteger chunkCount = new AtomicInteger();
-
                     regionFile.forEach(chunk -> {
-                        chunkCount.incrementAndGet();
-
                         ListTag<CompoundTag> tileEntities = chunk.getTileEntities();
                         if (tileEntities == null) return;
-
-                        System.out.println(tileEntities);
 
                         for (CompoundTag tileEntity : tileEntities) {
                             if (!tileEntity.containsKey("Items")) continue;
 
                             String blockEntityID = tileEntity.getString("id");
-                            int x = tileEntity.getInt("x");
-                            int y = tileEntity.getInt("y");
-                            int z = tileEntity.getInt("z");
-
-                            debug("[NBTScanner] Found block entity with items: " + blockEntityID + " at " + x + "," + y + "," + z);
-
                             ListTag<CompoundTag> items;
                             try {
                                 items = tileEntity.getListTag("Items").asCompoundTagList();
@@ -263,11 +254,14 @@ public class GlobalItemSearcher {
                                 continue;
                             }
 
+                            int x = tileEntity.getInt("x");
+                            int y = tileEntity.getInt("y");
+                            int z = tileEntity.getInt("z");
+
                             for (CompoundTag item : items) {
                                 String id = item.getString("id");
-                                debug("[NBTScanner] Found item: " + id);
                                 if (id.equalsIgnoreCase(namespaceID)) {
-                                    Bukkit.getLogger().info("[NBTScanner] Found match for " + id + " in " + blockEntityID
+                                    Bukkit.getLogger().info("[NBTScanner] Found " + id + " in " + blockEntityID
                                             + " at " + x + "," + y + "," + z
                                             + " in " + file.getName());
                                     matches.add(target.clone());
@@ -275,12 +269,9 @@ public class GlobalItemSearcher {
                             }
                         }
                     });
-
-                    debug("[NBTScanner] Finished parsing " + chunkCount.get() + " chunks in " + file.getName());
                 }
             }
 
-            debug("[NBTScanner] Finished scan. Found " + matches.size() + " matches.");
             return matches;
         });
     }
