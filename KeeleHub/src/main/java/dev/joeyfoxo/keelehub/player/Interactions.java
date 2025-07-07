@@ -98,6 +98,9 @@ public class Interactions implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         KeelePlayer player = PlayerPermManager.getCached(event.getPlayer().getUniqueId());
         if (!RankGuard.hasRequiredRank(player, this, "onInteract", event)) {
+            System.out.println("[Interactions] Player " + player.getName() + " attempted an interaction without required rank.");
+            System.out.println("[Interactions] Required rank: " + PlayerRank.ADMIN.name() + ", Player's rank: " + player.getRank().name());
+            System.out.println("[Interactions] Event: " + event.getEventName() + ", Action: " + event.getAction());
             event.setCancelled(true);
             return;
         }
@@ -114,11 +117,11 @@ public class Interactions implements Listener {
                     GUI hubSelector = GUIRegistry.getGUI("hubselector", player.getPlayer());
                     if (hubSelector != null) {
                         hubSelector.open(event.getPlayer());
-                    } else {
-                        event.getPlayer().sendMessage("§cHub Selector GUI not found.");
                     }
                 }
-                default -> event.getPlayer().sendMessage("§cUnknown item type.");
+                default -> {
+
+                }
             }
             return; // Prevent further interaction processing after GUI open
         }

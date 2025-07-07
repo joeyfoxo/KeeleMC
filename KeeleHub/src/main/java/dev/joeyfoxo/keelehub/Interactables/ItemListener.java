@@ -21,7 +21,7 @@ public class ItemListener extends GUIListener implements Listener {
         keeleHub.getServer().getMessenger().registerOutgoingPluginChannel(keeleHub, "BungeeCord");
     }
 
-@EventHandler
+    @EventHandler
     public void onPlayerClick(InventoryClickEvent event) {
         ItemStack clicked = event.getCurrentItem();
         if (clicked == null || clicked.getType().isAir()) {
