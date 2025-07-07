@@ -202,31 +202,34 @@ public class GlobalItemSearcher {
             File worldDir = new File(Bukkit.getWorldContainer(), "hub"); // root world folder
             List<File> regionDirs = new ArrayList<>();
 
-            // Check typical folders: overworld, nether, the end
-            regionDirs.add(new File(worldDir, "region")); // overworld
-            regionDirs.add(new File(worldDir, "DIM-1/entities")); // nether
-            regionDirs.add(new File(worldDir, "DIM1/region")); // the end
+            // Add all expected region directories
+            regionDirs.add(new File(worldDir, "region"));          // Overworld
+            regionDirs.add(new File(worldDir, "DIM-1/region"));    // Nether
+            regionDirs.add(new File(worldDir, "DIM1/region"));     // The End
 
-            // Log what we're scanning
-            debug("[NBTScanner] Scanning region folders for: " + namespaceID);
+            debug("[NBTScanner] Scanning region folders for item: " + namespaceID);
+            debug("[NBTScanner] World base path: " + worldDir.getAbsolutePath());
 
             for (File regionFolder : regionDirs) {
+                debug("[NBTScanner] Checking region folder: " + regionFolder.getAbsolutePath());
+
                 if (!regionFolder.exists()) {
-                    debug("[NBTScanner] Region folder does not exist: " + regionFolder.getAbsolutePath());
+                    debug("[NBTScanner] ✘ Region folder does not exist: " + regionFolder.getAbsolutePath());
                     continue;
                 }
 
                 File[] regionFiles = regionFolder.listFiles((dir, name) -> name.endsWith(".mca"));
                 if (regionFiles == null || regionFiles.length == 0) {
-                    debug("[NBTScanner] No .mca files in: " + regionFolder.getAbsolutePath());
+                    debug("[NBTScanner] ⚠ No .mca files found in: " + regionFolder.getAbsolutePath());
                     continue;
                 }
 
-                debug("[NBTScanner] Found " + regionFiles.length + " .mca files in: " + regionFolder.getAbsolutePath());
+                debug("[NBTScanner] ✓ Found " + regionFiles.length + " .mca files in: " + regionFolder.getAbsolutePath());
 
                 for (File file : regionFiles) {
                     McaFileBase<?> mcaFile;
                     try {
+                        debug("[NBTScanner] Loading MCA file: " + file.getName());
                         mcaFile = McaFileHelpers.autoMCAFile(file);
                     } catch (Exception e) {
                         Bukkit.getLogger().warning("[NBTScanner] Error loading MCA file: " + file.getName() + ": " + e.getMessage());
