@@ -2,6 +2,8 @@ package dev.joey.keelecore.util;
 
 import dev.joey.keelecore.admin.permissions.player.KeelePlayer;
 import dev.joey.keelecore.managers.PlayerPermManager;
+import io.github.ensgijs.nbt.io.BinaryNbtHelpers;
+import io.github.ensgijs.nbt.io.CompressionType;
 import io.github.ensgijs.nbt.io.NamedTag;
 import io.github.ensgijs.nbt.io.TextNbtHelpers;
 import io.github.ensgijs.nbt.mca.McaFileBase;
@@ -142,7 +144,7 @@ public class GlobalItemSearcher {
                     }
 
                     try {
-                        NamedTag tag = TextNbtHelpers.readTextNbtFile(file); // You may be using Querz's NBT
+                        NamedTag tag = BinaryNbtHelpers.read(file, CompressionType.GZIP); // You may be using Querz's NBT
                         CompoundTag root = (CompoundTag) tag.getTag();
 
                         if (root == null) {
@@ -154,7 +156,6 @@ public class GlobalItemSearcher {
                             Bukkit.getLogger().warning("[NBTScanner] Player file " + file.getName() + " missing 'Inventory' tag, skipping.");
                             continue;
                         }
-
                         System.out.println(root.values() + " Root values in " + file.getName());
                         System.out.println(root.keySet() + " Root keys in " + file.getName());
 
