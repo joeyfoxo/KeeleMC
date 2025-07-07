@@ -24,10 +24,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -202,18 +199,23 @@ public class GlobalItemSearcher {
             File worldContainer = Bukkit.getWorldContainer(); // base worlds folder
             debug("[NBTScanner] Scanning world container: " + worldContainer.getAbsolutePath());
 
+            String worldName = Bukkit.getWorlds().get(0).getName();
+
             File[] worldDirs = worldContainer.listFiles(File::isDirectory);
+            System.out.println(Arrays.toString(worldDirs) + " World Dirs");
             if (worldDirs == null) {
                 debug("[NBTScanner] ✘ No world folders found in: " + worldContainer.getAbsolutePath());
                 return matches;
             }
 
             List<String> regionSubdirs = List.of(
-                    "region",          // Overworld region folder
-                    "DIM-1/region",    // Nether region folder
-                    "DIM-1/entities",  // Nether entity folder (optional, for future expansion)
-                    "DIM1/region"      // End region folder
+                    worldName+ "/region",          // Overworld region folder
+                    worldName + "/_nether/DIM-1/region",    // Nether region folder
+                    worldName + "/_nether/DIM-1/entities",  // Nether entity folder (optional, for future expansion)
+                    worldName + "/_the_end/DIM1/region"      // End region folder
             );
+
+            System.out.println("Region Subdirs: " + regionSubdirs);
 
             for (File worldDir : worldDirs) {
                 debug("[NBTScanner] Checking world folder: " + worldDir.getName());
