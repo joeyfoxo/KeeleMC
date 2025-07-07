@@ -1,0 +1,86 @@
+plugins {
+	id 'com.github.kt3k.coveralls' version '2.4.0'
+	id 'maven-publish'
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'jacoco'
+
+group                        = 'io.github.ensgijs'
+archivesBaseName             = 'ens-nbt'
+version                      = '0.1-SNAPSHOT'
+sourceCompatibility          = JavaLanguageVersion.of(17)
+targetCompatibility          = JavaLanguageVersion.of(17)
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+repositories {
+	mavenCentral()
+}
+
+publishing {
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		maven {
+			name = "GitHubPackages"
+			url = "https://maven.pkg.github.com/octocat/hello-world"
+			credentials {
+				username = System.getenv("GITHUB_ACTOR")
+				password = System.getenv("GITHUB_TOKEN")
+			}
+		}
+	}
+	publications {
+		maven(MavenPublication) {
+			groupId = 'dev.joey'
+			artifactId = 'keelecore'
+			version = '1.0'
+
+			from components.java
+		}
+	}
+}
+
+dependencies {
+	testImplementation 'junit:junit:4.13.2'
+}
+
+javadoc {
+	source = sourceSets.main.allJava
+	destinationDir = file("./doc/")
+	include 'io/github/ensgijs/nbt/**'
+	options.windowTitle 'NBT (ENS)'
+	options.encoding 'UTF-8'
+	options.linkSource true
+	options.links 'https://docs.oracle.com/javase/17/docs/api/'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	archiveClassifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	archiveClassifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+jacocoTestReport {
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+
+artifacts {
+	archives sourcesJar
+	archives javadocJar
+}
+
+java {
+	withJavadocJar()
+	withSourcesJar()
+}
