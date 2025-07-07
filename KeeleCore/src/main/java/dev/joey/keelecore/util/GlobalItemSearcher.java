@@ -231,7 +231,10 @@ public class GlobalItemSearcher {
             }
 
             for (File regionDir : regionDirs) {
+                System.out.println("[NBTScanner] Scanning region directory: " + regionDir.getAbsolutePath());
                 File[] mcaFiles = regionDir.listFiles((dir, name) -> name.endsWith(".mca"));
+                System.out.println("[NBTScanner] Found " + (mcaFiles != null ? mcaFiles.length : 0) + " .mca files in: " + regionDir.getAbsolutePath());
+                System.out.println("[NBTScanner] Scanning for item: " + target.getType().name() + " (" + namespaceID + ")");
                 if (mcaFiles == null || mcaFiles.length == 0) {
                     debug("[NBTScanner] ⚠ No .mca files found in: " + regionDir.getAbsolutePath());
                     continue;
