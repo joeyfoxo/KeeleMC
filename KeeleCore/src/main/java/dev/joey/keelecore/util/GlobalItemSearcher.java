@@ -119,6 +119,11 @@ public class GlobalItemSearcher {
                         NamedTag tag = NBTUtil.read(file);
                         CompoundTag root = (CompoundTag) tag.getTag();
 
+                        System.out.println("[NBTScanner] Tag:" + tag.getTag());
+                        System.out.println("[NBTScanner] Tag Name: " + tag.getName());
+
+                        System.out.println("[NBTScanner] Root Set: " + root.keySet().toString());
+
                         if (root == null || !root.containsKey("Level")) {
                             Bukkit.getLogger().warning("[NBTScanner] MCA file " + file.getName() + " missing 'Level' tag, skipping.");
                             continue;  // skip to next file
