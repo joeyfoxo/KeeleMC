@@ -201,6 +201,7 @@ public class GlobalItemSearcher {
             debug("[NBTScanner] Scanning for item: " + namespaceID);
 
             for (World world : Bukkit.getWorlds()) {
+                System.out.println(world.getWorldFolder().toPath());
                 File regionFolder = switch (world.getEnvironment()) {
                     case NETHER -> new File(world.getWorldFolder(), "DIM-1/region");
                     case THE_END -> new File(world.getWorldFolder(), "DIM1/region");
