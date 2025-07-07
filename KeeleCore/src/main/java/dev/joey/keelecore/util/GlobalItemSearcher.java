@@ -162,7 +162,14 @@ public class GlobalItemSearcher {
             String namespaceID = target.getType().getKey().toString();
 
             for (World world : Bukkit.getWorlds()) {
-                File regionFolder = new File(world.getWorldFolder(), "region");
+
+                // Get region folder based on dimension
+                File regionFolder = switch (world.getEnvironment()) {
+                    case NETHER -> new File(world.getWorldFolder(), "DIM-1/region");
+                    case THE_END -> new File(world.getWorldFolder(), "DIM1/region");
+                    default -> new File(world.getWorldFolder(), "region");
+                };
+
                 if (!regionFolder.exists()) {
                     debug("[NBTScanner] No region folder for world: " + world.getName());
                     continue;
@@ -175,34 +182,26 @@ public class GlobalItemSearcher {
                     try {
                         MCAFile mca = MCAUtil.read(file);
 
-                        debug(mca.toString());
-
                         for (int cx = 0; cx < 32; cx++) {
                             for (int cz = 0; cz < 32; cz++) {
                                 net.querz.mca.Chunk chunk = mca.getChunk(cx, cz);
                                 if (chunk == null) continue;
 
-                                debug("[NBTScanner] Scanning chunk [" + cx + "," + cz + "] at " + file.getName());
-
-                                ListTag<CompoundTag> tileEntities;
-                                try {
-                                    tileEntities = chunk.getTileEntities();
-                                } catch (Exception teEx) {
-                                    debug("[NBTScanner] Failed to get tile entities from chunk [" + cx + "," + cz + "]: " + teEx.getMessage());
-                                    continue;
-                                }
-
+                                ListTag<CompoundTag> tileEntities = chunk.getTileEntities();
                                 if (tileEntities == null) continue;
 
                                 for (CompoundTag tileEntity : tileEntities) {
                                     String blockEntityID = tileEntity.getString("id");
+
+                                    // Filter only known inventories (skip command blocks, signs, etc.)
                                     if (!tileEntity.containsKey("Items")) continue;
 
+                                    // Read inventory
                                     ListTag<CompoundTag> items;
                                     try {
                                         items = tileEntity.getListTag("Items").asCompoundTagList();
-                                    } catch (Exception ie) {
-                                        debug("[NBTScanner] Failed to read Items tag in " + blockEntityID + ": " + ie.getMessage());
+                                    } catch (Exception ex) {
+                                        debug("[NBTScanner] Could not parse Items for " + blockEntityID + ": " + ex.getMessage());
                                         continue;
                                     }
 
@@ -212,6 +211,7 @@ public class GlobalItemSearcher {
                                             int x = tileEntity.getInt("x");
                                             int y = tileEntity.getInt("y");
                                             int z = tileEntity.getInt("z");
+
                                             Bukkit.getLogger().info("[NBTScanner] Found " + id + " in " + blockEntityID + " at " + x + "," + y + "," + z + " in " + file.getName());
                                             matches.add(target.clone());
                                         }
@@ -220,10 +220,11 @@ public class GlobalItemSearcher {
                             }
                         }
                     } catch (Exception e) {
-
+                        Bukkit.getLogger().warning("[NBTScanner] Error reading region file " + file.getName() + ": " + e.getMessage());
                     }
                 }
             }
+
             return matches;
         });
     }
