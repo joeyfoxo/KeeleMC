@@ -102,7 +102,6 @@ public class Interactions implements Listener {
             System.out.println("[Interactions] Required rank: " + PlayerRank.ADMIN.name() + ", Player's rank: " + player.getRank().name());
             System.out.println("[Interactions] Event: " + event.getEventName() + ", Action: " + event.getAction());
             event.setCancelled(true);
-            return;
         }
 
         ItemStack clicked = event.getItem();
@@ -117,6 +116,7 @@ public class Interactions implements Listener {
                     GUI hubSelector = GUIRegistry.getGUI("hubselector", player.getPlayer());
                     if (hubSelector != null) {
                         hubSelector.open(event.getPlayer());
+                        return;
                     }
                 }
                 default -> {

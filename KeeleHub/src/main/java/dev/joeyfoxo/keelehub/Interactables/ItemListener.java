@@ -2,7 +2,6 @@ package dev.joeyfoxo.keelehub.Interactables;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import dev.joey.keelecore.util.GUI.GUIListener;
 import dev.joey.keelecore.util.GUI.GUIRegistry;
 import dev.joey.keelecore.util.ItemTagHandler;
 import org.bukkit.entity.Player;
@@ -14,7 +13,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import static dev.joeyfoxo.keelehub.KeeleHub.keeleHub;
 
-public class ItemListener extends GUIListener implements Listener {
+public class ItemListener implements Listener {
 
     public ItemListener() {
         keeleHub.getServer().getPluginManager().registerEvents(this, keeleHub);
