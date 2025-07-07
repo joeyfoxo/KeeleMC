@@ -126,6 +126,8 @@ public class GlobalItemSearcher {
 
                         ListTag<CompoundTag> inventory = root.getListTag("Inventory").asCompoundTagList();
 
+                        System.out.println("[NBTScanner] Inventory Content:" + inventory.asStringTagList().toString());
+
                         for (CompoundTag item : inventory) {
                             String id = item.getString("id");
                             if (id.equalsIgnoreCase(namespaceID)) {
@@ -170,6 +172,7 @@ public class GlobalItemSearcher {
 
                                 debug("Scanning chunk [" + cx + "," + cz + "] in " + file.getName());
                                 ListTag<CompoundTag> tileEntities = chunk.getTileEntities();
+                                System.out.println("[NBTScanner] Tile Entities in chunk [" + cx + "," + cz + "]: " + tileEntities.asStringTagList().toString());
 
                                 for (CompoundTag tileEntity : tileEntities) {
                                     if (!tileEntity.containsKey("Items")) continue;
